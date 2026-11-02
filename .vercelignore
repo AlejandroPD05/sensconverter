@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+.next
+node_modules
+test-results
+playwright-report
+coverage
+probe-mail.mjs
+probe-mail-out.json
+probe-*.mjs

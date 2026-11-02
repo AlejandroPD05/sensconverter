@@ -2,6 +2,8 @@
 
 Conversor de sensibilidad de ratón entre juegos, con el **cm/360** como referencia física. La calculadora funciona al 100 % sin cuenta y sin Supabase. Las cuentas son opcionales y solo añaden guardado y sincronización.
 
+**En producción:** https://sensicore-zeta.vercel.app
+
 > **Nombre provisional.** «SensiCore» está centralizado en `src/lib/brand.ts` para poder cambiarlo sin tocar la UI.
 
 ## Qué incluye
@@ -199,10 +201,19 @@ El motor de conversión (`src/lib/conversion`) no importa React, Supabase ni com
 
 ### Vercel
 
-1. Importa el repositorio y define `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` en el entorno de build.
-2. Aplica las migraciones en el proyecto de Supabase de producción.
-3. Añade `https://tu-dominio/auth/callback` a las Redirect URLs de Supabase.
-4. Despliega y prueba registro, login, recuperación y guardado.
+Desplegado en **https://sensicore-zeta.vercel.app** (proyecto `sensicore`). Configuración aplicada:
+
+- `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` definidas en Production y Preview. No se sube `.env.local`: `.vercelignore` lo excluye.
+- Site URL de Supabase: el dominio de producción. Redirect URLs: el callback de producción, el patrón de previews, `localhost:3000` y `127.0.0.1:3100` (Playwright).
+- Migraciones aplicadas en el proyecto Supabase real.
+
+Para volver a desplegar desde este directorio:
+
+```powershell
+npx vercel deploy --prod
+```
+
+Si cambias el dominio o creas otro proyecto, actualiza el Site URL y las Redirect URLs de Supabase o los enlaces de correo acabarán en `/login?error=auth_callback`.
 
 ### Node / VPS
 

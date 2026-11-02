@@ -11,6 +11,7 @@ Actualizado: 02/11/2026.
 - [x] **Fase 5 — Cuentas.** Supabase SSR; registro, login, logout, recuperación; perfiles CRUD, duplicado, favoritos y preferido por juego; preferencia global; migraciones con RLS.
 - [x] **Fase 6 — Calidad.** Lint, typecheck, unitarias, build y E2E anónimas, autenticadas y de RLS verificadas contra un proyecto Supabase real.
 - [x] **Fase 7 — Entrega.** README con instalación, Supabase, despliegue, comandos, juegos y límites; `.env.example`; migraciones; este archivo.
+- [x] **Fase 8 — Producción.** Desplegado en Vercel (`https://sensicore-zeta.vercel.app`) con las variables públicas de Supabase y el Site URL/Redirect URLs del proyecto real apuntando al dominio.
 
 ## Verificación real
 
@@ -37,10 +38,10 @@ El aviso de hidratación sobre `caret-color: transparent` no procede de la app: 
 - [ ] Envío real de correo: depende de configurar Custom SMTP y un buzón real. Con `example.com` GoTrue responde `email_address_invalid`; con el servicio compartido, `over_email_send_rate_limit`.
 - [ ] Verificar en el despliegue que el origen exacto está en **Redirect URLs**, si no los enlaces acaban en `/login?error=auth_callback`.
 - [x] Inicializar Git y hacer el primer commit.
+- [x] Desplegar en Vercel y configurar Site URL y Redirect URLs del proyecto Supabase real.
 - [ ] Añadir juegos pendientes solo cuando exista una constante documentada y contrastada.
 - [ ] Valorar ADS/scope y aspect ratio cuando haya fórmulas verificadas; hoy se declaran fuera de alcance.
 - [ ] Borrado de cuenta seguro (requiere operación de servidor con privilegios; no se expone service-role key).
-- [ ] Inicializar Git y hacer el primer commit si se decide versionar el proyecto.
 
 ## Notas de la última pasada
 
