@@ -81,6 +81,22 @@ test.describe("calculadora anónima", () => {
     await expect(scopes).toContainText("0.793471");
   });
 
+  test("el FOV y la resolución se editan junto al DPI de cada juego", async ({ page }) => {
+    await page.goto("/?game=cs2&target=tf2");
+    const calculator = page.getByTestId("calculator");
+
+    // CS2 fija su FOV; TF2 lo deja cambiar entre 75 y 90.
+    const fovFields = calculator.getByLabel("FOV · Horizontal 4:3", { exact: true });
+    await expect(fovFields).toHaveCount(2);
+    await expect(fovFields.first()).toHaveAttribute("readonly", "");
+    await expect(calculator.getByLabel("Ancho de pantalla en TF2")).toHaveValue("1920");
+
+    await calculator.getByText("Focal length (0%)", { exact: true }).click();
+    await fovFields.nth(1).fill("75");
+    // tan(10°) / tan(37.5°) / (20 / 75)
+    await expect(calculator.getByTestId("scope-table")).toContainText("0.861727");
+  });
+
   test("sin modelo de zoom no inventa valores de mira", async ({ page }) => {
     await page.goto("/?game=cs2&target=valorant");
     await expect(page.getByTestId("scope-gap")).toContainText(/no damos ningún valor/i);

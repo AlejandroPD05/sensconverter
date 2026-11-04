@@ -22,28 +22,14 @@ export const fovScaleLabels: Record<FovScale, string> = {
   vdeg: "Vertical",
 };
 
-export interface AspectRatioOption {
-  id: string;
-  label: string;
-  value: number;
-}
+/** Aspect ratio used when the player does not give a resolution. */
+export const DEFAULT_ASPECT_RATIO = 16 / 9;
 
-export const aspectRatios: AspectRatioOption[] = [
-  { id: "16:9", label: "16:9", value: 16 / 9 },
-  { id: "16:10", label: "16:10", value: 16 / 10 },
-  { id: "21:9", label: "21:9 (64:27)", value: 64 / 27 },
-  { id: "32:9", label: "32:9", value: 32 / 9 },
-  { id: "4:3", label: "4:3", value: 4 / 3 },
-  { id: "5:4", label: "5:4", value: 5 / 4 },
-];
-
-export const defaultAspectRatioId = "16:9";
-
-export function getAspectRatio(id: string | undefined): AspectRatioOption {
-  return (
-    aspectRatios.find((item) => item.id === id) ??
-    (aspectRatios.find((item) => item.id === defaultAspectRatioId) as AspectRatioOption)
-  );
+/** Width / height of a resolution, or NaN when it is not a valid size. */
+export function aspectFromResolution(width: number, height: number): number {
+  if (!Number.isFinite(width) || !Number.isFinite(height)) return Number.NaN;
+  if (width <= 0 || height <= 0) return Number.NaN;
+  return width / height;
 }
 
 export type MonitorAxis = "horizontal" | "vertical";

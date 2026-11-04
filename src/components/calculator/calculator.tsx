@@ -6,7 +6,6 @@ import {
   AlertTriangle,
   ArrowLeftRight,
   Check,
-  ChevronDown,
   Clipboard,
   Lock,
   RotateCcw,
@@ -32,15 +31,9 @@ import type { GameDefinition } from "@/lib/games/types";
 import { cn } from "@/lib/cn";
 import { formatMeasure, formatSensitivity, parseDecimal } from "@/lib/format";
 import { saveCalculatorProfile } from "@/app/actions";
-import {
-  aspectRatios,
-  defaultAspectRatioId,
-  fovScaleLabels,
-  getAspectRatio,
-  type ActualFov,
-  type MonitorAxis,
-} from "@/lib/conversion/fov";
+import { aspectFromResolution, type MonitorAxis } from "@/lib/conversion/fov";
 import { ScopeTable } from "./scope-table";
+import { ScreenFields } from "./screen-fields";
 
 const convertibleGames = getConvertibleGames();
 
@@ -57,14 +50,6 @@ interface CalculatorProps {
 function fovFor(game: GameDefinition): string {
   if (!game.fov) return "";
   return String(game.fov.fixed ?? game.fov.default);
-}
-
-function fovHint(game: GameDefinition, real: ActualFov | undefined): string | undefined {
-  if (!game.fov) return undefined;
-  const actual = real
-    ? ` En tu monitor: ${formatMeasure(real.horizontal, 1)}° horizontal · ${formatMeasure(real.vertical, 1)}° vertical.`
-    : "";
-  return `${game.fov.note}${actual}`;
 }
 
 function gameFromId(id: string | undefined, fallback: string): GameDefinition {
@@ -88,9 +73,13 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
   const [sourceFov, setSourceFov] = useState(fovFor(initialSource));
   const [targetFov, setTargetFov] = useState(fovFor(initialTarget));
   const [monitorDistance, setMonitorDistance] = useState("50");
-  const [aspectId, setAspectId] = useState(defaultAspectRatioId);
   const [monitorAxis, setMonitorAxis] = useState<MonitorAxis>("horizontal");
-  const aspect = getAspectRatio(aspectId);
+  const [sourceWidth, setSourceWidth] = useState("1920");
+  const [sourceHeight, setSourceHeight] = useState("1080");
+  const [targetWidth, setTargetWidth] = useState("1920");
+  const [targetHeight, setTargetHeight] = useState("1080");
+  const sourceAspect = aspectFromResolution(parseDecimal(sourceWidth), parseDecimal(sourceHeight));
+  const targetAspect = aspectFromResolution(parseDecimal(targetWidth), parseDecimal(targetHeight));
   const [copied, setCopied] = useState<string | null>(null);
   const [saveState, setSaveState] = useState<{
     status: "ok" | "error";
@@ -123,7 +112,8 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
     targetFov: targetFov ? parseDecimal(targetFov) : undefined,
     monitorDistance: monitorFraction,
     monitorAxis,
-    aspectRatio: aspect.value,
+    sourceAspectRatio: sourceAspect,
+    targetAspectRatio: targetAspect,
   });
 
   const result = outcome.ok ? outcome : null;
@@ -158,8 +148,12 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
     setSourceId(targetId);
     setTargetId(sourceId);
     setSourceSensitivity(nextSourceSens);
-    setSourceFov(fovFor(targetGame));
-    setTargetFov(fovFor(sourceGame));
+    setSourceFov(targetFov);
+    setTargetFov(sourceFov);
+    setSourceWidth(targetWidth);
+    setSourceHeight(targetHeight);
+    setTargetWidth(sourceWidth);
+    setTargetHeight(sourceHeight);
     if (!sameDpi) {
       const nextSourceDpi = String(result.targetDpi);
       const nextTargetDpi = String(result.sourceDpi);
@@ -182,8 +176,11 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
     setSourceFov(fovFor(source));
     setTargetFov(fovFor(target));
     setMonitorDistance("50");
-    setAspectId(defaultAspectRatioId);
     setMonitorAxis("horizontal");
+    setSourceWidth("1920");
+    setSourceHeight("1080");
+    setTargetWidth("1920");
+    setTargetHeight("1080");
     setSaveState(null);
   }
 
@@ -320,6 +317,17 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
             error={fieldError("sourceDpi")}
             hint="El DPI efectivo de tu ratón en Windows o en el software del fabricante."
           />
+
+          <ScreenFields
+            game={sourceGame}
+            width={sourceWidth}
+            height={sourceHeight}
+            fov={sourceFov}
+            onWidthChange={setSourceWidth}
+            onHeightChange={setSourceHeight}
+            onFovChange={setSourceFov}
+            fovError={fieldError("fov")}
+          />
         </div>
 
         <div className="flex items-center justify-center border-y border-[var(--line)] p-2 lg:border-x lg:border-y-0">
@@ -451,6 +459,16 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
               </div>
             ) : null}
           </div>
+
+          <ScreenFields
+            game={targetGame}
+            width={targetWidth}
+            height={targetHeight}
+            fov={targetFov}
+            onWidthChange={setTargetWidth}
+            onHeightChange={setTargetHeight}
+            onFovChange={setTargetFov}
+          />
         </div>
       </div>
 
@@ -524,124 +542,54 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
           </div>
         </fieldset>
 
-        {selectedMethod?.requiresFov ? (
-          <details className="mt-3 rounded-lg border border-[var(--line)]">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-2.5 text-xs font-medium text-[var(--fg-soft)]">
-              <span className="flex items-center gap-2">
-                <ChevronDown className="size-3.5" aria-hidden="true" />
-                Ajustes de FOV y monitor
+        {activeMethod === "monitor-distance" ? (
+          <div className="mt-3 grid gap-3 rounded-lg border border-[var(--line)] p-3 sm:grid-cols-2">
+            <div>
+              <span className="field-label" id="monitor-axis-label">
+                Medir la distancia en
               </span>
-              <span className="mono text-xs text-[var(--faint)]">
-                {aspect.id} ·{" "}
-                {result?.sourceActualFov
-                  ? formatMeasure(result.sourceActualFov.horizontal, 1)
-                  : "—"}
-                ° →{" "}
-                {result?.targetActualFov
-                  ? formatMeasure(result.targetActualFov.horizontal, 1)
-                  : "—"}
-                °
-              </span>
-            </summary>
-            <div className="grid gap-3 border-t border-[var(--line)] p-3 sm:grid-cols-2">
-              <div>
-                <label htmlFor="aspect-ratio" className="field-label">
-                  Relación de aspecto del monitor
-                </label>
-                <select
-                  id="aspect-ratio"
-                  className="field-input"
-                  value={aspectId}
-                  onChange={(event) => setAspectId(event.target.value)}
-                >
-                  {aspectRatios.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.label}
-                    </option>
-                  ))}
-                </select>
-                <p className="field-hint">
-                  Convierte el FOV de cada juego a lo que ves en tu pantalla.
-                </p>
-              </div>
-              {activeMethod === "monitor-distance" ? (
-                <div>
-                  <span className="field-label" id="monitor-axis-label">
-                    Medir la distancia en
-                  </span>
-                  <div
-                    className="inline-flex w-full gap-1 rounded-lg bg-[var(--surface-muted)] p-1"
-                    role="group"
-                    aria-labelledby="monitor-axis-label"
+              <div
+                className="inline-flex w-full gap-1 rounded-lg bg-[var(--surface-muted)] p-1"
+                role="group"
+                aria-labelledby="monitor-axis-label"
+              >
+                {(["horizontal", "vertical"] as const).map((axis) => (
+                  <button
+                    key={axis}
+                    type="button"
+                    onClick={() => setMonitorAxis(axis)}
+                    aria-pressed={monitorAxis === axis}
+                    className={cn(
+                      "flex-1 rounded-md px-2 py-1.5 text-xs font-medium capitalize transition-colors",
+                      monitorAxis === axis
+                        ? "bg-[var(--surface)] text-[var(--fg)] shadow-[var(--shadow-sm)]"
+                        : "text-[var(--muted)] hover:text-[var(--fg)]",
+                    )}
                   >
-                    {(["horizontal", "vertical"] as const).map((axis) => (
-                      <button
-                        key={axis}
-                        type="button"
-                        onClick={() => setMonitorAxis(axis)}
-                        aria-pressed={monitorAxis === axis}
-                        className={cn(
-                          "flex-1 rounded-md px-2 py-1.5 text-xs font-medium capitalize transition-colors",
-                          monitorAxis === axis
-                            ? "bg-[var(--surface)] text-[var(--fg)] shadow-[var(--shadow-sm)]"
-                            : "text-[var(--muted)] hover:text-[var(--fg)]",
-                        )}
-                      >
-                        {axis}
-                      </button>
-                    ))}
-                  </div>
-                  <p className="field-hint">Vertical no depende del ancho del monitor.</p>
-                </div>
-              ) : (
-                <div className="hidden sm:block" aria-hidden="true" />
-              )}
-              <NumberField
-                label={`FOV de ${sourceGame.shortName}${sourceGame.fov ? ` · ${fovScaleLabels[sourceGame.fov.scale]}` : ""}`}
-                value={sourceFov}
-                onChange={setSourceFov}
-                unit="°"
-                step={0.1}
-                min={sourceGame.fov?.min ?? 1}
-                max={sourceGame.fov?.max ?? 179}
-                readOnly={Boolean(sourceGame.fov?.fixed)}
-                hint={fovHint(sourceGame, result?.sourceActualFov)}
-                error={fieldError("fov")}
-              />
-              <NumberField
-                label={`FOV de ${targetGame.shortName}${targetGame.fov ? ` · ${fovScaleLabels[targetGame.fov.scale]}` : ""}`}
-                value={targetFov}
-                onChange={setTargetFov}
-                unit="°"
-                step={0.1}
-                min={targetGame.fov?.min ?? 1}
-                max={targetGame.fov?.max ?? 179}
-                readOnly={Boolean(targetGame.fov?.fixed)}
-                hint={fovHint(targetGame, result?.targetActualFov)}
-              />
-              {activeMethod === "monitor-distance" ? (
-                <div className="sm:col-span-2">
-                  <NumberField
-                    label="Distancia de monitor"
-                    value={monitorDistance}
-                    onChange={setMonitorDistance}
-                    unit="%"
-                    step={5}
-                    min={0}
-                    max={100}
-                    error={fieldError("monitorDistance")}
-                    hint={`Porcentaje de media pantalla (${monitorAxis}) medido desde el centro: 0% es focal length y 100% el borde.`}
-                  />
-                </div>
-              ) : null}
+                    {axis}
+                  </button>
+                ))}
+              </div>
+              <p className="field-hint">Vertical no depende del ancho del monitor.</p>
             </div>
-          </details>
+            <NumberField
+              label="Distancia de monitor"
+              value={monitorDistance}
+              onChange={setMonitorDistance}
+              unit="%"
+              step={5}
+              min={0}
+              max={100}
+              error={fieldError("monitorDistance")}
+              hint="Desde el centro: 0% es focal length y 100% el borde."
+            />
+          </div>
         ) : null}
 
         <ScopeTable
           game={targetGame}
           hipFov={parseDecimal(targetFov)}
-          aspectRatio={aspect.value}
+          aspectRatio={targetAspect}
           method={activeMethod}
           monitorDistance={monitorFraction}
           monitorAxis={monitorAxis}

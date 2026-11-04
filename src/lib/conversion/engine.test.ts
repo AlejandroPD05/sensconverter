@@ -414,3 +414,39 @@ describe("miras (modelo lineal de Source)", () => {
     ).toBeNull();
   });
 });
+
+describe("resolución distinta en origen y destino", () => {
+  it("cada lado usa su propia relación de aspecto", () => {
+    const result = convertSensitivity({
+      sourceGameId: "cs2",
+      targetGameId: "valorant",
+      sourceSensitivity: 1,
+      sourceDpi: 800,
+      method: "fov-aware",
+      sourceFov: 90,
+      targetFov: 103,
+      sourceAspectRatio: 16 / 9,
+      targetAspectRatio: 4 / 3,
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.sourceActualFov?.horizontal).toBeCloseTo(106.26, 2);
+    // VALORANT mantiene 70.53° verticales: en 4:3 ve menos a los lados.
+    expect(result.targetActualFov?.vertical).toBeCloseTo(70.53, 2);
+    expect(result.targetActualFov?.horizontal).toBeLessThan(103);
+  });
+
+  it("rechaza una resolución no válida en los métodos con FOV", () => {
+    const result = convertSensitivity({
+      sourceGameId: "cs2",
+      targetGameId: "valorant",
+      sourceSensitivity: 1,
+      sourceDpi: 800,
+      method: "fov-aware",
+      sourceFov: 90,
+      targetFov: 103,
+      targetAspectRatio: Number.NaN,
+    });
+    expect(result.ok).toBe(false);
+  });
+});

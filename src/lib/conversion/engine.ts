@@ -5,8 +5,7 @@ import {
 } from "@/lib/games/types";
 import {
   actualFov,
-  defaultAspectRatioId,
-  getAspectRatio,
+  DEFAULT_ASPECT_RATIO,
   monitorDistanceRatio,
   type ActualFov,
   type MonitorAxis,
@@ -111,7 +110,11 @@ export interface ConversionInput {
   monitorDistance?: number;
   /** Axis the monitor distance is measured on. Defaults to horizontal. */
   monitorAxis?: MonitorAxis;
-  /** Width / height of the player's screen. Defaults to 16:9. */
+  /** Width / height of the source screen. Defaults to `aspectRatio`, then 16:9. */
+  sourceAspectRatio?: number;
+  /** Width / height of the target screen. Defaults to `aspectRatio`, then 16:9. */
+  targetAspectRatio?: number;
+  /** Shared aspect ratio when both screens are the same. */
   aspectRatio?: number;
 }
 
@@ -141,7 +144,8 @@ export interface ConversionSuccess {
   targetFov?: number;
   sourceActualFov?: ActualFov;
   targetActualFov?: ActualFov;
-  aspectRatio?: number;
+  sourceAspectRatio?: number;
+  targetAspectRatio?: number;
   monitorAxis?: MonitorAxis;
   monitorDistance?: number;
   fovRatio?: number;
@@ -362,7 +366,8 @@ export function convertSensitivity(input: ConversionInput): ConversionOutcome {
   let monitorDistance: number | undefined;
   let sourceActualFov: ActualFov | undefined;
   let targetActualFov: ActualFov | undefined;
-  let aspectRatio: number | undefined;
+  let sourceAspectRatio: number | undefined;
+  let targetAspectRatio: number | undefined;
   let monitorAxis: MonitorAxis | undefined;
 
   if (input.method === "fov-aware" || input.method === "monitor-distance") {
@@ -414,13 +419,15 @@ export function convertSensitivity(input: ConversionInput): ConversionOutcome {
       };
     }
 
-    aspectRatio = input.aspectRatio ?? getAspectRatio(defaultAspectRatioId).value;
-    if (!isValidNumber(aspectRatio) || aspectRatio < 0.5 || aspectRatio > 5) {
+    sourceAspectRatio = input.sourceAspectRatio ?? input.aspectRatio ?? DEFAULT_ASPECT_RATIO;
+    targetAspectRatio = input.targetAspectRatio ?? input.aspectRatio ?? DEFAULT_ASPECT_RATIO;
+    const validAspect = (value: number) => isValidNumber(value) && value >= 0.5 && value <= 5;
+    if (!validAspect(sourceAspectRatio) || !validAspect(targetAspectRatio)) {
       return {
         ok: false,
         error: {
           code: "invalid_input",
-          message: "La relación de aspecto no es válida.",
+          message: "La resolución no es válida: indica ancho y alto en píxeles.",
           field: "fov",
         },
       };
@@ -429,8 +436,8 @@ export function convertSensitivity(input: ConversionInput): ConversionOutcome {
     // getMethodAvailability already guarantees both games declare a FOV.
     const sourceScale = sourceGame.fov!.scale;
     const targetScale = targetGame.fov!.scale;
-    sourceActualFov = actualFov(sourceFov, sourceScale, aspectRatio);
-    targetActualFov = actualFov(targetFov, targetScale, aspectRatio);
+    sourceActualFov = actualFov(sourceFov, sourceScale, sourceAspectRatio);
+    targetActualFov = actualFov(targetFov, targetScale, targetAspectRatio);
     monitorAxis = input.monitorAxis ?? "horizontal";
 
     for (const [game, value] of [
@@ -523,7 +530,8 @@ export function convertSensitivity(input: ConversionInput): ConversionOutcome {
     targetFov,
     sourceActualFov,
     targetActualFov,
-    aspectRatio,
+    sourceAspectRatio,
+    targetAspectRatio,
     monitorAxis,
     monitorDistance,
     fovRatio: ratio,

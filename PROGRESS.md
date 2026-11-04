@@ -16,6 +16,7 @@ Actualizado: 04/11/2026.
 - [x] **Fase 10 — Interfaz clara SaaS.** Sustituida la "hoja de retransmisión" por un estilo claro moderno: fondo blanco, grises zinc, acento índigo, Geist + Geist Mono, tarjetas redondeadas con borde fino y selectores segmentados. Se quitó la franja EN DIRECTO (y `lib/live-readout.ts`). `DESIGN.md` describe el sistema nuevo; las capturas de `.impeccable/review/` están regeneradas y `.impeccable/design.json` (sistema anterior) se eliminó.
 - [x] **Fase 11 — Pendientes de la spec.** Cuenta con configuraciones recientes, juegos favoritos (derivados de los perfiles favoritos) y borrado de cuenta seguro mediante `delete_own_account()` (migración 0003). Rango de R6 Siege corregido a 1–100 enteros. E2E nuevas: aislamiento RLS entre usuarios y la app sin credenciales de Supabase.
 - [x] **Fase 12 — Sistema de FOV y miras.** Convención de FOV por juego (horizontal 4:3, horizontal 16:9, vertical) con fuente y estado; relación de aspecto del monitor; distancia de monitor horizontal o vertical con porcentaje (0% = focal length); tabla de miras con `zoom_sensitivity_ratio` para TF2 (Source SDK 2013, verificado) y la AWP de CS2 (experimental). Viewspeed visible pero desactivado: no hay fórmula pública verificable. Fortnite sin FOV documentado. Rangos corregidos: Apex 70–110, TF2 75–90, Quake Champions 100–140, Destiny 2 55–105, R6 60–90 vertical.
+- [x] **Fase 12b — FOV y resolución a la vista.** Cada lado de la calculadora muestra resolución (ancho × alto) y FOV del juego junto al DPI, con el FOV real resultante; origen y destino pueden tener resoluciones distintas. La distancia de monitor (eje y porcentaje) aparece solo al elegir ese método.
 
 ## Verificación real
 
@@ -23,9 +24,9 @@ Actualizado: 04/11/2026.
 | --- | --- |
 | `npm run lint` | Sin errores |
 | `npm run typecheck` | Sin errores |
-| `npm test` | 33/33 |
+| `npm test` | 35/35 |
 | `npm run build` | Correcto |
-| `npm run test:e2e` | 37/37 (incluye miras de TF2 y Viewspeed desactivado; incluye cuenta, RLS entre usuarios, aviso de enlace fallido y servidor sin Supabase; escritorio y móvil) |
+| `npm run test:e2e` | 39/39 (incluye miras de TF2 y Viewspeed desactivado; incluye cuenta, RLS entre usuarios, aviso de enlace fallido y servidor sin Supabase; escritorio y móvil) |
 | Revisión visual 390 / 768 / 1440 | Sin desbordamiento horizontal de página; navegación inferior solo en móvil |
 
 La revisión visual corrigió tres defectos reales: la navegación inferior se mostraba también en escritorio, la cabecera duplicaba el acceso a cuenta en móvil y las tarjetas de la biblioteca y el aviso de configuración desbordaban en pantallas estrechas. Las clases de componente se movieron a `@layer components` para que las utilidades de Tailwind puedan ocultarlas o limitarlas.

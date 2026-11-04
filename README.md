@@ -54,7 +54,7 @@ La calculadora y la biblioteca funcionan sin crear `.env.local`. Las páginas de
 | `npm start` | Sirve el build de producción |
 | `npm run lint` | ESLint |
 | `npm run typecheck` | `tsc --noEmit` |
-| `npm test` | Vitest, 33 pruebas unitarias |
+| `npm test` | Vitest, 35 pruebas unitarias |
 | `npm run test:watch` | Vitest en modo watch |
 | `npm run test:e2e` | Playwright: escritorio, móvil y un servidor sin Supabase |
 
@@ -229,7 +229,7 @@ Sirve el proceso detrás de HTTPS (por ejemplo, con un reverse proxy) y define l
 
 ## Limitaciones conocidas
 
-- El FOV de cada juego se convierte a su valor real según la relación de aspecto del monitor (horizontal 4:3, horizontal 16:9 o vertical, todos Hor+). Fortnite no tiene FOV documentado y no ofrece métodos con FOV.
+- El FOV y la resolución se editan en cada lado de la calculadora, junto al DPI; el FOV se convierte a su valor real según esa resolución (horizontal 4:3, horizontal 16:9 o vertical, todos Hor+). Fortnite no tiene FOV documentado y no ofrece métodos con FOV.
 - Miras: solo TF2 (modelo de Source SDK, verificado) y la AWP de CS2 (experimental). El resto de juegos no tiene un modelo de zoom público y la app no da valores de mira. Viewspeed no está disponible por falta de una fórmula verificable; el método específico del juego está desactivado.
 - No se modelan recoil, aceleración del ratón, suavizado ni la respuesta interna del motor.
 - Los juegos pendientes no se pueden elegir en la calculadora; la biblioteca explica por qué.
@@ -246,8 +246,8 @@ Comprobado en este repositorio:
 
 - `npm run lint`: sin errores.
 - `npm run typecheck`: sin errores.
-- `npm test`: 33 pruebas superadas.
+- `npm test`: 35 pruebas superadas.
 - `npm run build`: build de producción correcto.
-- `npm run test:e2e`: 37 superadas. Incluye cuenta, RLS entre usuarios, Chromium de escritorio, Pixel 7 y la app sin credenciales de Supabase.
+- `npm run test:e2e`: 39 superadas. Incluye cuenta, RLS entre usuarios, Chromium de escritorio, Pixel 7 y la app sin credenciales de Supabase.
 
 Las pruebas autenticadas se omiten si no hay proyecto Supabase o usuario de prueba; las omitidas no cuentan como aprobadas.
