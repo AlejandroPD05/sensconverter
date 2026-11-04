@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import {
   AlertTriangle,
   ArrowLeftRight,
@@ -34,6 +34,7 @@ import { saveCalculatorProfile } from "@/app/actions";
 import { aspectFromResolution, type MonitorAxis } from "@/lib/conversion/fov";
 import { ScopeTable } from "./scope-table";
 import { ScreenFields } from "./screen-fields";
+import { RollingNumber } from "@/components/ui/rolling-number";
 
 const convertibleGames = getConvertibleGames();
 
@@ -376,13 +377,14 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
 
             <div className="mt-1 flex flex-wrap items-end justify-between gap-3">
               <output
-                key={resultValue}
-                className="mono result-in block text-[clamp(2.5rem,6.5vw,3.5rem)] font-semibold leading-none tracking-[-0.04em] text-[var(--fg)]"
+                className="mono block text-[clamp(2.5rem,6.5vw,3.5rem)] font-semibold leading-none tracking-[-0.04em] text-[var(--fg)]"
                 aria-live="polite"
                 aria-atomic="true"
-                data-testid="target-sensitivity"
               >
-                {resultValue}
+                <span className="sr-only" data-testid="target-sensitivity">
+                  {resultValue}
+                </span>
+                <RollingNumber value={resultValue} />
               </output>
               <Button
                 variant="secondary"
@@ -416,17 +418,14 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
                 {sameDpi ? "mismo que origen" : "personalizado"}
               </span>
             </div>
-            <div className="inline-flex w-full gap-1 rounded-lg bg-[var(--surface-muted)] p-1">
+            <div
+              className="segmented"
+              style={{ "--seg-index": sameDpi ? 0 : 1 } as CSSProperties}
+            >
               <button
                 type="button"
                 onClick={() => setSameDpi(true)}
                 aria-pressed={sameDpi}
-                className={cn(
-                  "flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition-colors",
-                  sameDpi
-                    ? "bg-[var(--surface)] text-[var(--fg)] shadow-[var(--shadow-sm)]"
-                    : "text-[var(--muted)] hover:text-[var(--fg)]",
-                )}
               >
                 Usar {dpi || "—"} DPI
               </button>
@@ -434,12 +433,6 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
                 type="button"
                 onClick={() => setSameDpi(false)}
                 aria-pressed={!sameDpi}
-                className={cn(
-                  "flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition-colors",
-                  !sameDpi
-                    ? "bg-[var(--surface)] text-[var(--fg)] shadow-[var(--shadow-sm)]"
-                    : "text-[var(--muted)] hover:text-[var(--fg)]",
-                )}
               >
                 Personalizado
               </button>
@@ -549,9 +542,10 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
                 Medir la distancia en
               </span>
               <div
-                className="inline-flex w-full gap-1 rounded-lg bg-[var(--surface-muted)] p-1"
+                className="segmented"
                 role="group"
                 aria-labelledby="monitor-axis-label"
+                style={{ "--seg-index": monitorAxis === "vertical" ? 1 : 0 } as CSSProperties}
               >
                 {(["horizontal", "vertical"] as const).map((axis) => (
                   <button
@@ -559,12 +553,7 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
                     type="button"
                     onClick={() => setMonitorAxis(axis)}
                     aria-pressed={monitorAxis === axis}
-                    className={cn(
-                      "flex-1 rounded-md px-2 py-1.5 text-xs font-medium capitalize transition-colors",
-                      monitorAxis === axis
-                        ? "bg-[var(--surface)] text-[var(--fg)] shadow-[var(--shadow-sm)]"
-                        : "text-[var(--muted)] hover:text-[var(--fg)]",
-                    )}
+                    className="capitalize"
                   >
                     {axis}
                   </button>

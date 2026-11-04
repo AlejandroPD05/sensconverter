@@ -727,3 +727,533 @@
     padding-bottom: calc(4rem + env(safe-area-inset-bottom));
   }
 }
+
+/* ============================================================
+   Capa 2026: hero oscuro, visor, cifras que ruedan, segmentados
+   y transiciones entre páginas. Todo tiene versión reducida.
+   ============================================================ */
+
+:root {
+  --hero-bg: #07070c;
+  --hero-fg: #f4f4f5;
+  --hero-muted: #a1a1aa;
+  --hero-accent: #a5b4fc;
+  --hero-line: rgba(255, 255, 255, 0.08);
+}
+
+@layer base {
+  input,
+  textarea {
+    caret-color: var(--accent);
+  }
+
+  ::placeholder {
+    color: var(--faint);
+    opacity: 1;
+  }
+}
+
+@layer components {
+  /* ---------- Hero oscuro ---------- */
+
+  .hero-dark {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--hero-bg);
+    color: var(--hero-fg);
+  }
+
+  .hero-dark ::selection {
+    background: rgba(129, 140, 248, 0.45);
+    color: #fff;
+  }
+
+  .hero-dark :focus-visible {
+    outline-color: var(--hero-accent);
+  }
+
+  /* Retícula de campo de tiro, solo alrededor del visor. */
+  .hero-dark::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(var(--hero-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--hero-line) 1px, transparent 1px);
+    background-size: 56px 56px;
+    background-position: center;
+    mask-image: radial-gradient(ellipse 60% 70% at 72% 45%, #000 20%, transparent 72%);
+  }
+
+  .hero-aurora {
+    position: absolute;
+    inset: -20% -10% auto;
+    height: 140%;
+    z-index: -2;
+    pointer-events: none;
+  }
+
+  .hero-aurora::before,
+  .hero-aurora::after {
+    content: "";
+    position: absolute;
+    border-radius: 999px;
+    animation: aurora-drift 22s ease-in-out infinite alternate;
+    animation-play-state: paused;
+  }
+
+  .hero-aurora::before {
+    width: 60%;
+    height: 70%;
+    left: 45%;
+    top: 0;
+    background: radial-gradient(closest-side, rgba(79, 70, 229, 0.42), transparent);
+  }
+
+  .hero-aurora::after {
+    width: 45%;
+    height: 55%;
+    left: 5%;
+    top: 30%;
+    background: radial-gradient(closest-side, rgba(124, 58, 237, 0.22), transparent);
+    animation-duration: 28s;
+    animation-direction: alternate-reverse;
+  }
+
+  .hero-dark[data-active] .hero-aurora::before,
+  .hero-dark[data-active] .hero-aurora::after {
+    animation-play-state: running;
+  }
+
+  .hero-title {
+    font-size: clamp(2.75rem, 6.2vw, 5.25rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 0.98;
+    text-wrap: balance;
+  }
+
+  .reveal-line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.08em;
+  }
+
+  .reveal-line > span {
+    display: block;
+    animation: line-in 900ms var(--ease) both;
+  }
+
+  .reveal-line + .reveal-line > span {
+    animation-delay: 90ms;
+  }
+
+  .hero-fade {
+    animation: fade-in 700ms var(--ease) 320ms both;
+  }
+
+  .hero-lede {
+    color: var(--hero-muted);
+  }
+
+  .btn-hero-secondary {
+    color: var(--hero-fg);
+    border-color: rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .btn-hero-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.28);
+  }
+
+  /* ---------- Visor ---------- */
+
+  .hero-scope {
+    --aim-x: 0px;
+    --aim-y: 0px;
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: min(100%, 400px);
+    aspect-ratio: 1;
+    margin-inline: auto;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(79, 70, 229, 0.18), transparent 66%);
+    animation: scope-in 900ms var(--ease) 150ms both;
+  }
+
+  .hero-scope__dial {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(var(--turn, 0deg));
+    transition: transform 1200ms var(--ease);
+  }
+
+  .hero-scope__rim {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.14);
+    stroke-width: 1;
+  }
+
+  .hero-scope__tick {
+    stroke: rgba(255, 255, 255, 0.2);
+    stroke-width: 1;
+  }
+
+  .hero-scope__tick.is-major {
+    stroke: var(--hero-accent);
+    stroke-width: 1.6;
+  }
+
+  .hero-scope__reticle {
+    position: absolute;
+    inset: 15%;
+    border: 1px solid rgba(165, 180, 252, 0.22);
+    border-radius: 999px;
+    transform: translate(var(--aim-x), var(--aim-y));
+    transition: transform 420ms var(--ease);
+  }
+
+  .hero-scope__line {
+    position: absolute;
+  }
+
+  .hero-scope__line.is-h {
+    left: -12%;
+    right: -12%;
+    top: 50%;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(165, 180, 252, 0.6) 16%,
+      transparent 30%,
+      transparent 70%,
+      rgba(165, 180, 252, 0.6) 84%,
+      transparent
+    );
+  }
+
+  .hero-scope__line.is-v {
+    top: -12%;
+    bottom: -12%;
+    left: 50%;
+    width: 1px;
+    background: linear-gradient(
+      180deg,
+      transparent,
+      rgba(165, 180, 252, 0.6) 16%,
+      transparent 30%,
+      transparent 70%,
+      rgba(165, 180, 252, 0.6) 84%,
+      transparent
+    );
+  }
+
+  .hero-scope__readout {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    justify-items: center;
+    gap: 0.35rem;
+    text-align: center;
+  }
+
+  .hero-scope__from,
+  .hero-scope__to {
+    font-size: 0.85rem;
+    color: var(--hero-muted);
+  }
+
+  .hero-scope__value {
+    font-size: clamp(3rem, 7vw, 4.5rem);
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: #fff;
+  }
+
+  .hero-scope__cm {
+    margin-top: 0.4rem;
+    padding: 0.2rem 0.6rem;
+    border: 1px solid rgba(165, 180, 252, 0.25);
+    border-radius: var(--radius-pill);
+    font-size: 0.8rem;
+    color: #c7d2fe;
+  }
+
+  .hero-scope__steps {
+    position: absolute;
+    bottom: 7%;
+    display: flex;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .hero-scope__steps li {
+    width: 18px;
+    height: 3px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.22);
+    transform: scaleX(0.4);
+    transition: transform 400ms var(--ease), background 400ms var(--ease);
+  }
+
+  .hero-scope__steps li.is-active {
+    background: var(--hero-accent);
+    transform: scaleX(1);
+  }
+
+  /* ---------- Cifras que ruedan ---------- */
+
+  .rolling {
+    --row: 1.08em;
+    display: inline-flex;
+    align-items: flex-start;
+    height: var(--row);
+    line-height: var(--row);
+    font-variant-numeric: tabular-nums;
+    vertical-align: bottom;
+  }
+
+  .rolling-static {
+    display: inline-block;
+    height: var(--row);
+  }
+
+  .rolling-digit {
+    display: inline-block;
+    height: var(--row);
+    overflow: hidden;
+    mask-image: linear-gradient(transparent, #000 18%, #000 82%, transparent);
+  }
+
+  .rolling-strip {
+    display: flex;
+    flex-direction: column;
+    transform: translateY(calc(var(--d, 0) * var(--row) * -1));
+    transition: transform 650ms var(--ease) calc(var(--i, 0) * 28ms);
+  }
+
+  .rolling-strip > span {
+    display: block;
+    height: var(--row);
+  }
+
+  /* ---------- Selector segmentado con indicador deslizante ---------- */
+
+  .segmented {
+    --seg-gap: 4px;
+    position: relative;
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+    gap: var(--seg-gap);
+    padding: var(--seg-gap);
+    border-radius: 10px;
+    background: var(--surface-muted);
+  }
+
+  .segmented::before {
+    content: "";
+    position: absolute;
+    top: var(--seg-gap);
+    bottom: var(--seg-gap);
+    left: var(--seg-gap);
+    width: calc(
+      (100% - 2 * var(--seg-gap) - (var(--seg-count, 2) - 1) * var(--seg-gap)) /
+        var(--seg-count, 2)
+    );
+    border-radius: 7px;
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+    transform: translateX(calc(var(--seg-index, 0) * (100% + var(--seg-gap))));
+    transition: transform 320ms var(--ease);
+  }
+
+  .segmented > button {
+    position: relative;
+    z-index: 1;
+    border-radius: 7px;
+    padding: 0.4rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--muted);
+    transition: color var(--dur) var(--ease);
+  }
+
+  .segmented > button:hover,
+  .segmented > button[aria-pressed="true"] {
+    color: var(--fg);
+  }
+}
+
+/* ---------- Movimiento de la capa 2026 ---------- */
+
+@keyframes line-in {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scope-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94) rotate(-8deg);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+    filter: blur(0);
+  }
+}
+
+@keyframes aurora-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(-8%, 6%, 0) scale(1.15);
+  }
+}
+
+@keyframes hero-recede {
+  to {
+    opacity: 0.25;
+    transform: translateY(-48px) scale(0.97);
+    filter: blur(3px);
+  }
+}
+
+@keyframes vt-out {
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(4px);
+  }
+}
+
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* El contenido del hero se aleja mientras la calculadora sube por encima. */
+@supports (animation-timeline: view()) {
+  .hero-recede {
+    animation: hero-recede linear both;
+    animation-timeline: view();
+    animation-range: exit 10% exit 90%;
+  }
+}
+
+/* Transiciones entre páginas (React ViewTransition + Next). */
+::view-transition {
+  pointer-events: none;
+}
+
+::view-transition-group(site-header),
+::view-transition-group(mobile-nav) {
+  animation: none;
+  z-index: 100;
+}
+
+::view-transition-old(site-header),
+::view-transition-old(mobile-nav) {
+  display: none;
+}
+
+::view-transition-new(site-header),
+::view-transition-new(mobile-nav) {
+  animation: none;
+}
+
+::view-transition-old(.page) {
+  animation: vt-out 160ms ease-in both;
+}
+
+::view-transition-new(.page) {
+  animation: vt-in 380ms var(--ease) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-line > span,
+  .hero-fade,
+  .hero-scope,
+  .hero-recede,
+  .hero-aurora::before,
+  .hero-aurora::after {
+    animation: none !important;
+  }
+
+  .rolling-strip,
+  .hero-scope__dial,
+  .hero-scope__reticle,
+  .segmented::before {
+    transition: none !important;
+  }
+
+  /* Sin desplazamiento: las páginas solo funden. */
+  ::view-transition-old(.page) {
+    animation: vt-fade-out 120ms ease-in both !important;
+  }
+
+  ::view-transition-new(.page) {
+    animation: vt-fade-in 160ms ease-out both !important;
+  }
+}
+
+/* Ajustes de la capa 2026 */
+@layer components {
+  .hero-dark {
+    --fg: var(--hero-fg);
+    --fg-soft: #e4e4e7;
+    --muted: var(--hero-muted);
+    --faint: #a1a1aa;
+  }
+
+  .hero-title--page {
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    line-height: 1.02;
+  }
+
+  .rolling {
+    vertical-align: baseline;
+  }
+}

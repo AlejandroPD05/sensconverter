@@ -20,6 +20,14 @@ colors:
   danger: "#dc2626"
   line: "#e4e4e7"
   line-strong: "#d4d4d8"
+  success-line: "#bbf7d0"
+  warning-line: "#fde68a"
+  danger-line: "#fecaca"
+  hero-bg: "#07070c"
+  hero-fg: "#f4f4f5"
+  hero-muted: "#a1a1aa"
+  hero-accent: "#a5b4fc"
+  hero-accent-soft: "#c7d2fe"
 typography:
   sans: Geist
   mono: Geist Mono
@@ -35,14 +43,45 @@ radii:
 
 ## Overview
 
-Estilo de herramienta SaaS moderna en claro: fondo blanco, grises neutros
-(zinc), un único acento índigo y tarjetas con borde fino y sombra mínima. La
-calculadora es la protagonista; todo lo demás acompaña.
+Herramienta SaaS moderna en dos planos: una cabecera de página oscura (casi
+negro con aurora índigo y un visor de mira) y, encima, la aplicación clara con
+fondo blanco, grises zinc, un único acento índigo y tarjetas de borde fino. La
+calculadora sube por encima del hero oscuro y sigue siendo la protagonista.
 
 `src/app/globals.css` es la implementación. Este archivo describe las reglas.
 Sustituye al sistema anterior "hoja de retransmisión" (papel hueso y amarillo
 de señal) y al "Liquid Glass" oscuro original; ninguno de los dos se debe
-reintroducir. Las capturas de `.impeccable/` corresponden al sistema anterior.
+reintroducir.
+
+## Hero oscuro
+
+- `.hero-dark` es el único plano oscuro: home (con el visor) y `PageHero` en
+  biblioteca, global y metodología. Redefine `--fg`, `--muted` y `--faint`
+  para que el texto de dentro herede los tonos claros.
+- Aurora: dos degradados radiales índigo/violeta que derivan despacio. Solo se
+  animan mientras el visor de la home está en pantalla; en las páginas
+  interiores quedan quietos.
+- Retícula de 56 px enmascarada alrededor del visor: es el campo de tiro del
+  visor, no un fondo de página. No se usa fuera del hero.
+- Visor (`HeroScope`): dial con marcas, retícula que se desplaza hacia el
+  puntero y conversiones reales del motor que rotan cada 3,6 s. Se oculta en
+  móviles para que la calculadora quede cerca.
+- La última línea del titular va en `--hero-accent`; nada de texto con degradado.
+
+## Motion
+
+- Momento principal: entrada del visor (escala, giro y desenfoque) y las cifras
+  que ruedan al cambiar de ejemplo; el dial gira 45° por conversión.
+- Continuidad: el resultado de la calculadora rueda dígito a dígito
+  (`RollingNumber`, con el valor real en texto accesible), los selectores
+  segmentados deslizan su indicador y las páginas cambian con
+  `<ViewTransition default="page">` (salida 160 ms, entrada 380 ms) con la
+  cabecera y la navegación inferior ancladas.
+- El contenido del hero se aleja con `animation-timeline: view()` mientras la
+  calculadora sube; sin soporte, no pasa nada.
+- Curva `--ease` (cubic-bezier(0.16, 1, 0.3, 1)); sin rebotes.
+- `prefers-reduced-motion`: sin bucles, sin desplazamientos, sin rotación del
+  visor; las páginas solo funden y los números cambian sin rodar.
 
 ## Colors
 
@@ -78,9 +117,9 @@ reintroducir. Las capturas de `.impeccable/` corresponden al sistema anterior.
   `--shadow-md` y `rounded-2xl`.
 - Radios: 6 px (código, chips pequeños), 8 px (botones, inputs), 12 px
   (tarjetas), 16 px (paneles principales), pill (badges, eyebrow).
-- Sin degradados de color salvo el lavado índigo muy tenue detrás del hero
-  (`.page-backdrop`). El desenfoque solo se usa en la cabecera fija y la
-  navegación inferior.
+- Sin degradados de color fuera del hero oscuro. El desenfoque solo se usa en
+  la cabecera fija, la navegación inferior, la entrada del visor y la
+  transición de página.
 
 ## Components
 
@@ -107,3 +146,5 @@ Don't:
 - Añadir un segundo color de marca o usar el índigo como relleno decorativo.
 - Volver a mayúsculas mono, esquinas a 0 px o al amarillo de señal.
 - Usar cristal, glow o sombras grandes.
+- Poner etiquetas o «eyebrows» encima de los titulares: el titular habla solo.
+- Repetir una misma animación de entrada en cada sección.

@@ -5,6 +5,7 @@ import { conversionMethods } from "@/lib/conversion/engine";
 import { fovScaleLabels } from "@/lib/conversion/fov";
 import { games } from "@/lib/games/registry";
 import { formatMeasure } from "@/lib/format";
+import { PageHero } from "@/components/layout/page-hero";
 
 export const metadata: Metadata = {
   title: "Metodología y límites",
@@ -45,22 +46,15 @@ export default function MethodologyPage() {
   const pending = games.filter((game) => game.verification === "pending");
 
   return (
-    <div className="site-container pt-8 sm:pt-10">
-      <header className="grid gap-5 border-b border-[var(--line)] pb-5 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] md:items-end">
-        <div>
-          <p className="label">Metodología</p>
-          <h1 className="display mt-2 text-[clamp(2.2rem,5vw,3.6rem)]">
-            Matemáticas claras,
-            <br />
-            límites claros.
-          </h1>
-        </div>
-        <p className="max-w-md text-[0.88rem] leading-relaxed text-[var(--muted)] md:justify-self-end">
+    <>
+      <PageHero lines={["Matemáticas claras,", "límites claros."]}>
+        <p>
           Esta herramienta convierte la distancia física de un giro de 360°. No
           promete que dos juegos se sientan idénticos, porque no es cierto. Aquí
           está exactamente qué calculamos, qué asumimos y qué no.
         </p>
-      </header>
+      </PageHero>
+      <div className="site-container pt-8 sm:pt-10">
 
       <div className="mt-6 grid gap-4 lg:grid-cols-[1.5fr_0.5fr]">
         <section
@@ -419,5 +413,6 @@ export default function MethodologyPage() {
         </Link>
       </section>
     </div>
+    </>
   );
 }

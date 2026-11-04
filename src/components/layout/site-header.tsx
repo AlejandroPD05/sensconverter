@@ -89,7 +89,7 @@ export function SiteHeader() {
   }, []);
 
   return (
-    <header className="site-header">
+    <header className="site-header" style={{ viewTransitionName: "site-header" }}>
       <div className="site-container flex h-14 items-center justify-between gap-4">
         <Brand />
 
@@ -175,7 +175,11 @@ export function MobileNav() {
   ];
 
   return (
-    <nav className="mobile-nav md:hidden" aria-label="Navegación inferior">
+    <nav
+      className="mobile-nav md:hidden"
+      aria-label="Navegación inferior"
+      style={{ viewTransitionName: "mobile-nav" }}
+    >
       {items.map((item) => {
         const Icon = item.icon;
         return (

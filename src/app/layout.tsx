@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { ViewTransition } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteHeader, MobileNav } from "@/components/layout/site-header";
@@ -70,7 +71,7 @@ export default function RootLayout({
         </a>
         <SiteHeader />
         <main id="main" className="relative z-10">
-          {children}
+          <ViewTransition default="page">{children}</ViewTransition>
         </main>
         <SiteFooter />
         <MobileNav />

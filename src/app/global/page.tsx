@@ -3,6 +3,7 @@ import Link from "next/link";
 import { GlobalConverter } from "@/components/global/global-converter";
 import { getProfile } from "@/lib/db/profiles";
 import { getCurrentUser } from "@/lib/supabase/server";
+import { PageHero } from "@/components/layout/page-hero";
 
 export const metadata: Metadata = {
   title: "Sensibilidad global cm/360",
@@ -33,23 +34,16 @@ export default async function GlobalPage() {
   const profile = user ? await getProfile(user.id) : null;
 
   return (
-    <div className="site-container pt-8 sm:pt-10">
-      <header className="grid gap-5 border-b-2 border-[var(--line)] pb-5 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] md:items-end">
-        <div>
-          <p className="label">Referencia física</p>
-          <h1 className="display mt-2 text-[clamp(2.2rem,5vw,3.6rem)]">
-            Tu punto de partida
-            <br />
-            es el movimiento.
-          </h1>
-        </div>
-        <p className="max-w-md text-[0.88rem] leading-relaxed text-[var(--muted)] md:justify-self-end">
+    <>
+      <PageHero lines={["Tu punto de partida", "es el movimiento."]}>
+        <p>
           El cm/360 es la distancia que recorre el ratón para girar 360°. Sirve
           como referencia entre juegos porque no depende del slider de cada
           título. Un mismo cm/360 no garantiza la misma sensación: el FOV, el
           zoom y los multiplicadores también importan.
         </p>
-      </header>
+      </PageHero>
+      <div className="site-container pt-8 sm:pt-10">
 
       <div className="mt-6">
         <GlobalConverter
@@ -97,5 +91,6 @@ export default async function GlobalPage() {
         </Link>
       </section>
     </div>
+    </>
   );
 }

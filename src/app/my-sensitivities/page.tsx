@@ -15,7 +15,6 @@ export default async function MySensitivitiesPage() {
   if (!isSupabaseConfigured) {
     return (
       <div className="site-container max-w-3xl pt-8 sm:pt-10">
-        <p className="label">Tu biblioteca</p>
         <h1 className="display mt-2 text-[clamp(2rem,4.5vw,3rem)]">
           Mis sensibilidades
         </h1>
@@ -59,7 +58,6 @@ export default async function MySensitivitiesPage() {
     <div className="site-container pt-8 sm:pt-10">
       <header className="flex flex-wrap items-end justify-between gap-4 border-b-2 border-[var(--line)] pb-5">
         <div className="min-w-0">
-          <p className="label">Tu biblioteca</p>
           <h1 className="display mt-2 text-[clamp(2rem,5vw,3.2rem)]">
             Mis sensibilidades
           </h1>

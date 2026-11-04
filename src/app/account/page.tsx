@@ -55,7 +55,6 @@ export default async function AccountPage() {
   if (!isSupabaseConfigured) {
     return (
       <div className="site-container max-w-3xl pt-8 sm:pt-10">
-        <p className="label">Cuenta</p>
         <h1 className="display mt-2 text-[clamp(2rem,4.5vw,3rem)]">Mi cuenta</h1>
         <p className="mt-2 text-sm text-[var(--muted)]">
           El registro es opcional y requiere configurar Supabase.
@@ -113,7 +112,6 @@ export default async function AccountPage() {
             {initial}
           </span>
           <div className="min-w-0">
-            <p className="label">Cuenta</p>
             <h1 className="mt-1 text-[clamp(1.6rem,4vw,2.2rem)] font-semibold leading-none tracking-[-0.03em]">
               {displayName}
             </h1>

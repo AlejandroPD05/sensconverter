@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowDown, ArrowRight, ArrowUpRight } from "lucide-react";
 import { Calculator } from "@/components/calculator/calculator";
 import { GlobalConverter } from "@/components/global/global-converter";
+import { HeroScope } from "@/components/home/hero-scope";
 import { games } from "@/lib/games/registry";
 import { getProfile } from "@/lib/db/profiles";
 import { getCurrentUser } from "@/lib/supabase/server";
@@ -40,68 +41,58 @@ export default async function HomePage({
 
   return (
     <div className="relative">
-    <div className="page-backdrop" aria-hidden="true" />
-    <div className="site-container relative pt-10 sm:pt-16">
-      {accountDeleted ? (
-        <p className="callout callout-success mb-6 text-sm" role="status">
-          Tu cuenta y tus perfiles se han eliminado. La calculadora sigue
-          disponible sin registro.
-        </p>
-      ) : null}
-      <section className="grid items-start gap-8 lg:grid-cols-[1.4fr_0.6fr]">
-        <div className="animate-fade-up">
-          <span className="eyebrow">
-            <span className="size-1.5 rounded-full bg-[var(--success)]" aria-hidden="true" />
-            {verified} juegos con fórmula verificada
-          </span>
-          <h1 className="display mt-5 text-[clamp(2.5rem,5.6vw,4rem)]">
-            La misma mano,
-            <br />
-            otro juego.
-          </h1>
-          <p className="mt-4 max-w-xl text-[0.95rem] leading-relaxed text-[var(--muted)]">
-            Convierte tu sensibilidad entre CS2, VALORANT, Apex y otros
-            shooters con el cm/360 como referencia física. Fórmulas
-            documentadas, sin registro y sin prometer una precisión que el
-            juego no permite.
-          </p>
-          <div className="mt-6 flex flex-wrap items-center gap-2">
-            <Link href="#calculator" className="btn btn-primary">
-              Convertir ahora
-              <ArrowDown className="size-4" aria-hidden="true" />
-            </Link>
-            <Link href="/games" className="btn btn-secondary">
-              Ver los juegos
-            </Link>
+      <section className="hero-dark" aria-labelledby="hero-title">
+        <div className="hero-aurora" aria-hidden="true" />
+        <div className="site-container hero-recede grid items-center gap-10 pb-36 pt-14 sm:pt-20 lg:grid-cols-[1.15fr_0.85fr] lg:pb-44">
+          <div>
+            <h1 id="hero-title" className="hero-title">
+              <span className="reveal-line">
+                <span>La misma mano,</span>
+              </span>
+              <span className="reveal-line">
+                <span className="text-[var(--hero-accent)]">otro juego.</span>
+              </span>
+            </h1>
+            <div className="hero-fade">
+              <p className="hero-lede mt-6 max-w-xl text-base leading-relaxed sm:text-lg">
+                Convierte tu sensibilidad entre CS2, VALORANT, Apex y otros
+                shooters con el cm/360 como referencia física. Fórmulas
+                documentadas, sin registro y sin prometer una precisión que el
+                juego no permite.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <Link href="#calculator" className="btn btn-primary">
+                  Convertir ahora
+                  <ArrowDown className="size-4" aria-hidden="true" />
+                </Link>
+                <Link href="/games" className="btn btn-hero-secondary">
+                  Ver los juegos
+                </Link>
+              </div>
+              <p className="hero-lede mt-8 text-xs">
+                <span className="mono text-[var(--hero-fg)]">{verified}</span> juegos
+                verificados ·{" "}
+                <span className="mono text-[var(--hero-fg)]">{experimental}</span>{" "}
+                experimental ·{" "}
+                <span className="mono text-[var(--hero-fg)]">{pending}</span> pendientes de
+                fórmula
+              </p>
+            </div>
+          </div>
+          <div className="hidden sm:block">
+            <HeroScope />
           </div>
         </div>
-
-        <dl className="fact-list animate-fade-up hidden lg:grid">
-          <div>
-            <dt className="label">Juegos verificados</dt>
-            <dd className="mono text-lg font-semibold">
-              {verified}
-              <span className="ml-1 text-xs font-normal text-[var(--faint)]">
-                de {games.length}
-              </span>
-            </dd>
-          </div>
-          <div>
-            <dt className="label">Experimentales</dt>
-            <dd className="mono text-lg font-semibold">{experimental}</dd>
-          </div>
-          <div>
-            <dt className="label">Pendientes de fórmula</dt>
-            <dd className="mono text-lg font-semibold">{pending}</dd>
-          </div>
-          <div>
-            <dt className="label">Cuenta</dt>
-            <dd className="text-lg font-semibold">Opcional</dd>
-          </div>
-        </dl>
       </section>
 
-      <div id="calculator" className="scroll-mt-28 pt-8 sm:pt-10">
+      <div className="site-container relative z-10 -mt-24 lg:-mt-32">
+        {accountDeleted ? (
+          <p className="callout callout-success mb-6 text-sm" role="status">
+            Tu cuenta y tus perfiles se han eliminado. La calculadora sigue
+            disponible sin registro.
+          </p>
+        ) : null}
+      <div id="calculator" className="scroll-mt-24">
         <Calculator
           canSave={Boolean(user)}
           initial={{

@@ -15,7 +15,7 @@
 - Supabase Auth + Postgres con RLS (`@supabase/ssr`), Zod para validación.
 - Vitest (unitarias) y Playwright (E2E: Chromium de escritorio y Pixel 7).
 - npm como gestor de paquetes. Entorno Windows/PowerShell.
-- La estética es una herramienta SaaS clara: fondo blanco, grises zinc, un único acento índigo, Geist + Geist Mono (solo números), radios de 6–16 px y tarjetas con borde fino. `DESIGN.md` es el documento normativo del sistema; `src/app/globals.css` es la implementación. Son anti-referencia tanto la "hoja de retransmisión" (papel hueso, amarillo de señal, mayúsculas mono, esquinas a 0 px) como el "Liquid Glass" oscuro original.
+- La estética es una herramienta SaaS en dos planos: hero oscuro (aurora índigo, visor de mira en la home) y aplicación clara (blanco, zinc, un único acento índigo, Geist + Geist Mono solo para números, radios de 6–16 px, tarjetas de borde fino). Animaciones: cifras que ruedan, segmentados deslizantes, ViewTransition entre páginas; todo con versión `prefers-reduced-motion`. `DESIGN.md` es el documento normativo del sistema; `src/app/globals.css` es la implementación. Son anti-referencia tanto la "hoja de retransmisión" (papel hueso, amarillo de señal, mayúsculas mono, esquinas a 0 px) como el "Liquid Glass" oscuro original.
 
 ## Reglas que un agente suele romper
 
