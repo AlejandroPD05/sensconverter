@@ -19,6 +19,9 @@ Actualizado: 04/11/2026.
 - [x] **Fase 12b — FOV y resolución a la vista.** Cada lado de la calculadora muestra resolución (ancho × alto) y FOV del juego junto al DPI, con el FOV real resultante; origen y destino pueden tener resoluciones distintas. La distancia de monitor (eje y porcentaje) aparece solo al elegir ese método.
 - [x] **Donaciones.** Enlace a Ko-fi (`https://ko-fi.com/alejandroprietodiez`) en el pie y en la cabecera de escritorio, configurado en `donation.url` de `src/lib/brand.ts` (null lo oculta).
 - [x] **Fase 13 — Lavado de cara 2026.** Hero oscuro con aurora índigo y visor de mira que rota conversiones reales del motor (se oculta en móvil); cabeceras oscuras compartidas (`PageHero`) en biblioteca, global y metodología; resultado con cifras que ruedan; selectores segmentados con indicador deslizante; transiciones entre páginas con `ViewTransition`; el hero se aleja al hacer scroll (`animation-timeline: view()`). Sin eyebrows sobre los titulares. Todo respeta `prefers-reduced-motion` y los bucles se pausan fuera de pantalla.
+- [x] **Revisión de seguridad** (`SECURITY.md`): CSP y cabeceras de seguridad, sin `X-Powered-By`, funciones de BD con `search_path` fijo y límite de 200 perfiles por cuenta (migración 0004).
+- [x] Migración `0004_hardening.sql` aplicada en el proyecto real (04/11/2026); las cuatro funciones de `public` tienen `search_path` vacío.
+- [ ] Supabase Auth: contraseña mínima de 8+ y protección contra contraseñas filtradas (lo decide el propietario).
 
 ## Verificación real
 
@@ -26,9 +29,9 @@ Actualizado: 04/11/2026.
 | --- | --- |
 | `npm run lint` | Sin errores |
 | `npm run typecheck` | Sin errores |
-| `npm test` | 35/35 |
+| `npm test` | 46/46 |
 | `npm run build` | Correcto |
-| `npm run test:e2e` | 41/41 (incluye miras de TF2 y Viewspeed desactivado; incluye cuenta, RLS entre usuarios, aviso de enlace fallido y servidor sin Supabase; escritorio y móvil) |
+| `npm run test:e2e` | 45/45 (incluye cabeceras de seguridad y redirección del callback; incluye miras de TF2 y Viewspeed desactivado; incluye cuenta, RLS entre usuarios, aviso de enlace fallido y servidor sin Supabase; escritorio y móvil) |
 | Revisión visual 390 / 768 / 1440 | Sin desbordamiento horizontal de página; navegación inferior solo en móvil |
 
 La revisión visual corrigió tres defectos reales: la navegación inferior se mostraba también en escritorio, la cabecera duplicaba el acceso a cuenta en móvil y las tarjetas de la biblioteca y el aviso de configuración desbordaban en pantallas estrechas. Las clases de componente se movieron a `@layer components` para que las utilidades de Tailwind puedan ocultarlas o limitarlas.

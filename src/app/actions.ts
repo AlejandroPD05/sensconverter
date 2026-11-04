@@ -28,6 +28,17 @@ function dbError(): ActionResult {
   };
 }
 
+// The database caps each account at 200 profiles (migration 0004).
+function insertError(error: { code?: string }): ActionResult {
+  if (error.code === "P0001") {
+    return {
+      ok: false,
+      message: "Has llegado al máximo de 200 perfiles. Elimina alguno para guardar más.",
+    };
+  }
+  return dbError();
+}
+
 export async function saveCalculatorProfile(raw: unknown): Promise<ActionResult> {
   const parsed = saveCalculatorSchema.safeParse(raw);
   if (!parsed.success) {
@@ -76,7 +87,7 @@ export async function saveCalculatorProfile(raw: unknown): Promise<ActionResult>
     is_preferred: false,
   });
 
-  if (error) return dbError();
+  if (error) return insertError(error);
 
   revalidatePath("/my-sensitivities");
   return { ok: true, message: "Perfil guardado. Puedes verlo en Mis sensibilidades." };
@@ -277,7 +288,7 @@ export async function duplicateSensitivityProfile(id: string): Promise<ActionRes
     is_preferred: false,
   });
 
-  if (error) return dbError();
+  if (error) return insertError(error);
 
   revalidatePath("/my-sensitivities");
   return { ok: true, message: "Perfil duplicado." };

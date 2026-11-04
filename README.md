@@ -54,7 +54,7 @@ La calculadora y la biblioteca funcionan sin crear `.env.local`. Las páginas de
 | `npm start` | Sirve el build de producción |
 | `npm run lint` | ESLint |
 | `npm run typecheck` | `tsc --noEmit` |
-| `npm test` | Vitest, 35 pruebas unitarias |
+| `npm test` | Vitest, 46 pruebas unitarias |
 | `npm run test:watch` | Vitest en modo watch |
 | `npm run test:e2e` | Playwright: escritorio, móvil y un servidor sin Supabase |
 
@@ -246,8 +246,8 @@ Comprobado en este repositorio:
 
 - `npm run lint`: sin errores.
 - `npm run typecheck`: sin errores.
-- `npm test`: 35 pruebas superadas.
+- `npm test`: 46 pruebas superadas.
 - `npm run build`: build de producción correcto.
-- `npm run test:e2e`: 41 superadas. Incluye cuenta, RLS entre usuarios, Chromium de escritorio, Pixel 7 y la app sin credenciales de Supabase.
+- `npm run test:e2e`: 45 superadas. Incluye cuenta, RLS entre usuarios, Chromium de escritorio, Pixel 7 y la app sin credenciales de Supabase.
 
 Las pruebas autenticadas se omiten si no hay proyecto Supabase o usuario de prueba; las omitidas no cuentan como aprobadas.

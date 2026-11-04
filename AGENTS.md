@@ -46,8 +46,8 @@ npm install
 npm run dev          # http://localhost:3000
 npm run lint
 npm run typecheck
-npm test             # Vitest: 35 pruebas
-npm run test:e2e     # Playwright: 41 pruebas (escritorio, móvil y sin Supabase)
+npm test             # Vitest: 46 pruebas
+npm run test:e2e     # Playwright: 45 pruebas (escritorio, móvil y sin Supabase)
 npm run build        # incluye TypeScript; no hace falta tsc aparte
 npm start            # sirve el build de producción
 ```
@@ -65,6 +65,7 @@ npx playwright test tests/e2e/calculator.spec.ts --project=chromium
 - Las pruebas autenticadas necesitan Supabase migrado y `TEST_USER_EMAIL` / `TEST_USER_PASSWORD`; `playwright.config.ts` carga `.env.local` y usa un solo worker cuando hay usuario de prueba.
 - `test:e2e` arranca dos servidores: el normal en 3100 y otro en 3101 sin credenciales de Supabase (`NEXT_DIST_DIR=.next-e2e-sin-supabase`, variables con valor no válido para que Next no las lea de `.env.local`). Tras ejecutarlo, `next-env.d.ts` puede apuntar a esa carpeta; el siguiente `npm run dev` lo regenera. Las rutas de esa carpeta ya están en `tsconfig.json`.
 - La migración 0003 ya está aplicada en el proyecto real; la prueba de `delete_own_account` solo se omite contra un proyecto sin ella.
+- `SECURITY.md` recoge la revisión de seguridad. Las cabeceras (CSP, anti-iframe…) viven en `next.config.ts`; si añades un origen externo (analítica, imágenes, scripts), amplía la CSP o se bloqueará. La migración 0004 (search_path y límite de 200 perfiles) ya está aplicada en el proyecto real.
 - Las clases de componente de `globals.css` viven en `@layer components` para que las utilidades de Tailwind (`md:hidden`, `min-w-0`, `pr-14`…) puedan sobrescribirlas. No las devuelvas al CSS sin capa.
 - Playwright inyecta `caret-color: transparent` al hacer capturas. Si la captura ocurre antes de hidratar, React avisa de un `style` distinto; es un artefacto del test, no de la app.
 
