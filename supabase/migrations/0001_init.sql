@@ -1,4 +1,4 @@
--- SensiCore — initial schema
+-- SensConverter — initial schema
 -- Run this in the Supabase SQL editor or with `supabase db push`.
 
 create extension if not exists pgcrypto;

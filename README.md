@@ -1,10 +1,10 @@
-# SensiCore
+# SensConverter
 
 Conversor de sensibilidad de ratón entre juegos, con el **cm/360** como referencia física. La calculadora funciona al 100 % sin cuenta y sin Supabase. Las cuentas son opcionales y solo añaden guardado y sincronización.
 
 **En producción:** https://sensicore-zeta.vercel.app
 
-> **Nombre provisional.** «SensiCore» está centralizado en `src/lib/brand.ts` para poder cambiarlo sin tocar la UI.
+> El nombre (antes «SensiCore») está centralizado en `src/lib/brand.ts`. La URL de Vercel conserva el nombre antiguo.
 
 ## Qué incluye
 

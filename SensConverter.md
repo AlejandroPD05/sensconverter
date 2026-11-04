@@ -6,7 +6,7 @@ Act as a senior full-stack developer, software architect, UIUX designer, and tes
 
 Build a production-oriented web application for converting mouse sensitivity between FPS and other supported video games, inspired by the functionality of httpswww.mouse-sensitivity.com but with a substantially more modern interface, better usability, and a distinctive "broadcast data sheet" visual identity.
 
-The working project name is SensiCore. Keep the name, logo, colors, and branding easy to change later.
+The product name is SensConverter (formerly the working name SensiCore). Keep the name, logo, colors, and branding centralized.
 
 The application must allow anyone to use the main sensitivity calculator without registering, logging in, or providing personal information. User accounts must be an optional extension that unlocks cloud-saved configurations and personal profiles.
 

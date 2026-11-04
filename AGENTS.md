@@ -1,4 +1,4 @@
-# AGENTS.md — SensConverter (SensiCore)
+# AGENTS.md — SensConverter
 
 ## Estado del repo
 
@@ -28,7 +28,7 @@
 - El FOV se guarda en las unidades de cada juego (`fov.scale`) y se convierte con `lib/conversion/fov.ts`; las miras solo existen si el juego declara `zoom` con fuente. Viewspeed está desactivado a propósito: no hay fórmula pública verificable.
 - RLS activado en tablas de usuario; nunca confiar en un user ID enviado por el cliente.
 - Los inputs de DPI usan `step={1}`. No vuelvas a `step={50}` con `min={1}`: hace que 800 o 1600 sean valores HTML inválidos y bloquea el envío de los formularios.
-- El nombre "SensiCore" es provisional: mantén marca, logo y colores centralizados/fáciles de cambiar.
+- El nombre del producto es SensConverter (antes SensiCore). Marca, logo y colores siguen centralizados en `src/lib/brand.ts` y `globals.css`. La URL de Vercel (`sensicore-zeta`) y la clave de `localStorage` (`sensicore.global.v1`) conservan el nombre antiguo a propósito: cambiarlas rompe enlaces o borra preferencias guardadas.
 
 ## Convenciones de la spec
 

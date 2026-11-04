@@ -1,5 +1,5 @@
 ---
-name: SensiCore
+name: SensConverter
 description: Herramienta web clara y limpia para convertir sensibilidad entre juegos.
 colors:
   bg: "#ffffff"
@@ -31,7 +31,7 @@ radii:
   pill: 999px
 ---
 
-# Design System: SensiCore
+# Design System: SensConverter
 
 ## Overview
 

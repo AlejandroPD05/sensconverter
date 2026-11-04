@@ -1,4 +1,4 @@
-# PROGRESS — SensiCore
+# PROGRESS — SensConverter
 
 Actualizado: 04/11/2026.
 

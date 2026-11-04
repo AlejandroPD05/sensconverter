@@ -1,4 +1,4 @@
--- SensiCore — one preferred profile per game.
+-- SensConverter — one preferred profile per game.
 -- Apply after 0001_init.sql.
 
 alter table public.sensitivity_profiles

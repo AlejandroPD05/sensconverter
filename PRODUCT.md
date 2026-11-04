@@ -39,7 +39,7 @@ Cada juego declara su constante de yaw y su fuente; lo que no está verificado s
 - No se inventan constantes, fórmulas, compatibilidades ni precisión. El redondeo se explica y se ajusta a los decimales que acepta cada juego.
 - Entradas validadas; nunca se muestra `NaN` ni `Infinity`.
 - Requisitos: `prefers-reduced-motion`, foco visible, etiquetas accesibles y anuncio de resultados.
-- Nombre «SensiCore» provisional y centralizado en `src/lib/brand.ts`.
+- Nombre: SensConverter (antes SensiCore), centralizado en `src/lib/brand.ts`.
 
 ## Brand Commitments
 

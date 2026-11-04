@@ -1,4 +1,4 @@
--- SensiCore — the signed-in user can delete their own account.
+-- SensConverter — the signed-in user can delete their own account.
 -- Apply after 0002_preferred_profile.sql (SQL Editor or `supabase db push`).
 --
 -- Runs as the function owner (postgres) so it can remove the row from

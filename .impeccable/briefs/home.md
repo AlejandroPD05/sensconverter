@@ -19,7 +19,7 @@
 
 ## Decisiones abiertas
 
-- Ninguna bloqueante. Si el nombre «SensiCore» cambia, los tokens y el logo están centralizados.
+- Ninguna bloqueante. El nombre pasó de «SensiCore» a «SensConverter»; tokens y logo siguen centralizados.
 
 ## Direction contract (histórico)
 
