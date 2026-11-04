@@ -247,6 +247,6 @@ Comprobado en este repositorio:
 - `npm run typecheck`: sin errores.
 - `npm test`: 24 pruebas superadas.
 - `npm run build`: build de producción correcto.
-- `npm run test:e2e`: 31 superadas y 2 omitidas (la comprobación de `delete_own_account` hasta aplicar la migración 0003). Incluye cuenta, RLS entre usuarios, Chromium de escritorio, Pixel 7 y la app sin credenciales de Supabase.
+- `npm run test:e2e`: 33 superadas. Incluye cuenta, RLS entre usuarios, Chromium de escritorio, Pixel 7 y la app sin credenciales de Supabase.
 
 Las pruebas autenticadas se omiten si no hay proyecto Supabase o usuario de prueba; las omitidas no cuentan como aprobadas.

@@ -24,7 +24,7 @@ Actualizado: 04/11/2026.
 | `npm run typecheck` | Sin errores |
 | `npm test` | 24/24 |
 | `npm run build` | Correcto |
-| `npm run test:e2e` | 31 superadas, 2 omitidas (incluye cuenta, RLS entre usuarios, aviso de enlace fallido y servidor sin Supabase; escritorio y móvil). Las omitidas son la comprobación de `delete_own_account` hasta aplicar la migración 0003 |
+| `npm run test:e2e` | 33/33 (incluye cuenta, RLS entre usuarios, aviso de enlace fallido y servidor sin Supabase; escritorio y móvil) |
 | Revisión visual 390 / 768 / 1440 | Sin desbordamiento horizontal de página; navegación inferior solo en móvil |
 
 La revisión visual corrigió tres defectos reales: la navegación inferior se mostraba también en escritorio, la cabecera duplicaba el acceso a cuenta en móvil y las tarjetas de la biblioteca y el aviso de configuración desbordaban en pantallas estrechas. Las clases de componente se movieron a `@layer components` para que las utilidades de Tailwind puedan ocultarlas o limitarlas.
@@ -39,14 +39,14 @@ El aviso de hidratación sobre `caret-color: transparent` no procede de la app: 
 - [ ] **Rotar o revocar la secret key que se compartió por chat.** La app no la usa y no está guardada en el repositorio ni en `.env.local`.
 - [x] Flujo de correo verificado en todo lo que controla la app: la petición de recuperación envía `code_challenge` S256, `/auth/callback` canjea el código, `/reset-password` acepta la sesión, cambia la contraseña y permite iniciar sesión con la nueva.
 - [ ] Envío real de correo: depende de configurar Custom SMTP y un buzón real. Con `example.com` GoTrue responde `email_address_invalid`; con el servicio compartido, `over_email_send_rate_limit`.
-- [ ] Verificar en el despliegue que el origen exacto está en **Redirect URLs**, si no los enlaces acaban en `/login?error=auth_callback`.
+- [x] Site URL `https://sensicore-zeta.vercel.app` y Redirect URLs (incluido `/auth/callback` de producción) comprobados el 04/11/2026.
 - [x] Inicializar Git y hacer el primer commit.
 - [x] Desplegar en Vercel y configurar Site URL y Redirect URLs del proyecto Supabase real.
 - [ ] Añadir juegos pendientes solo cuando exista una constante documentada y contrastada.
 - [ ] Valorar ADS/scope y aspect ratio cuando haya fórmulas verificadas; hoy se declaran fuera de alcance.
 - [x] Borrado de cuenta seguro implementado sin service-role key (función `security definer` que solo borra `auth.uid()`).
-- [ ] **Aplicar `supabase/migrations/0003_delete_own_account.sql` en el proyecto real** (SQL Editor o `supabase db push`). Hasta entonces el botón avisa de que falta la migración. No se probó el borrado real de extremo a extremo para no eliminar el usuario de prueba.
-- [ ] Redesplegar en Vercel: la versión publicada no incluye las fases 10 y 11.
+- [x] Migración `0003_delete_own_account.sql` aplicada en el proyecto real (SQL Editor, 04/11/2026); la clave anónima no puede ejecutar la función. No se probó el borrado real de extremo a extremo para no eliminar el usuario de prueba.
+- [x] Redesplegado en Vercel con las fases 10 y 11.
 
 ## Notas de la última pasada
 

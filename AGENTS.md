@@ -63,7 +63,7 @@ npx playwright test tests/e2e/calculator.spec.ts --project=chromium
 - `NEXT_PUBLIC_SUPABASE_*` se incrusta en build. Si faltan al compilar, las páginas de cuenta quedan estáticas con el aviso de configuración.
 - Las pruebas autenticadas necesitan Supabase migrado y `TEST_USER_EMAIL` / `TEST_USER_PASSWORD`; `playwright.config.ts` carga `.env.local` y usa un solo worker cuando hay usuario de prueba.
 - `test:e2e` arranca dos servidores: el normal en 3100 y otro en 3101 sin credenciales de Supabase (`NEXT_DIST_DIR=.next-e2e-sin-supabase`, variables con valor no válido para que Next no las lea de `.env.local`). Tras ejecutarlo, `next-env.d.ts` puede apuntar a esa carpeta; el siguiente `npm run dev` lo regenera. Las rutas de esa carpeta ya están en `tsconfig.json`.
-- La prueba de `delete_own_account` se omite mientras la migración 0003 no esté aplicada en el proyecto real.
+- La migración 0003 ya está aplicada en el proyecto real; la prueba de `delete_own_account` solo se omite contra un proyecto sin ella.
 - Las clases de componente de `globals.css` viven en `@layer components` para que las utilidades de Tailwind (`md:hidden`, `min-w-0`, `pr-14`…) puedan sobrescribirlas. No las devuelvas al CSS sin capa.
 - Playwright inyecta `caret-color: transparent` al hacer capturas. Si la captura ocurre antes de hidratar, React avisa de un `style` distinto; es un artefacto del test, no de la app.
 
