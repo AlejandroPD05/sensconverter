@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AlertTriangle,
   ArrowLeftRight,
@@ -12,7 +12,6 @@ import {
   RotateCcw,
   Save,
   Share2,
-  Sparkles,
 } from "lucide-react";
 import { GameSelect } from "@/components/games/game-select";
 import { NumberField } from "@/components/ui/number-field";
@@ -32,6 +31,7 @@ import {
 import type { GameDefinition } from "@/lib/games/types";
 import { cn } from "@/lib/cn";
 import { formatMeasure, formatSensitivity, parseDecimal } from "@/lib/format";
+import { publishLiveReadout } from "@/lib/live-readout";
 import { saveCalculatorProfile } from "@/app/actions";
 
 const convertibleGames = getConvertibleGames();
@@ -106,6 +106,32 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
   });
 
   const result = outcome.ok ? outcome : null;
+
+  // La franja del encabezado lee este resultado. Se publica tras cada render
+  // y se limpia al desmontar la calculadora.
+  useEffect(() => {
+    if (!result) {
+      publishLiveReadout(null);
+      return;
+    }
+    publishLiveReadout({
+      sourceShort: result.sourceGame.shortName,
+      sourceSensitivity: formatSensitivity(
+        result.sourceSensitivity,
+        result.sourceGame.sensitivity.decimals,
+      ),
+      sourceDpi: result.sourceDpi,
+      targetShort: result.targetGame.shortName,
+      targetSensitivity: formatSensitivity(
+        result.targetSensitivityRounded,
+        result.targetGame.sensitivity.decimals,
+      ),
+      cm360: result.sourceCm360,
+      edpi: result.sourceEdpi,
+    });
+  });
+
+  useEffect(() => () => publishLiveReadout(null), []);
 
   function fieldError(field: string): string | undefined {
     if (!outcome.ok && outcome.error.field === field) {
@@ -216,35 +242,55 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
     (item) => item.id === activeMethod,
   );
   const methodDisabled = selectedAvailability?.available === false;
+  const resultValue = result
+    ? formatSensitivity(
+        result.targetSensitivityRounded,
+        result.targetGame.sensitivity.decimals,
+      )
+    : "—";
 
   return (
     <section
-      className="glass overflow-visible p-3 sm:p-4 lg:p-5"
+      className="border border-[var(--ink)] bg-[var(--paper-raise)]"
       aria-labelledby="calculator-title"
       data-testid="calculator"
     >
-      <div className="flex flex-wrap items-center justify-between gap-3 px-1 pb-4 pt-1">
-        <div>
-          <p className="eyebrow">
-            <Sparkles className="size-3.5" aria-hidden="true" />
-            Conversión en vivo
-          </p>
-          <h2 id="calculator-title" className="mt-1 text-lg font-semibold tracking-[-0.02em]">
-            De tu juego actual al siguiente
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--ink)] px-4 py-2.5 sm:px-5">
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <h2
+            id="calculator-title"
+            className="text-[0.78rem] font-bold uppercase tracking-[0.08em]"
+          >
+            Conversión
           </h2>
+          <span className="mono text-[0.6rem] uppercase tracking-[0.06em] text-[var(--faint)]">
+            en vivo · cm/360
+          </span>
         </div>
         <span className="badge badge-accent mono">
-          {activeMethod === "cm360" ? "360°" : activeMethod === "fov-aware" ? "FOV" : activeMethod === "monitor-distance" ? `${monitorDistance || "0"}% monitor` : activeMethod}
+          {activeMethod === "cm360"
+            ? "360°"
+            : activeMethod === "fov-aware"
+              ? "FOV"
+              : activeMethod === "monitor-distance"
+                ? `${monitorDistance || "0"}% monitor`
+                : activeMethod}
         </span>
       </div>
 
-      <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:items-stretch">
-        <div className="glass-inset flex flex-col gap-4 p-4 sm:p-5">
-          <div className="flex items-center justify-between">
-            <span className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--faint)]">
-              01 · Origen
+      <div className="grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
+        <div className="flex flex-col gap-4 p-4 sm:p-5">
+          <div className="flex items-center justify-between gap-2 border-b border-[var(--line)] pb-2">
+            <span className="label">Origen</span>
+            <span
+              className={
+                sourceGame.verification === "verified"
+                  ? "badge badge-success"
+                  : "badge badge-warning"
+              }
+            >
+              {sourceGame.verification === "verified" ? "Verificado" : "Experimental"}
             </span>
-            <span className="badge">{sourceGame.verification === "verified" ? "Verificado" : "Experimental"}</span>
           </div>
 
           <GameSelect
@@ -279,28 +325,31 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
           />
         </div>
 
-        <div className="flex items-center justify-center lg:flex-col">
+        <div className="flex items-center justify-center border-y border-[var(--line)] p-2 lg:border-x lg:border-y-0">
           <button
             type="button"
             onClick={swap}
             disabled={!result}
-            className="btn btn-secondary btn-icon size-11 rounded-full"
+            className="btn btn-secondary btn-icon"
             aria-label="Intercambiar juego de origen y destino"
             title="Intercambiar origen y destino"
           >
             <ArrowLeftRight className="size-4 rotate-90 lg:rotate-0" aria-hidden="true" />
           </button>
-          <span className="mx-2 hidden text-[0.58rem] uppercase tracking-[0.2em] text-[var(--faint)] lg:mx-0 lg:mt-2 lg:block">
-            swap
-          </span>
         </div>
 
-        <div className="result-surface flex flex-col gap-4 rounded-[var(--radius-md)] p-4 sm:p-5">
-          <div className="flex items-center justify-between">
-            <span className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[var(--accent)]/80">
-              02 · Destino
+        <div className="flex flex-col gap-4 p-4 sm:p-5">
+          <div className="flex items-center justify-between gap-2 border-b border-[var(--line)] pb-2">
+            <span className="label">Destino</span>
+            <span
+              className={
+                targetGame.verification === "verified"
+                  ? "badge badge-success"
+                  : "badge badge-warning"
+              }
+            >
+              {targetGame.verification === "verified" ? "Verificado" : "Experimental"}
             </span>
-            <span className="badge badge-accent">{targetGame.verification === "verified" ? "Verificado" : "Experimental"}</span>
           </div>
 
           <GameSelect
@@ -310,77 +359,68 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
             onChange={selectTarget}
           />
 
-          <div className="rounded-[var(--radius-md)] border border-white/[0.07] bg-black/25 px-4 py-5">
-            <p className="text-[0.7rem] font-medium uppercase tracking-[0.16em] text-[var(--muted)]">
-              Sensibilidad recomendada
-            </p>
-            <div className="mt-1 flex items-end justify-between gap-3">
+          <div className="result-surface p-4 sm:p-5">
+            <div className="flex items-center justify-between gap-2">
+              <p className="mono text-[0.58rem] font-medium uppercase tracking-[0.07em]">
+                Sensibilidad recomendada
+              </p>
+              <span className="mono text-[0.58rem] uppercase tracking-[0.07em]">
+                {targetGame.sensitivity.unit ?? "sens"}
+              </span>
+            </div>
+
+            <div className="mt-1 flex flex-wrap items-end justify-between gap-3">
               <output
-                className="mono block text-[clamp(2.6rem,7vw,4.1rem)] font-semibold leading-none tracking-[-0.055em] text-white"
+                key={resultValue}
+                className="mono result-in block text-[clamp(2.5rem,6.5vw,3.6rem)] font-bold leading-none tracking-[-0.06em]"
                 aria-live="polite"
                 aria-atomic="true"
                 data-testid="target-sensitivity"
               >
-                {result
-                  ? formatSensitivity(
-                      result.targetSensitivityRounded,
-                      result.targetGame.sensitivity.decimals,
-                    )
-                  : "—"}
+                {resultValue}
               </output>
-              <div className="flex flex-col items-end gap-2 pb-1">
-                <span className="text-[0.68rem] text-[var(--faint)]">
-                  {targetGame.sensitivity.unit ?? "sens"}
-                </span>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  disabled={!result}
-                  onClick={() =>
-                    result &&
-                    copyText(
-                      "sens",
-                      formatSensitivity(
-                        result.targetSensitivityRounded,
-                        result.targetGame.sensitivity.decimals,
-                      ),
-                    )
-                  }
-                  aria-label="Copiar sensibilidad de destino"
-                >
-                  {copied === "sens" ? (
-                    <Check className="size-3.5" aria-hidden="true" />
-                  ) : (
-                    <Clipboard className="size-3.5" aria-hidden="true" />
-                  )}
-                  {copied === "sens" ? "Copiada" : "Copiar"}
-                </Button>
-              </div>
+              <Button
+                variant="secondary"
+                size="sm"
+                disabled={!result}
+                onClick={() => result && copyText("sens", resultValue)}
+                aria-label="Copiar sensibilidad de destino"
+              >
+                {copied === "sens" ? (
+                  <Check className="size-3.5" aria-hidden="true" />
+                ) : (
+                  <Clipboard className="size-3.5" aria-hidden="true" />
+                )}
+                {copied === "sens" ? "Copiada" : "Copiar"}
+              </Button>
             </div>
-            <p className="mt-3 text-[0.7rem] leading-relaxed text-[var(--muted)]">
+
+            <CmScale value={result?.sourceCm360 ?? null} />
+
+            <p className="mt-3 text-[0.7rem] leading-relaxed text-[var(--ink)]/75">
               Redondeado a {targetGame.sensitivity.decimals} decimales, la
-              precisión que acepta {targetGame.shortName}. Ajusta el valor exacto
-              en el juego si el slider no coincide.
+              precisión que acepta {targetGame.shortName}. Ajusta el valor
+              exacto en el juego si el slider no coincide.
             </p>
           </div>
 
           <div>
             <div className="field-label">
               <span>DPI de destino</span>
-              <span className="mono text-[0.66rem] font-normal text-[var(--faint)]">
+              <span className="mono text-[0.62rem] font-normal text-[var(--faint)]">
                 {sameDpi ? "mismo que origen" : "personalizado"}
               </span>
             </div>
-            <div className="glass-inset inline-flex w-full items-center gap-1 p-1">
+            <div className="inline-flex w-full border border-[var(--line-strong)]">
               <button
                 type="button"
                 onClick={() => setSameDpi(true)}
                 aria-pressed={sameDpi}
                 className={cn(
-                  "flex-1 rounded-[7px] px-2 py-1.5 text-[0.72rem] font-medium transition-colors",
+                  "flex-1 px-2 py-2 text-[0.72rem] font-semibold transition-colors",
                   sameDpi
-                    ? "bg-white/[0.09] text-white"
-                    : "text-[var(--muted)] hover:text-white",
+                    ? "bg-[var(--ink)] text-[var(--paper)]"
+                    : "text-[var(--muted)] hover:text-[var(--ink)]",
                 )}
               >
                 Usar {dpi || "—"} DPI
@@ -390,10 +430,10 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
                 onClick={() => setSameDpi(false)}
                 aria-pressed={!sameDpi}
                 className={cn(
-                  "flex-1 rounded-[7px] px-2 py-1.5 text-[0.72rem] font-medium transition-colors",
+                  "flex-1 border-l border-[var(--line-strong)] px-2 py-2 text-[0.72rem] font-semibold transition-colors",
                   !sameDpi
-                    ? "bg-white/[0.09] text-white"
-                    : "text-[var(--muted)] hover:text-white",
+                    ? "bg-[var(--ink)] text-[var(--paper)]"
+                    : "text-[var(--muted)] hover:text-[var(--ink)]",
                 )}
               >
                 Personalizado
@@ -417,30 +457,32 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
         </div>
       </div>
 
-      <div className="mt-3 glass-inset p-4 sm:p-5">
+      <div className="border-t border-[var(--ink)] p-4 sm:p-5">
         <fieldset>
-          <legend className="field-label mb-3">
-            <span>Qué quieres conservar</span>
-            <span className="hidden text-[0.66rem] font-normal text-[var(--faint)] sm:inline">
+          <legend className="flex w-full flex-wrap items-baseline justify-between gap-2">
+            <span className="text-[0.78rem] font-bold uppercase tracking-[0.08em]">
+              Qué quieres conservar
+            </span>
+            <span className="hidden text-[0.68rem] text-[var(--faint)] sm:block">
               Los métodos no son intercambiables
             </span>
           </legend>
-          <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-3 grid gap-px bg-[var(--line)] sm:grid-cols-2 xl:grid-cols-4">
             {availability.map(({ method: item, available, reason }) => {
               const checked = activeMethod === item.id;
               return (
                 <label
                   key={item.id}
                   className={cn(
-                    "group relative flex cursor-pointer flex-col gap-1 rounded-[12px] border p-3 transition-colors",
+                    "group relative flex cursor-pointer flex-col gap-1 p-3 transition-colors",
                     checked
-                      ? "border-[var(--line-accent)] bg-[var(--accent)]/[0.07]"
-                      : "border-white/[0.07] bg-white/[0.02] hover:border-white/[0.15]",
-                    !available && "cursor-not-allowed opacity-50",
+                      ? "bg-[var(--field)]"
+                      : "bg-[var(--paper-raise)] hover:bg-[var(--paper)]",
+                    !available && "cursor-not-allowed opacity-55",
                   )}
                 >
                   <span className="flex items-center justify-between gap-2">
-                    <span className="flex items-center gap-2 text-[0.8rem] font-semibold">
+                    <span className="flex items-center gap-2 text-[0.82rem] font-semibold">
                       <input
                         type="radio"
                         name="conversion-method"
@@ -453,21 +495,25 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
                       <span
                         aria-hidden="true"
                         className={cn(
-                          "grid size-3.5 place-items-center rounded-full border",
-                          checked ? "border-[var(--accent)]" : "border-white/25",
+                          "grid size-3.5 place-items-center border",
+                          checked
+                            ? "border-[var(--ink)] bg-[var(--ink)]"
+                            : "border-[var(--line-strong)]",
                         )}
                       >
                         {checked ? (
-                          <span className="size-1.5 rounded-full bg-[var(--accent)]" />
+                          <span className="size-1.5 bg-[var(--field)]" />
                         ) : null}
                       </span>
                       {item.name}
                     </span>
                     {item.id === "cm360" ? (
-                      <span className="badge badge-accent text-[0.58rem]">base</span>
+                      <span className="mono text-[0.55rem] uppercase tracking-[0.06em] text-[var(--ink-soft)]">
+                        base
+                      </span>
                     ) : null}
                   </span>
-                  <span className="pl-[1.4rem] text-[0.68rem] leading-relaxed text-[var(--muted)]">
+                  <span className="pl-[1.4rem] text-[0.68rem] leading-relaxed text-[var(--ink-soft)]">
                     {item.shortDescription}
                   </span>
                   {!available ? (
@@ -482,17 +528,17 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
         </fieldset>
 
         {selectedMethod?.requiresFov ? (
-          <details className="mt-3 rounded-[12px] border border-white/[0.07] bg-white/[0.02]">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-2.5 text-[0.75rem] font-medium text-[var(--text-soft)]">
+          <details className="mt-3 border border-[var(--line)]">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-2.5 text-[0.75rem] font-medium text-[var(--ink-soft)]">
               <span className="flex items-center gap-2">
                 <ChevronDown className="size-3.5" aria-hidden="true" />
                 Ajustes de FOV
               </span>
-              <span className="mono text-[0.65rem] text-[var(--faint)]">
+              <span className="mono text-[0.62rem] text-[var(--faint)]">
                 {sourceFov || "—"}° → {targetFov || "—"}°
               </span>
             </summary>
-            <div className="grid gap-3 border-t border-white/[0.06] p-3 sm:grid-cols-2">
+            <div className="grid gap-3 border-t border-[var(--line)] p-3 sm:grid-cols-2">
               <NumberField
                 label={`FOV de ${sourceGame.shortName}`}
                 value={sourceFov}
@@ -536,151 +582,199 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
         ) : null}
       </div>
 
-      <div className="mt-3 grid gap-3 lg:grid-cols-[1.55fr_1fr]">
-        <div className="glass-inset p-4 sm:p-5" aria-live="polite">
-          <div className="flex items-center justify-between gap-3">
-            <h3 className="text-[0.78rem] font-semibold uppercase tracking-[0.14em] text-[var(--text-soft)]">
-              Resultado
-            </h3>
-            <span className="badge">
-              {selectedMethod?.name}
-            </span>
-          </div>
+      <dl
+        className="grid grid-cols-2 gap-px border-t border-[var(--ink)] bg-[var(--line)] lg:grid-cols-4"
+        aria-live="polite"
+      >
+        <Metric
+          label="cm/360 origen"
+          value={result ? `${formatMeasure(result.sourceCm360)} cm` : "—"}
+        />
+        <Metric
+          label="cm/360 destino"
+          value={result ? `${formatMeasure(result.targetCm360)} cm` : "—"}
+        />
+        <Metric
+          label="eDPI origen"
+          value={result ? formatMeasure(result.sourceEdpi, 0) : "—"}
+        />
+        <Metric
+          label="eDPI destino"
+          value={result ? formatMeasure(result.targetEdpi, 0) : "—"}
+        />
+      </dl>
 
-          {result ? (
-            <>
-              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-                <Metric label="cm/360 origen" value={`${formatMeasure(result.sourceCm360)} cm`} />
-                <Metric label="cm/360 destino" value={`${formatMeasure(result.targetCm360)} cm`} />
-                <Metric label="eDPI origen" value={formatMeasure(result.sourceEdpi, 0)} />
-                <Metric label="eDPI destino" value={formatMeasure(result.targetEdpi, 0)} />
-              </div>
-              <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.7rem] text-[var(--muted)]">
-                <span>
-                  {formatSensitivity(result.sourceSensitivity, sourceGame.sensitivity.decimals)} sens
-                  × {result.sourceDpi} DPI
-                </span>
-                <span aria-hidden="true">·</span>
-                <span>
-                  {formatMeasure(result.sourceDegreesPerCount, 3)}°/count →{" "}
-                  {formatMeasure(result.targetDegreesPerCount, 3)}°/count
-                </span>
-                {activeMethod !== "cm360" ? (
-                  <>
-                    <span aria-hidden="true">·</span>
-                    <span>
-                      FOV {formatMeasure(result.sourceFov ?? 0, 1)}° →{" "}
-                      {formatMeasure(result.targetFov ?? 0, 1)}°
-                    </span>
-                  </>
-                ) : null}
-              </div>
-              <p className="mt-3 text-[0.7rem] leading-relaxed text-[var(--faint)]">
-                {selectedMethod?.preserves} No conserva: {selectedMethod?.doesNotPreserve.toLowerCase()}
-              </p>
-            </>
-          ) : (
-            <p className="mt-3 text-sm text-[var(--danger)]" role="alert">
-              {outcome.ok ? "" : outcome.error.message}
+      <div className="border-t border-[var(--line)] px-4 py-3 sm:px-5">
+        {result ? (
+          <>
+            <div className="mono flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.66rem] text-[var(--muted)]">
+              <span>
+                {formatSensitivity(result.sourceSensitivity, sourceGame.sensitivity.decimals)} sens ×{" "}
+                {result.sourceDpi} DPI
+              </span>
+              <span aria-hidden="true" className="text-[var(--line-strong)]">
+                |
+              </span>
+              <span>
+                {formatMeasure(result.sourceDegreesPerCount, 3)}°/count →{" "}
+                {formatMeasure(result.targetDegreesPerCount, 3)}°/count
+              </span>
+              {activeMethod !== "cm360" ? (
+                <>
+                  <span aria-hidden="true" className="text-[var(--line-strong)]">
+                    |
+                  </span>
+                  <span>
+                    FOV {formatMeasure(result.sourceFov ?? 0, 1)}° →{" "}
+                    {formatMeasure(result.targetFov ?? 0, 1)}°
+                  </span>
+                </>
+              ) : null}
+            </div>
+            <p className="mt-2 text-[0.7rem] leading-relaxed text-[var(--faint)]">
+              {selectedMethod?.preserves} No conserva:{" "}
+              {selectedMethod?.doesNotPreserve.toLowerCase()}
             </p>
-          )}
-
-          {result && result.warnings.length > 0 ? (
-            <ul className="mt-3 grid gap-1.5">
-              {result.warnings.map((warning) => (
-                <li
-                  key={warning}
-                  className="flex items-start gap-2 rounded-lg border border-[var(--warning)]/20 bg-[var(--warning)]/[0.05] px-2.5 py-2 text-[0.68rem] leading-relaxed text-[#fde68a]"
-                >
-                  <AlertTriangle className="mt-0.5 size-3 shrink-0" aria-hidden="true" />
-                  {warning}
-                </li>
-              ))}
-            </ul>
-          ) : null}
-
-          {methodDisabled && method !== activeMethod ? (
-            <p className="mt-3 text-[0.68rem] text-[var(--warning)]">
-              El método seleccionado no está disponible; se muestra distancia 360°.
-            </p>
-          ) : null}
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <div className="grid grid-cols-2 gap-2">
-            <Button
-              variant="primary"
-              disabled={!result || copied === "share"}
-              onClick={copyShareLink}
-            >
-              {copied === "share" ? (
-                <Check className="size-4" aria-hidden="true" />
-              ) : (
-                <Share2 className="size-4" aria-hidden="true" />
-              )}
-              {copied === "share" ? "Enlace copiado" : "Compartir"}
-            </Button>
-            <Button variant="secondary" onClick={reset}>
-              <RotateCcw className="size-4" aria-hidden="true" />
-              Reiniciar
-            </Button>
-          </div>
-
-          {canSave ? (
-            <Button
-              variant="secondary"
-              onClick={handleSave}
-              disabled={!result || saving}
-              className="w-full"
-            >
-              <Save className="size-4" aria-hidden="true" />
-              {saving ? "Guardando…" : "Guardar en mi cuenta"}
-            </Button>
-          ) : (
-            <Link
-              href="/login?next=/"
-              className="btn btn-secondary w-full"
-            >
-              <Lock className="size-4" aria-hidden="true" />
-              Entra para guardar perfiles
-            </Link>
-          )}
-
-          {saveState ? (
-            <p
-              role="status"
-              className={cn(
-                "rounded-lg border px-3 py-2 text-[0.7rem] leading-relaxed",
-                saveState.status === "ok"
-                  ? "border-[var(--success)]/25 bg-[var(--success)]/[0.06] text-[#a7f3d0]"
-                  : "border-[var(--danger)]/25 bg-[var(--danger)]/[0.06] text-[#fecdd3]",
-              )}
-            >
-              {saveState.message}
-            </p>
-          ) : null}
-
-          <p className="mt-auto px-1 text-[0.65rem] leading-relaxed text-[var(--faint)]">
-            La conversión es matemática; la sensación también depende del FOV,
-            el zoom, la aceleración y la respuesta del juego.
+          </>
+        ) : (
+          <p className="text-sm font-medium text-[var(--danger)]" role="alert">
+            {outcome.ok ? "" : outcome.error.message}
           </p>
-        </div>
+        )}
+
+        {result && result.warnings.length > 0 ? (
+          <ul className="mt-2 grid gap-1.5">
+            {result.warnings.map((warning) => (
+              <li
+                key={warning}
+                className="flex items-start gap-2 border border-[rgba(138,90,0,0.4)] bg-[var(--field-soft)] px-2.5 py-2 text-[0.68rem] leading-relaxed text-[var(--ink-soft)]"
+              >
+                <AlertTriangle className="mt-0.5 size-3 shrink-0" aria-hidden="true" />
+                {warning}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+
+        {methodDisabled && method !== activeMethod ? (
+          <p className="mt-2 text-[0.68rem] text-[var(--warning)]">
+            El método seleccionado no está disponible; se muestra distancia 360°.
+          </p>
+        ) : null}
       </div>
 
-      {copied === "error" ? (
-        <p className="px-1 pt-2 text-[0.7rem] text-[var(--danger)]" role="status">
-          No se pudo copiar al portapapeles. Revisa los permisos del navegador.
+      <div className="grid gap-2 border-t border-[var(--ink)] p-4 sm:grid-cols-[auto_auto_minmax(0,1fr)] sm:items-center sm:p-5">
+        <Button
+          variant="primary"
+          disabled={!result || copied === "share"}
+          onClick={copyShareLink}
+        >
+          {copied === "share" ? (
+            <Check className="size-4" aria-hidden="true" />
+          ) : (
+            <Share2 className="size-4" aria-hidden="true" />
+          )}
+          {copied === "share" ? "Enlace copiado" : "Compartir"}
+        </Button>
+        <Button variant="secondary" onClick={reset}>
+          <RotateCcw className="size-4" aria-hidden="true" />
+          Reiniciar
+        </Button>
+
+        {canSave ? (
+          <Button
+            variant="secondary"
+            onClick={handleSave}
+            disabled={!result || saving}
+          >
+            <Save className="size-4" aria-hidden="true" />
+            {saving ? "Guardando…" : "Guardar en mi cuenta"}
+          </Button>
+        ) : (
+          <Link href="/login?next=/" className="btn btn-secondary">
+            <Lock className="size-4" aria-hidden="true" />
+            Entra para guardar perfiles
+          </Link>
+        )}
+
+        <p className="text-[0.65rem] leading-relaxed text-[var(--faint)] sm:col-span-3">
+          La conversión es matemática; la sensación también depende del FOV, el
+          zoom, la aceleración y la respuesta del juego.
         </p>
-      ) : null}
+
+        {saveState ? (
+          <p
+            role="status"
+            className={cn(
+              "border px-3 py-2 text-[0.7rem] leading-relaxed sm:col-span-3",
+              saveState.status === "ok"
+                ? "border-[rgba(11,106,60,0.4)] text-[var(--success)]"
+                : "border-[rgba(165,31,24,0.4)] text-[var(--danger)]",
+            )}
+          >
+            {saveState.message}
+          </p>
+        ) : null}
+
+        {copied === "error" ? (
+          <p className="text-[0.7rem] text-[var(--danger)] sm:col-span-3" role="status">
+            No se pudo copiar al portapapeles. Revisa los permisos del navegador.
+          </p>
+        ) : null}
+      </div>
     </section>
   );
 }
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-white/[0.06] bg-black/20 px-2.5 py-2">
-      <p className="text-[0.6rem] uppercase tracking-[0.1em] text-[var(--faint)]">{label}</p>
-      <p className="mono mt-1 text-sm font-semibold text-[var(--text)]">{value}</p>
+    <div className="bg-[var(--paper-raise)] px-4 py-3">
+      <dt className="label">{label}</dt>
+      <dd className="mono mt-1 text-[0.95rem] font-bold">{value}</dd>
+    </div>
+  );
+}
+
+function CmScale({ value }: { value: number | null }) {
+  const min = 5;
+  const max = 65;
+  const clamped = value === null ? null : Math.min(Math.max(value, min), max);
+  const percent =
+    clamped === null ? null : ((clamped - min) / (max - min)) * 100;
+  const ticks = Array.from({ length: 13 }, (_, index) => min + index * 5);
+
+  return (
+    <div
+      className="cm-scale"
+      role="img"
+      aria-label={
+        clamped === null
+          ? "Escala de cm/360 sin valor"
+          : `Tu cm/360 es ${formatMeasure(clamped)} centímetros en una escala de 5 a 65`
+      }
+    >
+      <span className="cm-scale__track" aria-hidden="true" />
+      {ticks.map((tick) => (
+        <span
+          key={tick}
+          className="cm-scale__tick"
+          style={{ left: `${((tick - min) / (max - min)) * 100}%` }}
+          aria-hidden="true"
+        />
+      ))}
+      {percent !== null ? (
+        <span
+          className="cm-scale__marker"
+          style={{ left: `${percent}%` }}
+          aria-hidden="true"
+        />
+      ) : null}
+      <span className="mono absolute bottom-0 left-0 text-[0.55rem] font-medium tracking-[0.06em] text-[var(--ink)]/65">
+        {min} cm
+      </span>
+      <span className="mono absolute bottom-0 right-0 text-[0.55rem] font-medium tracking-[0.06em] text-[var(--ink)]/65">
+        {max} cm
+      </span>
     </div>
   );
 }

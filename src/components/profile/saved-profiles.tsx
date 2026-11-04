@@ -97,8 +97,8 @@ export function SavedProfiles({ profiles }: { profiles: SavedProfileView[] }) {
 
   return (
     <div>
-      <div className="glass flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:p-4">
-        <div className="glass-inset flex flex-1 items-center gap-2 px-3 py-2">
+      <div className="flex flex-col gap-3 border border-[var(--ink)] bg-[var(--paper-raise)] p-3 sm:flex-row sm:items-center">
+        <div className="flex flex-1 items-center gap-2 border border-[var(--line-strong)] bg-[var(--paper)] px-3 py-2">
           <Search className="size-4 shrink-0 text-[var(--faint)]" aria-hidden="true" />
           <input
             type="search"
@@ -137,27 +137,32 @@ export function SavedProfiles({ profiles }: { profiles: SavedProfileView[] }) {
         <p
           role="status"
           className={cn(
-            "mt-3 rounded-lg border px-3 py-2 text-[0.75rem]",
+            "mt-3 border px-3 py-2 text-[0.75rem]",
             message.ok
-              ? "border-[var(--success)]/25 bg-[var(--success)]/[0.06] text-[#a7f3d0]"
-              : "border-[var(--danger)]/25 bg-[var(--danger)]/[0.06] text-[#fecdd3]",
+              ? "callout callout-success text-[var(--success)]"
+              : "callout callout-danger text-[var(--danger)]",
           )}
         >
           {message.text}
         </p>
       ) : null}
 
-      <p className="mt-4 text-[0.7rem] text-[var(--faint)]" role="status">
+      <p
+        className="mono mt-3 text-[0.58rem] uppercase tracking-[0.05em] text-[var(--faint)]"
+        role="status"
+      >
         {filtered.length} {filtered.length === 1 ? "perfil" : "perfiles"}
         {onlyFavorites ? " en favoritos" : ""}
       </p>
 
       {profiles.length === 0 ? (
-        <div className="glass mt-3 flex flex-col items-center px-6 py-14 text-center">
-          <span className="grid size-12 place-items-center rounded-2xl border border-[var(--line-accent)] bg-[var(--accent)]/[0.07]">
-            <Star className="size-5 text-[var(--accent)]" aria-hidden="true" />
+        <div className="mt-3 flex flex-col items-center border border-[var(--line-strong)] bg-[var(--paper-raise)] px-6 py-14 text-center">
+          <span className="mono grid size-12 place-items-center border border-[var(--ink)] bg-[var(--field)]">
+            <Star className="size-5 text-[var(--ink)]" aria-hidden="true" />
           </span>
-          <h2 className="mt-4 text-lg font-semibold">Todavía no hay perfiles</h2>
+          <h2 className="mt-4 text-lg font-bold tracking-[-0.02em]">
+            Todavía no hay perfiles
+          </h2>
           <p className="mt-1.5 max-w-md text-[0.8rem] leading-relaxed text-[var(--muted)]">
             Convierte una sensibilidad y pulsa «Guardar en mi cuenta». Puedes
             tener varios perfiles por juego: ranked, casual, cadera o miras.
@@ -167,7 +172,7 @@ export function SavedProfiles({ profiles }: { profiles: SavedProfileView[] }) {
           </Link>
         </div>
       ) : filtered.length === 0 ? (
-        <div className="glass mt-3 p-10 text-center">
+        <div className="mt-3 border border-[var(--line-strong)] bg-[var(--paper-raise)] p-10 text-center">
           <p className="text-sm text-[var(--muted)]">
             No hay perfiles que coincidan con los filtros.
           </p>
@@ -183,27 +188,31 @@ export function SavedProfiles({ profiles }: { profiles: SavedProfileView[] }) {
           </button>
         </div>
       ) : (
-        <div className="mt-3 grid gap-3 lg:grid-cols-2">
+        <ul className="mt-2 grid gap-3 lg:grid-cols-2">
           {filtered.map((profile) => {
             const isEditing = editingId === profile.id;
             const isBusy = busyId === profile.id;
             return (
-              <article key={profile.id} className="glass flex flex-col p-4">
-                <div className="flex items-start justify-between gap-3">
+              <li
+                key={profile.id}
+                className="flex flex-col border border-[var(--line-strong)] bg-[var(--paper-raise)]"
+              >
+                <div className="flex items-start justify-between gap-3 border-b border-[var(--line)] p-4">
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <h2 className="truncate text-[0.98rem] font-semibold tracking-[-0.01em]">
+                      <h2 className="truncate text-[0.95rem] font-bold tracking-[-0.01em]">
                         {profile.name}
                       </h2>
                       {profile.isPreferred ? (
                         <span className="badge badge-accent shrink-0">
-                          <BadgeCheck className="size-3" aria-hidden="true" />
+                          <BadgeCheck className="size-2.5" aria-hidden="true" />
                           Preferido
                         </span>
                       ) : null}
                     </div>
-                    <p className="mt-0.5 text-[0.68rem] text-[var(--faint)]">
-                      {profile.gameName} · {methodLabels[profile.method] ?? profile.method}
+                    <p className="mt-0.5 truncate text-[0.68rem] text-[var(--faint)]">
+                      {profile.gameName} ·{" "}
+                      {methodLabels[profile.method] ?? profile.method}
                     </p>
                   </div>
                   <button
@@ -214,7 +223,12 @@ export function SavedProfiles({ profiles }: { profiles: SavedProfileView[] }) {
                       )
                     }
                     disabled={isBusy}
-                    className="grid size-8 shrink-0 place-items-center rounded-full border border-white/[0.08] text-[var(--faint)] transition-colors hover:border-[var(--warning)]/40 hover:text-[var(--warning)]"
+                    className={cn(
+                      "grid size-7 shrink-0 place-items-center border transition-colors",
+                      profile.isFavorite
+                        ? "border-[var(--warning)] text-[var(--warning)]"
+                        : "border-[var(--line-strong)] text-[var(--faint)] hover:border-[var(--ink)] hover:text-[var(--ink)]",
+                    )}
                     aria-label={
                       profile.isFavorite
                         ? `Quitar ${profile.name} de favoritos`
@@ -223,131 +237,134 @@ export function SavedProfiles({ profiles }: { profiles: SavedProfileView[] }) {
                     aria-pressed={profile.isFavorite}
                   >
                     <Star
-                      className="size-4"
+                      className="size-3.5"
                       fill={profile.isFavorite ? "currentColor" : "none"}
                       aria-hidden="true"
                     />
                   </button>
                 </div>
 
-                <div className="mt-3 grid grid-cols-3 gap-2">
-                  <div className="rounded-lg border border-white/[0.06] bg-black/20 px-2.5 py-2">
-                    <p className="text-[0.58rem] uppercase tracking-[0.1em] text-[var(--faint)]">
-                      Sensibilidad
-                    </p>
-                    <p className="mono mt-0.5 text-base font-semibold text-[var(--accent)]">
-                      {formatSensitivity(profile.sensitivity, profile.sensitivityDecimals)}
-                      {profile.sensitivityUnit ? (
-                        <span className="ml-0.5 text-[0.6rem] font-normal text-[var(--faint)]">
-                          {profile.sensitivityUnit}
-                        </span>
-                      ) : null}
-                    </p>
-                  </div>
-                  <div className="rounded-lg border border-white/[0.06] bg-black/20 px-2.5 py-2">
-                    <p className="text-[0.58rem] uppercase tracking-[0.1em] text-[var(--faint)]">
-                      DPI
-                    </p>
-                    <p className="mono mt-0.5 text-base font-semibold">
-                      {formatMeasure(profile.dpi, 0)}
-                    </p>
-                  </div>
-                  <div className="rounded-lg border border-white/[0.06] bg-black/20 px-2.5 py-2">
-                    <p className="text-[0.58rem] uppercase tracking-[0.1em] text-[var(--faint)]">
-                      cm/360
-                    </p>
-                    <p className="mono mt-0.5 text-base font-semibold">
-                      {profile.cm360 ? formatMeasure(profile.cm360) : "—"}
-                    </p>
-                  </div>
-                </div>
+                <dl className="grid grid-cols-3 gap-px border-b border-[var(--line)] bg-[var(--line)]">
+                  {[
+                    {
+                      label: "Sensibilidad",
+                      value: formatSensitivity(
+                        profile.sensitivity,
+                        profile.sensitivityDecimals,
+                      ),
+                      suffix: profile.sensitivityUnit,
+                    },
+                    {
+                      label: "DPI",
+                      value: formatMeasure(profile.dpi, 0),
+                    },
+                    {
+                      label: "cm/360",
+                      value: profile.cm360 ? formatMeasure(profile.cm360) : "—",
+                    },
+                  ].map((cell) => (
+                    <div key={cell.label} className="bg-[var(--paper-raise)] px-3 py-2">
+                      <dt className="label text-[0.52rem]">{cell.label}</dt>
+                      <dd className="mono mt-0.5 text-[0.95rem] font-bold">
+                        {cell.value}
+                        {cell.suffix ? (
+                          <span className="ml-0.5 text-[0.58rem] font-normal text-[var(--faint)]">
+                            {cell.suffix}
+                          </span>
+                        ) : null}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
 
-                {profile.notes ? (
-                  <p className="mt-3 line-clamp-3 whitespace-pre-line text-[0.72rem] leading-relaxed text-[var(--muted)]">
-                    {profile.notes}
+                <div className="flex flex-1 flex-col p-4 pt-3">
+                  {profile.notes ? (
+                    <p className="line-clamp-3 whitespace-pre-line text-[0.72rem] leading-relaxed text-[var(--muted)]">
+                      {profile.notes}
+                    </p>
+                  ) : null}
+
+                  <p className="mono mt-auto pt-3 text-[0.58rem] uppercase tracking-[0.05em] text-[var(--faint)]">
+                    Actualizado{" "}
+                    {new Date(profile.updatedAt).toLocaleDateString("es-ES", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
                   </p>
-                ) : null}
 
-                <p className="mt-3 text-[0.62rem] text-[var(--faint)]">
-                  Actualizado{" "}
-                  {new Date(profile.updatedAt).toLocaleDateString("es-ES", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })}
-                </p>
-
-                {isEditing ? (
-                  <EditProfileForm
-                    profile={profile}
-                    busy={isBusy}
-                    onCancel={() => setEditingId(null)}
-                    onSave={(payload) =>
-                      run(
-                        profile.id,
-                        () => updateSensitivityProfile({ id: profile.id, ...payload }),
-                        true,
-                      )
-                    }
-                  />
-                ) : (
-                  <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-white/[0.06] pt-3">
-                    <Link
-                      href={`/?game=${encodeURIComponent(profile.gameId)}&sens=${profile.sensitivity}&dpi=${profile.dpi}`}
-                      className="btn btn-secondary btn-sm"
-                    >
-                      <ExternalLink className="size-3.5" aria-hidden="true" />
-                      Usar
-                    </Link>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setEditingId(profile.id)}
-                    >
-                      <Pencil className="size-3.5" aria-hidden="true" />
-                      Editar
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      disabled={isBusy || profile.isPreferred}
-                      onClick={() =>
-                        run(profile.id, () =>
-                          setPreferredSensitivityProfile(profile.id),
+                  {isEditing ? (
+                    <EditProfileForm
+                      profile={profile}
+                      busy={isBusy}
+                      onCancel={() => setEditingId(null)}
+                      onSave={(payload) =>
+                        run(
+                          profile.id,
+                          () => updateSensitivityProfile({ id: profile.id, ...payload }),
+                          true,
                         )
                       }
-                      aria-pressed={profile.isPreferred}
-                    >
-                      <BadgeCheck className="size-3.5" aria-hidden="true" />
-                      {profile.isPreferred ? "Preferido" : "Preferir"}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      disabled={isBusy}
-                      onClick={() =>
-                        run(profile.id, () => duplicateSensitivityProfile(profile.id))
-                      }
-                    >
-                      <Copy className="size-3.5" aria-hidden="true" />
-                      Duplicar
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      disabled={isBusy}
-                      onClick={() => handleDelete(profile)}
-                      className="ml-auto text-[var(--danger)] hover:bg-[var(--danger)]/10"
-                    >
-                      <Trash2 className="size-3.5" aria-hidden="true" />
-                      Eliminar
-                    </Button>
-                  </div>
-                )}
-              </article>
+                    />
+                  ) : (
+                    <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-[var(--line)] pt-3">
+                      <Link
+                        href={`/?game=${encodeURIComponent(profile.gameId)}&sens=${profile.sensitivity}&dpi=${profile.dpi}`}
+                        className="btn btn-secondary btn-sm"
+                      >
+                        <ExternalLink className="size-3.5" aria-hidden="true" />
+                        Usar
+                      </Link>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setEditingId(profile.id)}
+                      >
+                        <Pencil className="size-3.5" aria-hidden="true" />
+                        Editar
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        disabled={isBusy || profile.isPreferred}
+                        onClick={() =>
+                          run(profile.id, () =>
+                            setPreferredSensitivityProfile(profile.id),
+                          )
+                        }
+                        aria-pressed={profile.isPreferred}
+                      >
+                        <BadgeCheck className="size-3.5" aria-hidden="true" />
+                        {profile.isPreferred ? "Preferido" : "Preferir"}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        disabled={isBusy}
+                        onClick={() =>
+                          run(profile.id, () => duplicateSensitivityProfile(profile.id))
+                        }
+                      >
+                        <Copy className="size-3.5" aria-hidden="true" />
+                        Duplicar
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        disabled={isBusy}
+                        onClick={() => handleDelete(profile)}
+                        className="text-[var(--danger)] hover:bg-[rgba(165,31,24,0.08)] sm:ml-auto"
+                      >
+                        <Trash2 className="size-3.5" aria-hidden="true" />
+                        Eliminar
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
       )}
     </div>
   );
@@ -387,16 +404,16 @@ function EditProfileForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="mt-3 space-y-3 rounded-[12px] border border-[var(--line-accent)]/40 bg-[var(--accent)]/[0.03] p-3"
+      className="mt-3 space-y-3 border border-[var(--ink)] bg-[var(--paper)] p-3"
     >
       <div className="flex items-center justify-between">
-        <p className="text-[0.72rem] font-semibold uppercase tracking-[0.1em] text-[var(--accent)]">
+        <p className="mono text-[0.58rem] font-medium uppercase tracking-[0.06em] text-[var(--ink-soft)]">
           Editar perfil
         </p>
         <button
           type="button"
           onClick={onCancel}
-          className="grid size-7 place-items-center rounded-full text-[var(--faint)] hover:bg-white/[0.06] hover:text-white"
+          className="grid size-6 place-items-center border border-transparent text-[var(--faint)] transition-colors hover:border-[var(--line-strong)] hover:text-[var(--ink)]"
           aria-label="Cancelar edición"
         >
           <X className="size-3.5" aria-hidden="true" />

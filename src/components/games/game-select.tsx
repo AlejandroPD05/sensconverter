@@ -139,14 +139,14 @@ export function GameSelect({
       <button
         ref={triggerRef}
         type="button"
-        className="glass-inset flex w-full items-center gap-3 px-3 py-2.5 text-left transition-colors hover:border-white/20"
+        className="flex w-full items-center gap-3 border border-[var(--line-strong)] bg-[var(--paper-raise)] px-3 py-2.5 text-left transition-colors hover:border-[var(--ink)]"
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={open ? listId : undefined}
         aria-labelledby={labelId}
         onClick={() => (open ? closeSelect(false) : openSelect())}
       >
-        <span className="grid size-9 shrink-0 place-items-center rounded-[9px] border border-white/10 bg-white/[0.05] text-[0.68rem] font-bold tracking-wide text-[var(--accent)]">
+        <span className="mono grid size-8 shrink-0 place-items-center border border-[var(--line)] bg-[var(--paper-sunk)] text-[0.6rem] font-bold tracking-wide text-[var(--ink-soft)]">
           {selected ? initials(selected.shortName) : "—"}
         </span>
         <span className="min-w-0 flex-1">
@@ -168,8 +168,8 @@ export function GameSelect({
       </button>
 
       {open ? (
-        <div className="glass glass-strong absolute left-0 right-0 top-[calc(100%+0.45rem)] z-50 overflow-hidden rounded-[var(--radius-md)] p-1.5">
-          <div className="glass-inset flex items-center gap-2 px-2.5 py-2">
+        <div className="absolute left-0 right-0 top-[calc(100%+0.35rem)] z-50 overflow-hidden border border-[var(--ink)] bg-[var(--paper-raise)]">
+          <div className="flex items-center gap-2 border-b border-[var(--line)] px-2.5 py-2">
             <Search className="size-4 shrink-0 text-[var(--faint)]" aria-hidden="true" />
             <input
               ref={searchRef}
@@ -198,7 +198,7 @@ export function GameSelect({
             id={listId}
             role="listbox"
             aria-label={label}
-            className="mt-1 max-h-72 overflow-y-auto overscroll-contain"
+            className="max-h-72 overflow-y-auto overscroll-contain py-1"
           >
             {filtered.length === 0 ? (
               <li className="px-3 py-6 text-center text-sm text-[var(--muted)]">
@@ -216,15 +216,15 @@ export function GameSelect({
                       aria-selected={isSelected}
                       data-index={index}
                       className={cn(
-                        "flex w-full items-center gap-3 rounded-[10px] px-2.5 py-2 text-left transition-colors",
+                        "flex w-full items-center gap-3 px-2.5 py-2 text-left transition-colors",
                         index === activeIndex
-                          ? "bg-white/[0.07]"
-                          : "hover:bg-white/[0.05]",
+                          ? "bg-[var(--paper-sunk)]"
+                          : "hover:bg-[var(--paper)]",
                       )}
                       onPointerMove={() => setActiveIndex(index)}
                       onClick={() => selectGame(game)}
                     >
-                      <span className="grid size-8 shrink-0 place-items-center rounded-lg border border-white/10 bg-[var(--accent)]/5 text-[0.62rem] font-bold text-[var(--accent)]">
+                      <span className="mono grid size-7 shrink-0 place-items-center border border-[var(--line)] bg-[var(--paper-sunk)] text-[0.56rem] font-bold text-[var(--ink-soft)]">
                         {initials(game.shortName)}
                       </span>
                       <span className="min-w-0 flex-1">

@@ -18,7 +18,7 @@ export default async function ResetPasswordPage() {
       subtitle="Elige una contraseña que no uses en otros servicios."
       footer={
         <p>
-          <Link href="/login" className="font-semibold text-[var(--accent)] hover:underline">
+          <Link href="/login" className="font-semibold text-[var(--ink)] underline decoration-[var(--line-strong)] underline-offset-4 hover:decoration-[var(--ink)]">
             Volver a iniciar sesión
           </Link>
         </p>
@@ -30,10 +30,10 @@ export default async function ResetPasswordPage() {
         <ResetPasswordForm />
       ) : (
         <div className="callout callout-warning" role="alert">
-          <p className="text-sm font-semibold text-[#fde68a]">
+          <p className="text-sm font-bold text-[var(--ink)]">
             El enlace no es válido o ha caducado
           </p>
-          <p className="mt-1.5 text-[0.76rem] leading-relaxed text-[var(--text-soft)]">
+          <p className="mt-1.5 text-[0.76rem] leading-relaxed text-[var(--ink-soft)]">
             Solicita un enlace nuevo desde la página de recuperación. Los
             enlaces de Supabase caducan y solo pueden usarse una vez.
           </p>

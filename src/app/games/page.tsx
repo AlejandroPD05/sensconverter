@@ -13,20 +13,26 @@ export default function GamesPage() {
   const pending = games.filter((game) => game.verification === "pending").length;
 
   return (
-    <div className="site-container pt-10 sm:pt-14">
-      <header className="max-w-3xl animate-fade-up">
-        <p className="eyebrow">Biblioteca</p>
-        <h1 className="display mt-3 text-[clamp(2.2rem,5vw,3.6rem)]">
-          Juegos que sí podemos <span className="text-gradient">convertir</span>
-        </h1>
-        <p className="mt-4 text-[0.92rem] leading-relaxed text-[var(--muted)]">
-          {verified} juegos con constante verificada. {pending} aparecen como
-          pendientes porque todavía no tenemos una fórmula que podamos defender.
-          Preferimos decírtelo a inventar un número.
+    <div className="site-container pt-8 sm:pt-10">
+      <header className="grid gap-5 border-b-2 border-[var(--ink)] pb-5 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] md:items-end">
+        <div>
+          <p className="label">Biblioteca</p>
+          <h1 className="display mt-2 text-[clamp(2.2rem,5vw,3.6rem)]">
+            Juegos que sí podemos
+            <br />
+            convertir.
+          </h1>
+        </div>
+        <p className="max-w-md text-[0.88rem] leading-relaxed text-[var(--muted)] md:justify-self-end">
+          <span className="mono font-bold text-[var(--ink)]">{verified}</span>{" "}
+          juegos con constante verificada.{" "}
+          <span className="mono font-bold text-[var(--ink)]">{pending}</span>{" "}
+          aparecen como pendientes porque todavía no tenemos una fórmula que
+          podamos defender. Preferimos decírtelo a inventar un número.
         </p>
       </header>
 
-      <div className="mt-8">
+      <div className="mt-6">
         <GameLibrary />
       </div>
     </div>

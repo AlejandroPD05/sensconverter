@@ -1,20 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  ArrowRight,
-  CheckCircle2,
-  Gamepad2,
-  Gauge,
-  MousePointer2,
-  ShieldCheck,
-  Sparkles,
-} from "lucide-react";
+import { ArrowDown, ArrowRight, ArrowUpRight } from "lucide-react";
 import { Calculator } from "@/components/calculator/calculator";
 import { GlobalConverter } from "@/components/global/global-converter";
 import { games } from "@/lib/games/registry";
 import { getProfile } from "@/lib/db/profiles";
 import { getCurrentUser } from "@/lib/supabase/server";
 import { brand } from "@/lib/brand";
+import { formatMeasure } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Conversor de sensibilidad y cm/360",
@@ -42,113 +35,60 @@ export default async function HomePage({
   const experimental = games.filter(
     (game) => game.verification === "experimental",
   ).length;
+  const pending = games.length - verified - experimental;
 
   return (
-    <div className="site-container pt-10 sm:pt-14">
-      <section className="grid items-end gap-8 lg:grid-cols-[1.35fr_0.65fr]">
+    <div className="site-container pt-8 sm:pt-10">
+      <section className="grid items-start gap-8 lg:grid-cols-[1.4fr_0.6fr]">
         <div className="animate-fade-up">
-          <p className="eyebrow">
-            <Sparkles className="size-3.5" aria-hidden="true" />
-            Sensibilidad con criterio
-          </p>
-          <h1 className="display mt-4 text-[clamp(2.6rem,7vw,5.2rem)]">
-            Una sensibilidad.
+          <h1 className="display text-[clamp(2.5rem,5.6vw,4.2rem)]">
+            La misma mano,
             <br />
-            <span className="text-gradient">Todos tus juegos.</span>
+            otro juego.
           </h1>
-          <p className="mt-5 max-w-xl text-[0.95rem] leading-relaxed text-[var(--muted)]">
-            Convierte entre CS2, VALORANT, Apex, Overwatch 2 y más usando
-            fórmulas documentadas. Sin registro, sin promesas de precisión
-            falsa y con el cm/360 como referencia real.
+          <p className="mt-4 max-w-xl text-[0.95rem] leading-relaxed text-[var(--muted)]">
+            Convierte tu sensibilidad entre CS2, VALORANT, Apex y otros
+            shooters con el cm/360 como referencia física. Fórmulas
+            documentadas, sin registro y sin prometer una precisión que el
+            juego no permite.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-2">
             <Link href="#calculator" className="btn btn-primary">
               Convertir ahora
-              <ArrowRight className="size-4" aria-hidden="true" />
+              <ArrowDown className="size-4" aria-hidden="true" />
             </Link>
             <Link href="/games" className="btn btn-secondary">
-              <Gamepad2 className="size-4" aria-hidden="true" />
-              Ver juegos compatibles
+              Ver los juegos
             </Link>
           </div>
-          <dl className="mt-8 flex flex-wrap gap-x-8 gap-y-3">
-            <div>
-              <dt className="text-[0.62rem] uppercase tracking-[0.14em] text-[var(--faint)]">
-                Juegos verificados
-              </dt>
-              <dd className="mono mt-0.5 text-xl font-semibold">
-                {verified}
-                {experimental > 0 ? (
-                  <span className="ml-1 text-[0.7rem] font-normal text-[var(--faint)]">
-                    +{experimental} exp.
-                  </span>
-                ) : null}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-[0.62rem] uppercase tracking-[0.14em] text-[var(--faint)]">
-                Métodos
-              </dt>
-              <dd className="mono mt-0.5 text-xl font-semibold">3</dd>
-            </div>
-            <div>
-              <dt className="text-[0.62rem] uppercase tracking-[0.14em] text-[var(--faint)]">
-                Registro
-              </dt>
-              <dd className="mt-0.5 flex items-center gap-1.5 text-xl font-semibold">
-                Opcional
-              </dd>
-            </div>
-          </dl>
         </div>
 
-        <div className="glass animate-fade-up animate-delay-1 relative overflow-hidden p-5">
-          <div
-            className="pointer-events-none absolute -right-16 -top-20 size-56 rounded-full bg-[var(--accent)]/10 blur-3xl"
-            aria-hidden="true"
-          />
-          <div className="flex items-center justify-between">
-            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-[var(--faint)]">
-              Referencia global
-            </p>
-            <span className="badge badge-accent">ejemplo</span>
+        <dl className="fact-list animate-fade-up pt-1">
+          <div>
+            <dt className="label">Juegos verificados</dt>
+            <dd className="mono text-lg font-bold">
+              {verified}
+              <span className="ml-1 text-[0.62rem] font-normal text-[var(--faint)]">
+                de {games.length}
+              </span>
+            </dd>
           </div>
-          <div className="mt-5 flex items-baseline gap-2">
-            <span className="mono text-[3.6rem] font-semibold leading-none tracking-[-0.06em]">
-              40
-            </span>
-            <span className="text-sm text-[var(--muted)]">cm / 360°</span>
+          <div>
+            <dt className="label">Experimentales</dt>
+            <dd className="mono text-lg font-bold">{experimental}</dd>
           </div>
-          <div className="mt-4 grid grid-cols-3 gap-2">
-            {[10, 20, 40].map((distance, index) => (
-              <div key={distance} className="glass-inset px-2 py-2 text-center">
-                <p className="text-[0.58rem] uppercase tracking-[0.1em] text-[var(--faint)]">
-                  {[90, 180, 360][index]}°
-                </p>
-                <p className="mono mt-0.5 text-[0.8rem] font-semibold">
-                  {distance} cm
-                </p>
-              </div>
-            ))}
+          <div>
+            <dt className="label">Pendientes de fórmula</dt>
+            <dd className="mono text-lg font-bold">{pending}</dd>
           </div>
-          <div className="mt-4 flex items-center gap-2 rounded-lg border border-white/[0.07] bg-black/20 px-3 py-2.5">
-            <MousePointer2 className="size-4 text-[var(--accent)]" aria-hidden="true" />
-            <p className="text-[0.68rem] leading-relaxed text-[var(--muted)]">
-              A 800 DPI son <span className="mono text-white">0.408</span> en
-              VALORANT o <span className="mono text-white">1.30</span> en CS2.
-            </p>
+          <div>
+            <dt className="label">Cuenta</dt>
+            <dd className="text-lg font-bold">Opcional</dd>
           </div>
-          <Link
-            href="/global"
-            className="mt-3 inline-flex items-center gap-1.5 text-[0.72rem] font-medium text-[var(--accent)] hover:underline"
-          >
-            Configurar mi referencia
-            <ArrowRight className="size-3.5" aria-hidden="true" />
-          </Link>
-        </div>
+        </dl>
       </section>
 
-      <div id="calculator" className="scroll-mt-24 pt-10 sm:pt-12">
+      <div id="calculator" className="scroll-mt-28 pt-8 sm:pt-10">
         <Calculator
           canSave={Boolean(user)}
           initial={{
@@ -160,16 +100,18 @@ export default async function HomePage({
         />
       </div>
 
-      <section className="mt-12 scroll-mt-24" aria-labelledby="global-home-title">
-        <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+      <section className="mt-12 scroll-mt-28" aria-labelledby="global-home-title">
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-3 border-b border-[var(--line-strong)] pb-2">
           <div>
-            <p className="eyebrow">
-              <Gauge className="size-3.5" aria-hidden="true" />
-              Tu referencia
-            </p>
-            <h2 id="global-home-title" className="mt-1 text-2xl font-semibold tracking-[-0.03em]">
-              Calcula desde centímetros, no desde números
+            <h2
+              id="global-home-title"
+              className="text-xl font-bold tracking-[-0.02em]"
+            >
+              Referencia global
             </h2>
+            <p className="mt-0.5 text-[0.8rem] text-[var(--muted)]">
+              Parte de centímetros, no del número de un slider.
+            </p>
           </div>
           <Link href="/global" className="btn btn-ghost btn-sm">
             Abrir herramienta completa
@@ -184,55 +126,110 @@ export default async function HomePage({
         />
       </section>
 
-      <section className="mt-14 grid gap-3 md:grid-cols-3" aria-label="Principios del producto">
-        {[
-          {
-            icon: ShieldCheck,
-            title: "Fórmulas documentadas",
-            text: "Cada juego declara su constante y su fuente. Lo que no está verificado no devuelve un número.",
-          },
-          {
-            icon: CheckCircle2,
-            title: "Sin cuenta obligatoria",
-            text: "La calculadora completa funciona al instante. La cuenta solo añade guardado y sincronización.",
-          },
-          {
-            icon: Gauge,
-            title: "cm/360, no humo",
-            text: "La distancia física es la referencia común. Te explicamos qué conserva cada método y qué no.",
-          },
-        ].map((item) => {
-          const Icon = item.icon;
-          return (
-            <article key={item.title} className="glass p-5">
-              <span className="grid size-9 place-items-center rounded-lg border border-[var(--line-accent)] bg-[var(--accent)]/[0.07]">
-                <Icon className="size-4 text-[var(--accent)]" aria-hidden="true" />
-              </span>
-              <h3 className="mt-3 text-sm font-semibold">{item.title}</h3>
-              <p className="mt-1.5 text-[0.76rem] leading-relaxed text-[var(--muted)]">
-                {item.text}
-              </p>
-            </article>
-          );
-        })}
-      </section>
+      <div className="mt-12 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+        <section aria-labelledby="library-title">
+          <div className="flex items-end justify-between gap-3 border-b border-[var(--line-strong)] pb-2">
+            <h2 id="library-title" className="text-xl font-bold tracking-[-0.02em]">
+              Biblioteca
+            </h2>
+            <Link
+              href="/games"
+              className="text-[0.72rem] font-semibold underline decoration-[var(--line-strong)] underline-offset-4 hover:decoration-[var(--ink)]"
+            >
+              Ver todos
+            </Link>
+          </div>
+          <table className="data-table mt-2">
+            <caption className="sr-only">
+              Juegos con constante de yaw documentada
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Juego</th>
+                <th scope="col">Constante</th>
+                <th scope="col">Estado</th>
+                <th scope="col" className="text-right">
+                  Acción
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {games.slice(0, 6).map((game) => {
+                const convertible =
+                  Boolean(game.yaw) && game.verification !== "pending";
+                return (
+                  <tr key={game.id}>
+                    <td className="font-semibold">{game.shortName}</td>
+                    <td className="mono text-[0.78rem] text-[var(--muted)]">
+                      {game.yaw ? formatMeasure(game.yaw, 4) : "—"}
+                    </td>
+                    <td>
+                      <span
+                        className={
+                          game.verification === "verified"
+                            ? "badge badge-success"
+                            : game.verification === "experimental"
+                              ? "badge badge-warning"
+                              : "badge"
+                        }
+                      >
+                        {game.verification === "verified"
+                          ? "Verificado"
+                          : game.verification === "experimental"
+                            ? "Experimental"
+                            : "Pendiente"}
+                      </span>
+                    </td>
+                    <td className="text-right">
+                      {convertible ? (
+                        <Link
+                          href={`/?game=${encodeURIComponent(game.id)}`}
+                          className="inline-flex items-center gap-1 text-[0.72rem] font-semibold underline decoration-[var(--line-strong)] underline-offset-4 hover:decoration-[var(--ink)]"
+                        >
+                          Convertir
+                          <ArrowUpRight className="size-3" aria-hidden="true" />
+                        </Link>
+                      ) : (
+                        <Link
+                          href="/methodology#limites"
+                          className="text-[0.72rem] text-[var(--warning)] underline underline-offset-4"
+                        >
+                          Por qué no
+                        </Link>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </section>
 
-      <section className="glass mt-12 flex flex-col items-start justify-between gap-4 p-6 sm:flex-row sm:items-center">
-        <div>
-          <h2 className="text-lg font-semibold tracking-[-0.02em]">
-            ¿De dónde salen estos números?
-          </h2>
-          <p className="mt-1 max-w-2xl text-[0.78rem] leading-relaxed text-[var(--muted)]">
-            La metodología explica la fórmula, la diferencia entre distancia
-            360°, FOV aware y distancia de monitor, y por qué dos juegos con el
-            mismo cm/360 no se sienten idénticos.
-          </p>
-        </div>
-        <Link href="/methodology" className="btn btn-secondary shrink-0">
-          Leer la metodología
-          <ArrowRight className="size-4" aria-hidden="true" />
-        </Link>
-      </section>
+        <section
+          className="flex flex-col justify-between bg-[var(--ink)] p-6 text-[var(--band-ink)] sm:p-8"
+          aria-labelledby="method-title"
+        >
+          <div>
+            <h2 id="method-title" className="text-xl font-bold tracking-[-0.02em]">
+              ¿De dónde salen estos números?
+            </h2>
+            <p className="mt-2 max-w-md text-[0.82rem] leading-relaxed text-[var(--band-muted)]">
+              La metodología explica la fórmula, la diferencia entre distancia
+              360°, FOV aware y distancia de monitor, y por qué dos juegos con
+              el mismo cm/360 no se sienten idénticos.
+            </p>
+          </div>
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <Link href="/methodology" className="btn btn-on-dark">
+              Leer la metodología
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+            <span className="mono text-[0.58rem] uppercase tracking-[0.06em] text-[var(--band-muted)]">
+              sin promesas de precisión perfecta
+            </span>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

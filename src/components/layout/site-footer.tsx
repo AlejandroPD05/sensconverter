@@ -1,45 +1,66 @@
 import Link from "next/link";
 import { brand } from "@/lib/brand";
 
+const groups = [
+  {
+    title: "Herramienta",
+    links: [
+      { href: "/", label: "Calculadora" },
+      { href: "/global", label: "Sensibilidad global" },
+      { href: "/games", label: "Biblioteca de juegos" },
+    ],
+  },
+  {
+    title: "Cuenta",
+    links: [
+      { href: "/my-sensitivities", label: "Mis sensibilidades" },
+      { href: "/account", label: "Cuenta" },
+      { href: "/methodology", label: "Metodología" },
+    ],
+  },
+];
+
 export function SiteFooter() {
   return (
-    <footer className="relative z-10 mt-20 border-t border-white/[0.06] py-10">
-      <div className="site-container flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
+    <footer className="relative z-10 mt-16 border-t-2 border-[var(--ink)] bg-[var(--paper)]">
+      <div className="site-container grid gap-8 py-10 md:grid-cols-[1.3fr_1fr_1fr]">
         <div className="max-w-sm">
-          <p className="text-sm font-semibold tracking-[-0.02em]">{brand.name}</p>
-          <p className="mt-2 text-[0.78rem] leading-relaxed text-[var(--faint)]">
+          <p className="text-sm font-bold uppercase tracking-[-0.01em]">
+            {brand.name}
+          </p>
+          <p className="mt-2 text-[0.8rem] leading-relaxed text-[var(--muted)]">
             Conversor de sensibilidad con fórmulas documentadas. Sin cuenta
             obligatoria, sin resultados inventados. La sensación de apuntado
             depende de más factores que cm/360.
           </p>
         </div>
-        <div className="grid grid-cols-2 gap-x-10 gap-y-2 text-[0.78rem] text-[var(--muted)] sm:grid-cols-3">
-          <Link href="/" className="transition-colors hover:text-white">
-            Calculadora
-          </Link>
-          <Link href="/games" className="transition-colors hover:text-white">
-            Biblioteca
-          </Link>
-          <Link href="/global" className="transition-colors hover:text-white">
-            Sensibilidad global
-          </Link>
-          <Link href="/methodology" className="transition-colors hover:text-white">
-            Metodología
-          </Link>
-          <Link href="/account" className="transition-colors hover:text-white">
-            Cuenta
-          </Link>
-          <Link href="/my-sensitivities" className="transition-colors hover:text-white">
-            Mis sensibilidades
-          </Link>
-        </div>
+
+        {groups.map((group) => (
+          <div key={group.title}>
+            <p className="label">{group.title}</p>
+            <ul className="mt-3 grid gap-1.5">
+              {group.links.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-[0.8rem] text-[var(--ink-soft)] underline decoration-transparent underline-offset-4 transition-colors hover:decoration-[var(--ink)]"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
-      <div className="site-container mt-8 flex flex-col gap-2 border-t border-white/[0.05] pt-5 text-[0.68rem] text-[var(--faint)] sm:flex-row sm:items-center sm:justify-between">
-        <p>© {new Date().getFullYear()} {brand.name}. Herramienta independiente.</p>
-        <p>
-          Constantes verificadas el 29/10/2026. Verifica siempre en el rango de
-          práctica de tu juego.
-        </p>
+
+      <div className="border-t border-[var(--line)] bg-[var(--ink)] text-[var(--band-muted)]">
+        <div className="site-container mono flex flex-col gap-1.5 py-3 text-[0.56rem] uppercase tracking-[0.06em] sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            © {new Date().getFullYear()} {brand.name} · herramienta independiente
+          </p>
+          <p>Constantes verificadas el 29/10/2026 · revisa siempre en tu juego</p>
+        </div>
       </div>
     </footer>
   );

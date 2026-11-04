@@ -17,7 +17,7 @@ Conversor de sensibilidad de ratón entre juegos, con el **cm/360** como referen
 - Perfiles guardados en Postgres: crear, editar, renombrar, duplicar, borrar, favoritos y un perfil preferido por juego.
 - Preferencia global (cm/360 y DPI) guardada por usuario.
 - RLS activado: cada usuario solo puede leer y modificar sus propios registros.
-- Diseño Liquid Glass oscuro, responsive, con foco visible, `prefers-reduced-motion` y anuncios de resultados.
+- Diseño propio "hoja de retransmisión" (papel hueso, tinta, una sola señal amarilla), documentado en `DESIGN.md`; responsive, con foco visible, `prefers-reduced-motion` y anuncios de resultados.
 
 ## Stack
 
@@ -190,7 +190,8 @@ src/
     games/             Registro data-driven de juegos
     supabase/          Clientes SSR/browser y configuración
     db/                Consultas y tipos de la base de datos
-  app/globals.css      Tokens y superficies Liquid Glass
+  app/globals.css      Tokens, superficies y componentes del sistema visual
+DESIGN.md              Sistema visual normativo (tokens, reglas, componentes)
 supabase/migrations/   Esquema, RLS, triggers e índices
 tests/e2e/             Flujos anónimos, de cuenta y de aislamiento
 ```

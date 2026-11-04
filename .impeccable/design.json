@@ -1,0 +1,185 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-04T08:00:00.000Z",
+  "title": "Design System: SensiCore",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Papel hueso",
+        "canonical": "#e9e7de",
+        "tonalRamp": ["oklch(20% 0.012 100)", "oklch(32% 0.012 100)", "oklch(45% 0.012 100)", "oklch(58% 0.012 100)", "oklch(70% 0.012 100)", "oklch(80% 0.012 100)", "oklch(88% 0.012 100)", "oklch(95% 0.012 100)"]
+      },
+      "paper-raise": {
+        "role": "neutral",
+        "displayName": "Papel elevado",
+        "canonical": "#f3f1e8",
+        "tonalRamp": ["oklch(22% 0.01 100)", "oklch(34% 0.01 100)", "oklch(46% 0.01 100)", "oklch(58% 0.01 100)", "oklch(70% 0.01 100)", "oklch(81% 0.01 100)", "oklch(89% 0.01 100)", "oklch(96% 0.01 100)"]
+      },
+      "paper-sunk": {
+        "role": "neutral",
+        "displayName": "Papel hundido",
+        "canonical": "#dedbd0",
+        "tonalRamp": ["oklch(18% 0.012 100)", "oklch(30% 0.012 100)", "oklch(42% 0.012 100)", "oklch(54% 0.012 100)", "oklch(66% 0.012 100)", "oklch(76% 0.012 100)", "oklch(84% 0.012 100)", "oklch(92% 0.012 100)"]
+      },
+      "ink": {
+        "role": "primary",
+        "displayName": "Tinta",
+        "canonical": "#12140f",
+        "tonalRamp": ["oklch(16% 0.012 130)", "oklch(26% 0.012 130)", "oklch(36% 0.012 130)", "oklch(46% 0.012 130)", "oklch(57% 0.012 130)", "oklch(68% 0.012 130)", "oklch(80% 0.012 130)", "oklch(92% 0.012 130)"]
+      },
+      "signal-yellow": {
+        "role": "primary",
+        "displayName": "Señal amarilla",
+        "canonical": "#f2e23e",
+        "tonalRamp": ["oklch(22% 0.09 100)", "oklch(34% 0.11 100)", "oklch(46% 0.13 100)", "oklch(58% 0.15 100)", "oklch(70% 0.16 100)", "oklch(80% 0.17 100)", "oklch(88% 0.17 100)", "oklch(95% 0.13 100)"]
+      },
+      "verified-green": {
+        "role": "tertiary",
+        "displayName": "Verde verificado",
+        "canonical": "#0b6a3c",
+        "tonalRamp": ["oklch(22% 0.06 155)", "oklch(30% 0.08 155)", "oklch(38% 0.10 155)", "oklch(46% 0.11 155)", "oklch(56% 0.11 155)", "oklch(68% 0.10 155)", "oklch(80% 0.08 155)", "oklch(93% 0.05 155)"]
+      },
+      "pending-amber": {
+        "role": "tertiary",
+        "displayName": "Ámbar pendiente",
+        "canonical": "#8a5a00",
+        "tonalRamp": ["oklch(20% 0.05 75)", "oklch(30% 0.07 75)", "oklch(40% 0.09 75)", "oklch(50% 0.11 75)", "oklch(60% 0.12 75)", "oklch(72% 0.11 75)", "oklch(84% 0.08 75)", "oklch(94% 0.04 75)"]
+      },
+      "error-red": {
+        "role": "tertiary",
+        "displayName": "Rojo error",
+        "canonical": "#a51f18",
+        "tonalRamp": ["oklch(20% 0.06 28)", "oklch(30% 0.10 28)", "oklch(40% 0.14 28)", "oklch(50% 0.17 28)", "oklch(60% 0.16 28)", "oklch(72% 0.12 28)", "oklch(84% 0.08 28)", "oklch(94% 0.04 28)"]
+      },
+      "band-ink": {
+        "role": "neutral",
+        "displayName": "Tinta de banda",
+        "canonical": "#e9e7de",
+        "tonalRamp": ["oklch(20% 0.012 100)", "oklch(32% 0.012 100)", "oklch(45% 0.012 100)", "oklch(58% 0.012 100)", "oklch(70% 0.012 100)", "oklch(80% 0.012 100)", "oklch(88% 0.012 100)", "oklch(95% 0.012 100)"]
+      },
+      "band-muted": {
+        "role": "neutral",
+        "displayName": "Banda apagada",
+        "canonical": "#a9ac9f",
+        "tonalRamp": ["oklch(20% 0.01 110)", "oklch(31% 0.01 110)", "oklch(42% 0.01 110)", "oklch(54% 0.01 110)", "oklch(66% 0.01 110)", "oklch(76% 0.01 110)", "oklch(85% 0.01 110)", "oklch(94% 0.01 110)"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Titular de hoja", "purpose": "Titulares de página, una o dos líneas con salto manual." },
+      "label": { "displayName": "Etiqueta de datos", "purpose": "Cabeceras de tabla, metadatos, franja en directo y cifras comparables." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "ease-signal", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Única curva del sistema: entradas y cambios de estado." },
+      { "name": "dur-fast", "value": "120ms", "purpose": "Hover y foco de controles." },
+      { "name": "dur", "value": "200ms", "purpose": "Cambios de color y borde en paneles." },
+      { "name": "dur-slow", "value": "320ms", "purpose": "Movimiento del marcador en la escala cm/360." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acción que avanza el flujo: convertir, guardar, abrir la calculadora.",
+      "html": "<button class=\"ds-btn ds-btn-primary\">Convertir sensibilidad</button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; min-height: 2.55rem; padding: 0.5rem 0.9rem; border: 1px solid transparent; border-radius: 2px; font-family: Archivo, ui-sans-serif, system-ui, sans-serif; font-size: 0.8rem; font-weight: 600; line-height: 1; white-space: nowrap; cursor: pointer; transition: background 120ms cubic-bezier(0.16,1,0.3,1), border-color 120ms cubic-bezier(0.16,1,0.3,1), color 120ms cubic-bezier(0.16,1,0.3,1); } .ds-btn-primary { background: var(--ink, #12140f); color: var(--paper, #e9e7de); border-color: var(--ink, #12140f); } .ds-btn-primary:hover { background: #000; } .ds-btn:focus-visible { outline: 2px solid var(--ink, #12140f); outline-offset: 2px; } .ds-btn:disabled { opacity: 0.4; cursor: not-allowed; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Acción alternativa de peso similar, sin relleno.",
+      "html": "<button class=\"ds-btn ds-btn-secondary\">Ver metodología</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; min-height: 2.55rem; padding: 0.5rem 0.9rem; border: 1px solid rgba(18,20,15,0.34); border-radius: 2px; background: transparent; color: var(--ink, #12140f); font-family: Archivo, ui-sans-serif, system-ui, sans-serif; font-size: 0.8rem; font-weight: 600; line-height: 1; cursor: pointer; transition: background 120ms cubic-bezier(0.16,1,0.3,1), border-color 120ms cubic-bezier(0.16,1,0.3,1); } .ds-btn-secondary:hover { border-color: var(--ink, #12140f); background: rgba(18,20,15,0.05); } .ds-btn-secondary:focus-visible { outline: 2px solid var(--ink, #12140f); outline-offset: 2px; }"
+    },
+    {
+      "name": "Signal Button",
+      "kind": "button",
+      "refersTo": "button-signal",
+      "description": "Acción principal dentro de la franja o del resultado; el amarillo marca lo vivo.",
+      "html": "<button class=\"ds-btn-signal\">Aplicar</button>",
+      "css": ".ds-btn-signal { display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; min-height: 2.55rem; padding: 0.5rem 0.9rem; border: 1px solid var(--ink, #12140f); border-radius: 2px; background: var(--field, #f2e23e); color: var(--on-field, #12140f); font-family: Archivo, ui-sans-serif, system-ui, sans-serif; font-size: 0.8rem; font-weight: 700; line-height: 1; cursor: pointer; transition: background 120ms cubic-bezier(0.16,1,0.3,1); } .ds-btn-signal:hover { background: #f8f0a2; } .ds-btn-signal:focus-visible { outline: 2px solid var(--ink, #12140f); outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "field-input",
+      "description": "Campo numérico o de texto; el foco se marca con un subrayado interior amarillo, no con un halo.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">DPI del ratón</span><input class=\"ds-field-input\" type=\"number\" value=\"800\" step=\"1\" min=\"1\" /></label>",
+      "css": ".ds-field { display: block; } .ds-field-label { display: block; margin-bottom: 0.3rem; font-family: 'Martian Mono', ui-monospace, monospace; font-size: 0.58rem; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #54574d; } .ds-field-input { width: 100%; min-height: 2.85rem; padding: 0.6rem 0.7rem; border: 1px solid rgba(18,20,15,0.34); border-radius: 2px; background: var(--paper-raise, #f3f1e8); color: var(--ink, #12140f); font-family: 'Martian Mono', ui-monospace, monospace; font-size: 1rem; font-variant-numeric: tabular-nums; transition: border-color 120ms cubic-bezier(0.16,1,0.3,1), box-shadow 120ms cubic-bezier(0.16,1,0.3,1); } .ds-field-input:hover { border-color: var(--ink, #12140f); } .ds-field-input:focus { outline: none; border-color: var(--ink, #12140f); background: #fbf9f0; box-shadow: inset 0 -3px 0 0 var(--field, #f2e23e); }"
+    },
+    {
+      "name": "Status Badge",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "Estado de verificación de un juego; el color nunca va solo, siempre lleva texto.",
+      "html": "<span class=\"ds-badge ds-badge-verified\">Verificado</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.16rem 0.4rem; border: 1px solid rgba(18,20,15,0.34); border-radius: 2px; font-family: 'Martian Mono', ui-monospace, monospace; font-size: 0.56rem; font-weight: 500; letter-spacing: 0.06em; line-height: 1.4; text-transform: uppercase; color: #33362c; white-space: nowrap; } .ds-badge::before { content: ''; width: 4px; height: 4px; background: currentColor; } .ds-badge-verified { color: var(--success, #0b6a3c); border-color: rgba(11,106,60,0.4); }"
+    },
+    {
+      "name": "Result Surface",
+      "kind": "custom",
+      "refersTo": "result-surface",
+      "description": "Panel de resultado: el único bloque grande de amarillo, con la cifra en mono y la escala cm/360 debajo.",
+      "html": "<div class=\"ds-result\"><p class=\"ds-result-label\">Sensibilidad destino</p><p class=\"ds-result-value\">0.314</p><div class=\"ds-result-scale\"><span></span><i style=\"left:38%\"></i></div></div>",
+      "css": ".ds-result { padding: 20px; background: var(--field, #f2e23e); color: var(--on-field, #12140f); border: 1px solid var(--ink, #12140f); border-radius: 0; } .ds-result-label { margin: 0; font-family: 'Martian Mono', ui-monospace, monospace; font-size: 0.56rem; letter-spacing: 0.08em; text-transform: uppercase; } .ds-result-value { margin: 0.25rem 0 0; font-family: 'Martian Mono', ui-monospace, monospace; font-size: clamp(2.4rem, 7vw, 3.6rem); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; } .ds-result-scale { position: relative; height: 14px; margin-top: 14px; border-top: 1px solid rgba(18,20,15,0.45); } .ds-result-scale i { position: absolute; top: -1px; width: 2px; height: 12px; background: var(--ink, #12140f); }"
+    },
+    {
+      "name": "Live Strip",
+      "kind": "nav",
+      "refersTo": "live-strip",
+      "description": "Banda amarilla bajo la cabecera que muestra la conversión viva; el gesto de firma del producto.",
+      "html": "<div class=\"ds-live\"><span class=\"ds-live-dot\"></span><span>EN DIRECTO</span><span class=\"ds-live-sep\">/</span><span>CS2 → VALORANT</span><span class=\"ds-live-sep\">/</span><span class=\"ds-live-value\">0.314</span></div>",
+      "css": ".ds-live { display: flex; align-items: center; gap: 0.6rem; padding: 0 16px; min-height: 36px; background: var(--field, #f2e23e); border-bottom: 1px solid var(--ink, #12140f); color: var(--on-field, #12140f); font-family: 'Martian Mono', ui-monospace, monospace; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; overflow: hidden; } .ds-live-dot { width: 6px; height: 6px; background: var(--ink, #12140f); animation: ds-pulse 2s steps(2, end) infinite; } .ds-live-sep { opacity: 0.4; } .ds-live-value { margin-left: auto; font-weight: 700; } @keyframes ds-pulse { 50% { opacity: 0.25; } }"
+    },
+    {
+      "name": "Data Table",
+      "kind": "custom",
+      "refersTo": "data-table",
+      "description": "Tabla de constantes y equivalencias: hairlines, cabecera en mono y hover de fila en amarillo tenue.",
+      "html": "<table class=\"ds-table\"><thead><tr><th>Juego</th><th>Yaw (°/count)</th><th>Estado</th></tr></thead><tbody><tr><td>CS2</td><td>0.022</td><td>Verificado</td></tr><tr><td>VALORANT</td><td>0.07</td><td>Verificado</td></tr></tbody></table>",
+      "css": ".ds-table { width: 100%; border-collapse: collapse; font-family: Archivo, ui-sans-serif, system-ui, sans-serif; font-size: 0.8rem; color: #12140f; } .ds-table th { padding: 0.55rem 0.5rem; border-bottom: 1px solid rgba(18,20,15,0.34); font-family: 'Martian Mono', ui-monospace, monospace; font-size: 0.58rem; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: #666a5e; text-align: left; } .ds-table td { padding: 0.65rem 0.5rem; border-bottom: 1px solid rgba(18,20,15,0.14); } .ds-table tbody tr:hover { background: rgba(242,226,62,0.28); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "La hoja de retransmisión",
+    "overview": "SensiCore se lee como la hoja de estadísticas que un equipo de retransmisión imprime antes de un partido: papel hueso, reglas finas, cifras alineadas y un único campo de amarillo de señal reservado para lo que está pasando en directo. No hay cristal, no hay degradados de color, no hay sombras difusas: la jerarquía la construyen la escala tipográfica, las hairlines de 1 px y el contraste entre papel y tinta.\n\nLa densidad es deliberada. La página principal muestra la calculadora en el primer viewport junto a la evidencia que la sostiene (constantes, estado de verificación, fórmula). El visitante no tiene que creer un número: puede ver de dónde sale. Esa honestidad es también una decisión visual — el sistema prefiere una tabla a una tarjeta de marketing.\n\nEl amarillo es escaso por diseño. Aparece en la franja «EN DIRECTO» de la cabecera, en el resultado de la conversión y en el elemento activo de una lista; en ningún otro sitio. Su rareza es lo que lo convierte en señal.",
+    "keyCharacteristics": [
+      "Papel hueso y tinta; un solo campo de señal amarillo.",
+      "Radios de 0–2 px, hairlines de 1 px, cero sombras.",
+      "Archivo para la voz; Martian Mono para datos, etiquetas y cifras.",
+      "Estructura de tabla: cabecera de banda negra, cuerpo de datos, pie de metodología.",
+      "Movimiento mínimo, de una sola pasada, con prefers-reduced-motion respetado."
+    ],
+    "rules": [
+      { "name": "La regla del campo único", "body": "El amarillo de señal ocupa menos del 10 % de cualquier pantalla y solo aparece donde hay un valor en vivo, un resultado o una selección activa. Si dudas, no lo uses.", "section": "colors" },
+      { "name": "La regla del contraste oscurecido", "body": "Los colores de estado se oscurecen hasta cumplir AA sobre papel hueso; nunca se aclaran para «verse mejor».", "section": "colors" },
+      { "name": "La regla de la cifra mono", "body": "Todo número que el usuario vaya a comparar o copiar (sensibilidad, DPI, cm/360, yaw) se compone en Martian Mono con font-variant-numeric: tabular-nums. La prosa nunca va en mono.", "section": "typography" },
+      { "name": "La regla del tracking", "body": "El tracking negativo se reserva a los titulares display; las etiquetas en mono siempre llevan tracking positivo.", "section": "typography" },
+      { "name": "La regla del plano", "body": "Si un elemento necesita destacar, cambia de tono o gana un borde; no gana una sombra. Una sombra difusa, un halo o un backdrop-filter son errores de sistema, no variantes.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do usar el amarillo solo para lo vivo, lo seleccionado o el resultado.",
+      "Do componer cifras en Martian Mono con tabular-nums.",
+      "Do separar secciones con una regla de 2 px en tinta y paneles con 1 px.",
+      "Do mantener el foco visible con contorno de 2 px en tinta y offset de 2 px.",
+      "Do respetar prefers-reduced-motion: sin desplazamientos ni transiciones largas.",
+      "Do dejar que la tabla sea la protagonista cuando hay datos que comparar."
+    ],
+    "donts": [
+      "Don't añadir sombras, halos, backdrop-filter ni degradados de color.",
+      "Don't subir los radios por encima de 2 px ni introducir píldoras.",
+      "Don't usar el amarillo como fondo de página, texto largo o color de estado.",
+      "Don't poner prosa en mono ni cifras en la fuente de texto.",
+      "Don't inventar insignias de compatibilidad, constantes o datos de relleno.",
+      "Don't añadir un kicker o antetítulo sobre un titular: el titular se sostiene solo."
+    ]
+  }
+}

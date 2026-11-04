@@ -66,8 +66,8 @@ export function GameLibrary() {
 
   return (
     <div>
-      <div className="glass flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:p-4">
-        <div className="glass-inset flex flex-1 items-center gap-2 px-3 py-2">
+      <div className="flex flex-col gap-3 border border-[var(--ink)] bg-[var(--paper-raise)] p-3 sm:flex-row sm:items-center sm:p-4">
+        <div className="flex flex-1 items-center gap-2 border border-[var(--line-strong)] bg-[var(--paper)] px-3 py-2">
           <Search className="size-4 shrink-0 text-[var(--faint)]" aria-hidden="true" />
           <input
             type="search"
@@ -78,7 +78,11 @@ export function GameLibrary() {
             className="w-full bg-transparent text-sm outline-none placeholder:text-[var(--faint)]"
           />
         </div>
-        <div className="flex flex-wrap gap-1" role="group" aria-label="Filtrar por estado">
+        <div
+          className="flex flex-wrap gap-px border border-[var(--line-strong)] bg-[var(--line)]"
+          role="group"
+          aria-label="Filtrar por estado"
+        >
           {filters.map((item) => (
             <button
               key={item.id}
@@ -86,10 +90,10 @@ export function GameLibrary() {
               onClick={() => setFilter(item.id)}
               aria-pressed={filter === item.id}
               className={cn(
-                "rounded-full border px-3 py-1.5 text-[0.7rem] font-medium transition-colors",
+                "px-3 py-1.5 font-mono text-[0.6rem] uppercase tracking-[0.05em] transition-colors",
                 filter === item.id
-                  ? "border-[var(--line-accent)] bg-[var(--accent)]/10 text-[var(--accent)]"
-                  : "border-white/[0.08] text-[var(--muted)] hover:border-white/20 hover:text-white",
+                  ? "bg-[var(--ink)] text-[var(--paper)]"
+                  : "bg-[var(--paper-raise)] text-[var(--muted)] hover:text-[var(--ink)]",
               )}
             >
               {item.label}
@@ -98,103 +102,113 @@ export function GameLibrary() {
         </div>
       </div>
 
-      <p className="mt-4 text-[0.72rem] text-[var(--faint)]" role="status">
+      <p className="mono mt-3 text-[0.58rem] uppercase tracking-[0.05em] text-[var(--faint)]" role="status">
         {filtered.length} {filtered.length === 1 ? "juego" : "juegos"} · solo se
         convierten los que tienen una constante documentada
       </p>
 
-      <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-        {filtered.map((game) => {
-          const convertible = Boolean(game.yaw) && game.verification !== "pending";
-          return (
-            <article
-              key={game.id}
-              className="glass group flex min-w-0 flex-col p-4 transition-transform duration-300 hover:-translate-y-0.5"
-            >
-              <div className="flex items-start gap-3">
-                <span
-                  className={cn(
-                    "grid size-11 shrink-0 place-items-center rounded-xl border text-[0.72rem] font-bold",
-                    convertible
-                      ? "border-[var(--line-accent)] bg-[var(--accent)]/[0.08] text-[var(--accent)]"
-                      : "border-white/[0.08] bg-white/[0.03] text-[var(--faint)]",
-                  )}
-                  aria-hidden="true"
-                >
-                  {initials(game)}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <h2 className="truncate text-[0.95rem] font-semibold tracking-[-0.01em]">
-                    {game.name}
-                  </h2>
-                  <p className="truncate text-[0.68rem] text-[var(--faint)]">
-                    {game.developer}
-                    {game.releaseYear ? ` · ${game.releaseYear}` : ""}
-                  </p>
-                </div>
-                <span
-                  className={cn(
-                    "badge shrink-0",
-                    game.verification === "verified" && "badge-success",
-                    game.verification === "experimental" && "badge-warning",
-                    game.verification === "pending" && "badge",
-                  )}
-                >
-                  {game.verification === "verified" ? (
-                    <ShieldCheck className="size-3" aria-hidden="true" />
-                  ) : game.verification === "experimental" ? (
-                    <TriangleAlert className="size-3" aria-hidden="true" />
-                  ) : null}
-                  {statusLabels[game.verification]}
-                </span>
-              </div>
+      <div className="mt-3 border border-[var(--line-strong)]">
+        <div className="hidden grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_auto] gap-4 border-b border-[var(--ink)] px-4 py-2 md:grid">
+          <span className="label">Juego</span>
+          <span className="label">Capacidades</span>
+          <span className="label text-right">Estado y acción</span>
+        </div>
 
-              <div className="mt-3 flex flex-wrap gap-1.5">
-                {game.capabilities.length > 0 ? (
-                  game.capabilities.map((capability) => (
-                    <span key={capability} className="badge text-[0.6rem]">
-                      {capabilityLabels[capability]}
-                    </span>
-                  ))
-                ) : (
-                  <span className="badge text-[0.6rem]">Conversión no disponible</span>
-                )}
-              </div>
-
-              <p className="mt-3 line-clamp-2 text-[0.72rem] leading-relaxed text-[var(--muted)]">
-                {game.notes[0]}
-              </p>
-
-              <div className="mt-auto flex items-center justify-between gap-2 pt-4">
-                {convertible ? (
-                  <Link
-                    href={`/?game=${encodeURIComponent(game.id)}`}
-                    className="btn btn-secondary btn-sm"
+        <ul>
+          {filtered.map((game) => {
+            const convertible = Boolean(game.yaw) && game.verification !== "pending";
+            return (
+              <li
+                key={game.id}
+                className="grid gap-3 border-b border-[var(--line)] p-4 last:border-b-0 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_auto] md:items-center md:gap-4"
+              >
+                <div className="flex min-w-0 items-start gap-3">
+                  <span
+                    className={cn(
+                      "mono grid size-9 shrink-0 place-items-center border text-[0.6rem] font-bold",
+                      convertible
+                        ? "border-[var(--ink)] bg-[var(--field)] text-[var(--ink)]"
+                        : "border-[var(--line-strong)] bg-[var(--paper-sunk)] text-[var(--faint)]",
+                    )}
+                    aria-hidden="true"
                   >
-                    Usar en la calculadora
-                    <ArrowUpRight className="size-3.5" aria-hidden="true" />
-                  </Link>
-                ) : (
-                  <Link
-                    href="/methodology#limites"
-                    className="text-[0.7rem] font-medium text-[var(--warning)] underline-offset-4 hover:underline"
-                  >
-                    Por qué no está disponible
-                  </Link>
-                )}
-                {game.lastVerified ? (
-                  <span className="text-[0.6rem] text-[var(--faint)]">
-                    Verificado {game.lastVerified}
+                    {initials(game)}
                   </span>
-                ) : null}
-              </div>
-            </article>
-          );
-        })}
+                  <div className="min-w-0 flex-1">
+                    <h2 className="truncate text-[0.95rem] font-bold tracking-[-0.01em]">
+                      {game.name}
+                    </h2>
+                    <p className="truncate text-[0.68rem] text-[var(--faint)]">
+                      {game.developer}
+                      {game.releaseYear ? ` · ${game.releaseYear}` : ""}
+                    </p>
+                    <p className="mt-1 line-clamp-2 text-[0.72rem] leading-relaxed text-[var(--muted)] md:hidden">
+                      {game.notes[0]}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-1">
+                  {game.capabilities.length > 0 ? (
+                    game.capabilities.map((capability) => (
+                      <span key={capability} className="badge text-[0.52rem]">
+                        {capabilityLabels[capability]}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="badge text-[0.52rem]">Sin conversión</span>
+                  )}
+                </div>
+
+                <div className="flex flex-wrap items-center justify-between gap-3 md:justify-end">
+                  <span
+                    className={cn(
+                      "badge",
+                      game.verification === "verified" && "badge-success",
+                      game.verification === "experimental" && "badge-warning",
+                    )}
+                  >
+                    {game.verification === "verified" ? (
+                      <ShieldCheck className="size-2.5" aria-hidden="true" />
+                    ) : game.verification === "experimental" ? (
+                      <TriangleAlert className="size-2.5" aria-hidden="true" />
+                    ) : null}
+                    {statusLabels[game.verification]}
+                  </span>
+                  {convertible ? (
+                    <Link
+                      href={`/?game=${encodeURIComponent(game.id)}`}
+                      className="inline-flex items-center gap-1 text-[0.72rem] font-semibold underline decoration-[var(--line-strong)] underline-offset-4 hover:decoration-[var(--ink)]"
+                    >
+                      Usar en la calculadora
+                      <ArrowUpRight className="size-3.5" aria-hidden="true" />
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/methodology#limites"
+                      className="text-[0.7rem] font-medium text-[var(--warning)] underline underline-offset-4"
+                    >
+                      Por qué no está disponible
+                    </Link>
+                  )}
+                </div>
+
+                <p className="hidden text-[0.72rem] leading-relaxed text-[var(--muted)] md:col-span-3 md:block">
+                  {game.notes[0]}
+                  {game.lastVerified ? (
+                    <span className="mono ml-1 text-[0.6rem] text-[var(--faint)]">
+                      · verificado {game.lastVerified}
+                    </span>
+                  ) : null}
+                </p>
+              </li>
+            );
+          })}
+        </ul>
       </div>
 
       {filtered.length === 0 ? (
-        <div className="glass mt-3 p-10 text-center">
+        <div className="mt-3 border border-[var(--line-strong)] bg-[var(--paper-raise)] p-10 text-center">
           <p className="text-sm text-[var(--muted)]">
             No hay juegos que coincidan con «{deferredQuery}».
           </p>

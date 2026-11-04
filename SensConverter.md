@@ -4,7 +4,7 @@
 
 Act as a senior full-stack developer, software architect, UIUX designer, and testing engineer.
 
-Build a production-oriented web application for converting mouse sensitivity between FPS and other supported video games, inspired by the functionality of httpswww.mouse-sensitivity.com but with a substantially more modern interface, better usability, and a distinctive Liquid Glass visual identity.
+Build a production-oriented web application for converting mouse sensitivity between FPS and other supported video games, inspired by the functionality of httpswww.mouse-sensitivity.com but with a substantially more modern interface, better usability, and a distinctive "broadcast data sheet" visual identity.
 
 The working project name is SensiCore. Keep the name, logo, colors, and branding easy to change later.
 
@@ -19,7 +19,7 @@ This is a real software project, not a static mockup, landing page, or prototype
 3. Allow anonymous visitors to use the calculator immediately.
 4. Offer optional accounts to save, organize, edit, and synchronize sensitivity profiles.
 5. Provide a global cm360 reference profile that helps users maintain a consistent physical mouse movement distance across games.
-6. Deliver a polished, responsive Liquid Glass interface with excellent usability.
+6. Deliver a polished, responsive interface with a coherent, deliberately restricted visual system and excellent usability.
 7. Design the architecture so additional games, formulas, features, and integrations can be added without rewriting the application.
 
 Prioritize mathematical correctness, usability, performance, accessibility, and maintainability over unnecessary complexity.
@@ -370,68 +370,63 @@ Do not simulate a successful login or pretend that a configuration was saved rem
 
 ---
 
-## 8. LIQUID GLASS DESIGN SYSTEM
+## 8. BROADCAST DATA SHEET DESIGN SYSTEM
 
-The application must look premium, modern, technical, and distinctive.
+> Replaced on 2026-11-04. The original "Liquid Glass" direction (dark charcoal, translucent panels, backdrop blur, cyan/violet accents) is now an explicit anti-reference: it read as generic generated UI. The shipped system is "broadcast data sheet" (hoja de retransmisión). `DESIGN.md` is the normative implementation document; this section states the intent.
 
-Use a dark Liquid Glass aesthetic inspired by modern translucent operating-system interfaces, high-end gaming dashboards, and refined glassmorphism.
+The application must look like a measurement tool, not a marketing landing page.
 
-Do not simply place a blur effect over a generic dashboard. Establish a coherent design system.
+Use the visual language of a broadcast statistics sheet printed before a match: bone paper, ink, hairline rules, aligned figures and a single signal-yellow field reserved for what is live.
+
+Do not place a translucent card over a generic dashboard. Establish a coherent, deliberately restricted system.
 
 ### Visual direction
 
-- Deep charcoal, near-black, and midnight-blue backgrounds.
-- Translucent glass surfaces with controlled transparency.
-- Layered background gradients.
-- Subtle light reflections and edge highlights.
-- Soft, realistic shadows.
-- Carefully controlled backdrop blur.
-- Fine borders with low-opacity highlights.
-- Restrained accent colors, such as electric cyan, icy blue, or violet.
-- High-contrast, readable typography.
-- Generous spacing and a strong visual hierarchy.
-- Crisp, restrained icons.
-- Smooth, purposeful animations.
+- Bone paper background (`#e9e7de`), ink type (`#12140f`) and a raised paper tone for panels.
+- One signal colour only: broadcast yellow (`#f2e23e`).
+- Hairline rules of 1 px, and 2 px ink rules for structural section breaks.
+- Corner radii from 0 to 2 px. No pills.
+- No diffuse shadows, no glow, no coloured gradients, no glass, no backdrop blur.
+- Status colours are darkened until they pass AA on paper: green, amber, red.
+- High-contrast, readable typography with tabular figures.
+- Tight groups, generous separation, obvious scale and weight steps.
+- Crisp, restrained Lucide icons at 14–18 px.
 
-Create depth through layers rather than excessive glow.
+Create hierarchy with type scale, tonal steps and rules, never with elevation.
 
-Use a restrained accent palette instead of making every component colorful. The calculator's results should stand out without relying on constant animation.
+Keep the signal colour under roughly 10% of any screen. The result stands out because the rest of the page refuses colour, not because everything else animates.
 
-### Glass surfaces
+### Surfaces
 
 Create reusable visual variants, such as
 
-- Primary glass panel.
-- Secondary glass panel.
-- Floating toolbar.
-- Glass navigation.
-- Elevated result card.
-- Modal and dropdown surfaces.
-- Subtle inset input surfaces.
+- Primary panel (1 px ink border, raised paper).
+- Secondary panel (1 px hairline border, no fill).
+- Data table (hairline rows, mono header, signal-yellow hover).
+- Live strip under the header, fed by the calculator.
+- Result surface (solid signal yellow, mono figure, cm/360 scale).
+- Sunk formula block (darker paper).
+- Inset input surfaces with a 3 px inner underline on focus.
 
 Define consistent CSS tokens for
 
-- Backgrounds.
-- Glass opacity.
-- Blur levels.
-- Borders.
-- Shadows.
-- Accent colors.
+- Paper, raised paper, sunk paper and ink.
+- Hairlines and strong hairlines.
+- Signal yellow and its soft tint.
+- Status colours.
 - Corner radii.
 - Spacing.
-- Animation durations.
+- Animation durations and a single easing curve.
 
-Use backdrop filters progressively, with suitable fallbacks for browsers that do not support them.
-
-Do not apply heavy blur to every element. Maintain performance and ensure that text, inputs, and buttons remain easy to read.
+Every component class lives in `@layer components` and every element reset in `@layer base`, so Tailwind utilities can still override layout classes. Do not reintroduce blurred, translucent or shadowed surfaces.
 
 ### Typography and layout
 
-Use a clean modern sans-serif typeface. A restrained monospace font can be used for numeric sensitivity values and technical measurements.
+Use Archivo for display and body copy, and Martian Mono for labels, table headers, the live strip and every figure the user compares or copies.
 
-Use tabular numerals for measurements that users compare.
+Use tabular numerals for measurements that users compare. Prose never goes in mono; figures never go in the text face.
 
-Design the main calculator as the visual centerpiece. It should feel like a professional tool, not an administrative form.
+Design the main calculator as a data sheet: source and target configuration, the yellow result panel, and the cm/360 scale, with the evidence (yaw, verification status, formula) reachable in the same view or one click away. It should feel like a professional instrument, not an administrative form.
 
 The source and target configurations should be easy to compare. On wide screens, use a balanced side-by-side layout. On smaller screens, stack the sections without losing the conversion flow.
 

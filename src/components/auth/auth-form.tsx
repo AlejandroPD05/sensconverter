@@ -167,7 +167,7 @@ export function AuthForm({ mode, next }: { mode: Mode; next: string }) {
             {mode === "login" ? (
               <Link
                 href="/forgot-password"
-                className="text-[0.68rem] font-normal tracking-normal text-[var(--accent)] hover:underline"
+                className="text-[0.68rem] font-normal tracking-normal text-[var(--ink-soft)] underline decoration-[var(--line-strong)] underline-offset-4 hover:decoration-[var(--ink)]"
               >
                 ¿La olvidaste?
               </Link>
@@ -189,7 +189,7 @@ export function AuthForm({ mode, next }: { mode: Mode; next: string }) {
             <button
               type="button"
               onClick={() => setShowPassword((value) => !value)}
-              className="absolute inset-y-0 right-2 grid w-9 place-items-center text-[var(--faint)] hover:text-white"
+              className="absolute inset-y-0 right-2 grid w-9 place-items-center text-[var(--faint)] transition-colors hover:text-[var(--ink)]"
               aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
             >
               {showPassword ? (

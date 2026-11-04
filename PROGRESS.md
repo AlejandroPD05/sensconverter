@@ -1,10 +1,10 @@
 # PROGRESS — SensiCore
 
-Actualizado: 02/11/2026.
+Actualizado: 04/11/2026.
 
 ## Fases de la especificación
 
-- [x] **Fase 1 — Base.** Next.js 16 + TypeScript estricto + Tailwind 4; tokens Liquid Glass; navegación de escritorio y móvil; registro de juegos con tipos y capacidades.
+- [x] **Fase 1 — Base.** Next.js 16 + TypeScript estricto + Tailwind 4; navegación de escritorio y móvil; registro de juegos con tipos y capacidades. (Los tokens originales "Liquid Glass" se sustituyeron en la Fase 9.)
 - [x] **Fase 2 — Motor.** Fórmulas cm/360, inversa, eDPI, sens→sens, FOV aware y distancia de monitor; validación; disponibilidad por método; 22 pruebas unitarias.
 - [x] **Fase 3 — Calculadora anónima.** Selectores con búsqueda y teclado; sensibilidad, DPI compartido o distinto; FOV avanzado; swap, reset, copiar y compartir; resultado en vivo; herramienta global con persistencia local transparente.
 - [x] **Fase 4 — Biblioteca y acabado.** Búsqueda, filtros por estado, estados vacíos, enlaces a la calculadora o a los límites; responsive; reduced motion; foco visible.
@@ -12,6 +12,7 @@ Actualizado: 02/11/2026.
 - [x] **Fase 6 — Calidad.** Lint, typecheck, unitarias, build y E2E anónimas, autenticadas y de RLS verificadas contra un proyecto Supabase real.
 - [x] **Fase 7 — Entrega.** README con instalación, Supabase, despliegue, comandos, juegos y límites; `.env.example`; migraciones; este archivo.
 - [x] **Fase 8 — Producción.** Desplegado en Vercel (`https://sensicore-zeta.vercel.app`) con las variables públicas de Supabase y el Site URL/Redirect URLs del proyecto real apuntando al dominio.
+- [x] **Fase 9 — Rediseño visual.** Sustituida la estética "Liquid Glass" (anti-referencia) por el sistema "hoja de retransmisión": papel hueso, tinta, un único amarillo de señal, Archivo + Martian Mono, radios 0–2 px, hairlines, franja EN DIRECTO alimentada por la calculadora y escala cm/360. `DESIGN.md` y `.impeccable/design.json` documentan el sistema; `impeccable detect` no encuentra anti-patrones.
 
 ## Verificación real
 

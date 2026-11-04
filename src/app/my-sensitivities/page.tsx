@@ -14,8 +14,11 @@ export const metadata: Metadata = { title: "Mis sensibilidades" };
 export default async function MySensitivitiesPage() {
   if (!isSupabaseConfigured) {
     return (
-      <div className="site-container max-w-3xl pt-10 sm:pt-14">
-        <h1 className="display text-4xl">Mis sensibilidades</h1>
+      <div className="site-container max-w-3xl pt-8 sm:pt-10">
+        <p className="label">Tu biblioteca</p>
+        <h1 className="display mt-2 text-[clamp(2rem,4.5vw,3rem)]">
+          Mis sensibilidades
+        </h1>
         <p className="mt-2 text-sm text-[var(--muted)]">
           El guardado en la nube necesita Supabase configurado. La calculadora
           sigue funcionando sin cuenta.
@@ -53,25 +56,25 @@ export default async function MySensitivitiesPage() {
   });
 
   return (
-    <div className="site-container pt-10 sm:pt-14">
-      <header className="flex flex-wrap items-end justify-between gap-4 animate-fade-up">
-        <div>
-          <p className="eyebrow">Tu biblioteca</p>
-          <h1 className="display mt-2 text-[clamp(2.2rem,5vw,3.4rem)]">
-            Mis <span className="text-gradient">sensibilidades</span>
+    <div className="site-container pt-8 sm:pt-10">
+      <header className="flex flex-wrap items-end justify-between gap-4 border-b-2 border-[var(--ink)] pb-5">
+        <div className="min-w-0">
+          <p className="label">Tu biblioteca</p>
+          <h1 className="display mt-2 text-[clamp(2rem,5vw,3.2rem)]">
+            Mis sensibilidades
           </h1>
-          <p className="mt-3 max-w-2xl text-[0.86rem] leading-relaxed text-[var(--muted)]">
+          <p className="mt-2 max-w-2xl text-[0.84rem] leading-relaxed text-[var(--muted)]">
             Perfiles guardados en tu cuenta. Puedes tener varias configuraciones
             por juego, marcarlas como favoritas y cargarlas en la calculadora.
           </p>
         </div>
-        <Link href="/" className="btn btn-primary">
+        <Link href="/" className="btn btn-primary shrink-0">
           Nueva conversión
           <ArrowRight className="size-4" aria-hidden="true" />
         </Link>
       </header>
 
-      <div className="mt-7">
+      <div className="mt-5">
         <SavedProfiles profiles={profiles} />
       </div>
     </div>

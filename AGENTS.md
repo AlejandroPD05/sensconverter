@@ -15,7 +15,7 @@
 - Supabase Auth + Postgres con RLS (`@supabase/ssr`), Zod para validación.
 - Vitest (unitarias) y Playwright (E2E: Chromium de escritorio y Pixel 7).
 - npm como gestor de paquetes. Entorno Windows/PowerShell.
-- La estética es "Liquid Glass" oscura: tokens CSS propios en `src/app/globals.css`, no un dashboard genérico con blur.
+- La estética es "hoja de retransmisión": papel hueso, tinta, un único amarillo de señal, radios 0–2 px y hairlines de 1 px. `DESIGN.md` es el documento normativo del sistema; `src/app/globals.css` es la implementación. El antiguo "Liquid Glass" oscuro es anti-referencia: nada de cristal, blur, glow, sombras difusas ni degradados de color.
 
 ## Reglas que un agente suele romper
 
