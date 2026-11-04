@@ -6,12 +6,13 @@ import { useEffect, useState } from "react";
 import {
   Calculator,
   BookOpen,
+  Coffee,
   Gamepad2,
   Gauge,
   LogIn,
   UserRound,
 } from "lucide-react";
-import { brand } from "@/lib/brand";
+import { brand, donation } from "@/lib/brand";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/cn";
 
@@ -113,6 +114,18 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
+          {donation.url ? (
+            <a
+              href={donation.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="nav-link hidden lg:inline-flex"
+            >
+              <Coffee className="size-4 opacity-70" aria-hidden="true" />
+              Apoyar
+              <span className="sr-only"> en {donation.provider} (se abre en otra pestaña)</span>
+            </a>
+          ) : null}
           <Link
             href="/my-sensitivities"
             className="nav-link hidden lg:inline-flex"

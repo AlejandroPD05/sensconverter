@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { brand } from "@/lib/brand";
+import { Coffee } from "lucide-react";
+import { brand, donation } from "@/lib/brand";
 
 const groups = [
   {
@@ -33,6 +34,19 @@ export function SiteFooter() {
             obligatoria, sin resultados inventados. La sensación de apuntado
             depende de más factores que cm/360.
           </p>
+          {donation.url ? (
+            <a
+              href={donation.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-secondary btn-sm mt-4"
+              data-testid="donation-link"
+            >
+              <Coffee className="size-4" aria-hidden="true" />
+              Apóyalo en {donation.provider}
+              <span className="sr-only"> (se abre en otra pestaña)</span>
+            </a>
+          ) : null}
         </div>
 
         {groups.map((group) => (
