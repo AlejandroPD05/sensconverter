@@ -68,6 +68,24 @@ test.describe("calculadora anónima", () => {
     await expect(page.getByRole("heading", { name: /Lo que esta herramienta no hace/i })).toBeVisible();
   });
 
+  test("calcula las miras de TF2 con focal length y no ofrece Viewspeed", async ({ page }) => {
+    await page.goto("/?game=cs2&target=tf2");
+    const calculator = page.getByTestId("calculator");
+
+    await expect(calculator.getByRole("radio", { name: /Viewspeed/i })).toBeDisabled();
+    await calculator.getByText("Focal length (0%)", { exact: true }).click();
+
+    const scopes = calculator.getByTestId("scope-table");
+    await expect(scopes).toContainText("zoom_sensitivity_ratio");
+    // tan(10°) / tan(45°) / (20 / 90): rifle de TF2 a 0% con FOV 90.
+    await expect(scopes).toContainText("0.793471");
+  });
+
+  test("sin modelo de zoom no inventa valores de mira", async ({ page }) => {
+    await page.goto("/?game=cs2&target=valorant");
+    await expect(page.getByTestId("scope-gap")).toContainText(/no damos ningún valor/i);
+  });
+
   test("la navegación inferior solo aparece en móvil y no desborda", async ({ page }, testInfo) => {
     await page.goto("/");
     await expect(page.getByTestId("target-sensitivity")).toBeVisible();

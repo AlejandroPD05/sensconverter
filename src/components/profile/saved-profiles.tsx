@@ -46,7 +46,7 @@ export interface SavedProfileView {
 
 const methodLabels: Record<string, string> = {
   cm360: "Distancia 360°",
-  "fov-aware": "FOV aware",
+  "fov-aware": "Focal length (0%)",
   "monitor-distance": "Distancia de monitor",
   "game-specific": "Específica del juego",
 };

@@ -23,9 +23,9 @@ const filters: Array<{ id: Filter; label: string }> = [
 const capabilityLabels: Record<ConversionCapability, string> = {
   cm360: "cm/360",
   sensToSens: "Sens → sens",
-  fovAware: "FOV aware",
+  fovAware: "Focal length",
   monitorDistance: "Monitor",
-  scoped: "Zoom",
+  scoped: "Miras",
   ads: "ADS",
 };
 

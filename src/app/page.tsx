@@ -230,7 +230,7 @@ export default async function HomePage({
             </h2>
             <p className="mt-2 max-w-md text-[0.8125rem] leading-relaxed text-[var(--muted)]">
               La metodología explica la fórmula, la diferencia entre distancia
-              360°, FOV aware y distancia de monitor, y por qué dos juegos con
+              360°, focal length y distancia de monitor, y por qué dos juegos con
               el mismo cm/360 no se sienten idénticos.
             </p>
           </div>

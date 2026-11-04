@@ -8,6 +8,8 @@ import {
   sensitivityToSensitivity,
 } from "./engine";
 import { games, getGame } from "@/lib/games/registry";
+import { actualFov } from "./fov";
+import { zoomRecommendations } from "./zoom";
 
 describe("cm/360", () => {
   it("calcula el ejemplo documentado de Valorant (0.4 a 800 DPI)", () => {
@@ -208,7 +210,7 @@ describe("métodos de conversión", () => {
     const fov = convertSensitivity({
       ...common,
       method: "fov-aware",
-      sourceFov: 106.26,
+      sourceFov: 90,
       targetFov: 103,
     });
     expect(plain.ok && fov.ok).toBe(true);
@@ -282,16 +284,133 @@ describe("métodos de conversión", () => {
 });
 
 describe("capacidades declaradas", () => {
-  it("ningún juego anuncia ADS o zoom mientras el motor no los convierta", () => {
+  it("las capacidades coinciden con los datos de FOV y zoom", () => {
     // La biblioteca muestra cada capacidad como badge: declarar una que el motor
     // no implementa sería una compatibilidad falsa.
-    const unimplemented = ["scoped", "ads"] as const;
     for (const game of games) {
-      for (const capability of unimplemented) {
-        expect(game.capabilities, `${game.id} declara ${capability}`).not.toContain(
-          capability,
-        );
-      }
+      expect(game.capabilities, `${game.id} declara ads`).not.toContain("ads");
+      // "scoped" solo con un modelo de zoom declarado.
+      expect(game.capabilities.includes("scoped"), `${game.id} y scoped`).toBe(
+        Boolean(game.zoom),
+      );
+      // Los métodos con FOV solo si el juego declara cómo lo mide.
+      expect(game.capabilities.includes("fovAware"), `${game.id} y fovAware`).toBe(
+        Boolean(game.fov),
+      );
     }
+  });
+});
+
+describe("FOV real y relación de aspecto", () => {
+  it("90 horizontal 4:3 equivale a 106.26° en 16:9 y 73.74° vertical", () => {
+    const fov = actualFov(90, "hdeg-4:3", 16 / 9);
+    expect(fov.horizontal).toBeCloseTo(106.26, 2);
+    expect(fov.vertical).toBeCloseTo(73.74, 2);
+  });
+
+  it("103 horizontal 16:9 da 70.53° vertical en cualquier monitor (Hor+)", () => {
+    expect(actualFov(103, "hdeg-16:9", 16 / 9).vertical).toBeCloseTo(70.53, 2);
+    expect(actualFov(103, "hdeg-16:9", 4 / 3).vertical).toBeCloseTo(70.53, 2);
+    expect(actualFov(103, "hdeg-16:9", 4 / 3).horizontal).toBeLessThan(103);
+  });
+
+  it("un FOV vertical se mantiene y el horizontal crece con el aspecto", () => {
+    const wide = actualFov(60, "vdeg", 21 / 9);
+    const normal = actualFov(60, "vdeg", 16 / 9);
+    expect(wide.vertical).toBeCloseTo(60, 10);
+    expect(wide.horizontal).toBeGreaterThan(normal.horizontal);
+  });
+
+  it("CS2 → VALORANT con focal length usa los FOV reales, no los valores de menú", () => {
+    const result = convertSensitivity({
+      sourceGameId: "cs2",
+      targetGameId: "valorant",
+      sourceSensitivity: 1,
+      sourceDpi: 800,
+      method: "fov-aware",
+      sourceFov: 90,
+      targetFov: 103,
+      aspectRatio: 16 / 9,
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    const expected =
+      (1 * 0.022 / 0.07) *
+      (Math.tan((103 * Math.PI) / 360) / Math.tan((106.2602 * Math.PI) / 360));
+    expect(result.targetSensitivity).toBeCloseTo(expected, 4);
+    expect(result.sourceActualFov?.horizontal).toBeCloseTo(106.26, 2);
+  });
+
+  it("la distancia de monitor vertical al 100% compara los FOV verticales", () => {
+    const common = {
+      sourceGameId: "apex-legends",
+      targetGameId: "r6-siege",
+      sourceSensitivity: 2,
+      sourceDpi: 800,
+      method: "monitor-distance" as const,
+      sourceFov: 90,
+      targetFov: 60,
+      monitorDistance: 1,
+      aspectRatio: 16 / 9,
+    };
+    const vertical = convertSensitivity({ ...common, monitorAxis: "vertical" });
+    const horizontal = convertSensitivity({ ...common, monitorAxis: "horizontal" });
+    expect(vertical.ok && horizontal.ok).toBe(true);
+    if (!vertical.ok || !horizontal.ok) return;
+    expect(vertical.fovRatio).toBeCloseTo(60 / 73.7398, 4);
+    expect(vertical.targetSensitivity).not.toBeCloseTo(horizontal.targetSensitivity, 4);
+  });
+
+  it("Viewspeed no está disponible y Fortnite no ofrece métodos con FOV", () => {
+    const cs2 = getGame("cs2")!;
+    const fortnite = getGame("fortnite")!;
+    const viewspeed = getMethodAvailability(cs2, getGame("valorant")!).find(
+      (item) => item.method.id === "viewspeed",
+    );
+    expect(viewspeed?.available).toBe(false);
+    const focal = getMethodAvailability(cs2, fortnite).find(
+      (item) => item.method.id === "fov-aware",
+    );
+    expect(focal?.available).toBe(false);
+    expect(focal?.reason).toMatch(/Fortnite/);
+  });
+});
+
+describe("miras (modelo lineal de Source)", () => {
+  it("la AWP a 0% da el conocido zoom_sensitivity_ratio 0.818933", () => {
+    const awp = zoomRecommendations({
+      game: getGame("cs2")!,
+      hipFov: 90,
+      aspectRatio: 16 / 9,
+      match: "monitor",
+      monitorDistance: 0,
+      monitorAxis: "horizontal",
+    });
+    expect(awp?.[0].setting).toBeCloseTo(0.818933, 5);
+  });
+
+  it("igualar la distancia 360° con el rifle de TF2 deshace el escalado lineal", () => {
+    const sniper = zoomRecommendations({
+      game: getGame("tf2")!,
+      hipFov: 90,
+      aspectRatio: 16 / 9,
+      match: "cm360",
+      monitorDistance: 0,
+      monitorAxis: "horizontal",
+    });
+    expect(sniper?.[0].setting).toBeCloseTo(90 / 20, 10);
+  });
+
+  it("sin modelo verificado no devuelve ningún valor", () => {
+    expect(
+      zoomRecommendations({
+        game: getGame("valorant")!,
+        hipFov: 103,
+        aspectRatio: 16 / 9,
+        match: "monitor",
+        monitorDistance: 0,
+        monitorAxis: "horizontal",
+      }),
+    ).toBeNull();
   });
 });

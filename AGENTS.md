@@ -25,6 +25,7 @@
 - Motor de conversión aislado de UI, auth y base de datos (`lib/conversion`, `lib/games`).
 - Registro de juegos data-driven con capacidades declaradas; la UI no debe tener condicionales por juego.
 - Fórmula base solo para modelos yaw: `cm360 = (360 × 2.54) / (DPI × sensitivity × yaw)`; inversa para obtener sensibilidad. Valida entradas y evita `NaN`/`Infinity`.
+- El FOV se guarda en las unidades de cada juego (`fov.scale`) y se convierte con `lib/conversion/fov.ts`; las miras solo existen si el juego declara `zoom` con fuente. Viewspeed está desactivado a propósito: no hay fórmula pública verificable.
 - RLS activado en tablas de usuario; nunca confiar en un user ID enviado por el cliente.
 - Los inputs de DPI usan `step={1}`. No vuelvas a `step={50}` con `min={1}`: hace que 800 o 1600 sean valores HTML inválidos y bloquea el envío de los formularios.
 - El nombre "SensiCore" es provisional: mantén marca, logo y colores centralizados/fáciles de cambiar.
@@ -45,8 +46,8 @@ npm install
 npm run dev          # http://localhost:3000
 npm run lint
 npm run typecheck
-npm test             # Vitest: 24 pruebas
-npm run test:e2e     # Playwright: 33 pruebas (escritorio, móvil y sin Supabase)
+npm test             # Vitest: 33 pruebas
+npm run test:e2e     # Playwright: 37 pruebas (escritorio, móvil y sin Supabase)
 npm run build        # incluye TypeScript; no hace falta tsc aparte
 npm start            # sirve el build de producción
 ```

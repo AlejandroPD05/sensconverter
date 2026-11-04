@@ -15,6 +15,7 @@ Actualizado: 04/11/2026.
 - [x] **Fase 9 — Rediseño visual.** Sustituida la estética "Liquid Glass" (anti-referencia) por el sistema "hoja de retransmisión": papel hueso, tinta, un único amarillo de señal, Archivo + Martian Mono, radios 0–2 px, hairlines, franja EN DIRECTO alimentada por la calculadora y escala cm/360. `DESIGN.md` documentaba el sistema (sustituido en la Fase 10).
 - [x] **Fase 10 — Interfaz clara SaaS.** Sustituida la "hoja de retransmisión" por un estilo claro moderno: fondo blanco, grises zinc, acento índigo, Geist + Geist Mono, tarjetas redondeadas con borde fino y selectores segmentados. Se quitó la franja EN DIRECTO (y `lib/live-readout.ts`). `DESIGN.md` describe el sistema nuevo; las capturas de `.impeccable/review/` están regeneradas y `.impeccable/design.json` (sistema anterior) se eliminó.
 - [x] **Fase 11 — Pendientes de la spec.** Cuenta con configuraciones recientes, juegos favoritos (derivados de los perfiles favoritos) y borrado de cuenta seguro mediante `delete_own_account()` (migración 0003). Rango de R6 Siege corregido a 1–100 enteros. E2E nuevas: aislamiento RLS entre usuarios y la app sin credenciales de Supabase.
+- [x] **Fase 12 — Sistema de FOV y miras.** Convención de FOV por juego (horizontal 4:3, horizontal 16:9, vertical) con fuente y estado; relación de aspecto del monitor; distancia de monitor horizontal o vertical con porcentaje (0% = focal length); tabla de miras con `zoom_sensitivity_ratio` para TF2 (Source SDK 2013, verificado) y la AWP de CS2 (experimental). Viewspeed visible pero desactivado: no hay fórmula pública verificable. Fortnite sin FOV documentado. Rangos corregidos: Apex 70–110, TF2 75–90, Quake Champions 100–140, Destiny 2 55–105, R6 60–90 vertical.
 
 ## Verificación real
 
@@ -22,9 +23,9 @@ Actualizado: 04/11/2026.
 | --- | --- |
 | `npm run lint` | Sin errores |
 | `npm run typecheck` | Sin errores |
-| `npm test` | 24/24 |
+| `npm test` | 33/33 |
 | `npm run build` | Correcto |
-| `npm run test:e2e` | 33/33 (incluye cuenta, RLS entre usuarios, aviso de enlace fallido y servidor sin Supabase; escritorio y móvil) |
+| `npm run test:e2e` | 37/37 (incluye miras de TF2 y Viewspeed desactivado; incluye cuenta, RLS entre usuarios, aviso de enlace fallido y servidor sin Supabase; escritorio y móvil) |
 | Revisión visual 390 / 768 / 1440 | Sin desbordamiento horizontal de página; navegación inferior solo en móvil |
 
 La revisión visual corrigió tres defectos reales: la navegación inferior se mostraba también en escritorio, la cabecera duplicaba el acceso a cuenta en móvil y las tarjetas de la biblioteca y el aviso de configuración desbordaban en pantallas estrechas. Las clases de componente se movieron a `@layer components` para que las utilidades de Tailwind puedan ocultarlas o limitarlas.
@@ -38,12 +39,13 @@ El aviso de hidratación sobre `caret-color: transparent` no procede de la app: 
 - [x] Pruebas autenticadas y de aislamiento RLS ejecutadas contra Supabase real, en escritorio y móvil.
 - [ ] **Rotar o revocar la secret key que se compartió por chat.** La app no la usa y no está guardada en el repositorio ni en `.env.local`.
 - [x] Flujo de correo verificado en todo lo que controla la app: la petición de recuperación envía `code_challenge` S256, `/auth/callback` canjea el código, `/reset-password` acepta la sesión, cambia la contraseña y permite iniciar sesión con la nueva.
-- [ ] Envío real de correo: depende de configurar Custom SMTP y un buzón real. Con `example.com` GoTrue responde `email_address_invalid`; con el servicio compartido, `over_email_send_rate_limit`.
+- [x] Envío real de correo: Custom SMTP con Gmail (smtp.gmail.com:587, contraseña de aplicación) configurado el 04/11/2026; el usuario confirmó que llega el correo de registro.
 - [x] Site URL `https://sensicore-zeta.vercel.app` y Redirect URLs (incluido `/auth/callback` de producción) comprobados el 04/11/2026.
 - [x] Inicializar Git y hacer el primer commit.
 - [x] Desplegar en Vercel y configurar Site URL y Redirect URLs del proyecto Supabase real.
 - [ ] Añadir juegos pendientes solo cuando exista una constante documentada y contrastada.
-- [ ] Valorar ADS/scope y aspect ratio cuando haya fórmulas verificadas; hoy se declaran fuera de alcance.
+- [x] Relación de aspecto y miras con fuente (TF2, AWP de CS2).
+- [ ] Miras del resto de juegos: solo cuando haya un modelo de zoom público y contrastado (hoy no lo hay para VALORANT, Apex, Overwatch 2, CoD, R6, Destiny 2, Quake Champions ni Fortnite).
 - [x] Borrado de cuenta seguro implementado sin service-role key (función `security definer` que solo borra `auth.uid()`).
 - [x] Migración `0003_delete_own_account.sql` aplicada en el proyecto real (SQL Editor, 04/11/2026); la clave anónima no puede ejecutar la función. No se probó el borrado real de extremo a extremo para no eliminar el usuario de prueba.
 - [x] Redesplegado en Vercel con las fases 10 y 11.

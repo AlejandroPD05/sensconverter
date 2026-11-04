@@ -1,3 +1,5 @@
+import type { FovScale } from "@/lib/conversion/fov";
+
 export type VerificationStatus =
   | "verified"
   | "experimental"
@@ -18,12 +20,41 @@ export interface YawSource {
 }
 
 export interface GameFovConfig {
-  /** Fixed horizontal FOV in degrees, when the game does not allow changing it. */
+  /** How the in-game value is measured. */
+  scale: FovScale;
+  /** Fixed value in the game's own units, when the game does not allow changing it. */
   fixed?: number;
-  /** Default horizontal FOV in degrees, used as a starting point. */
+  /** Starting value in the game's own units. */
   default: number;
   min: number;
   max: number;
+  note: string;
+  /** Where the range and the measurement convention come from. */
+  source: YawSource;
+  /** `experimental` when sources disagree or only community testing backs it. */
+  verification: "verified" | "experimental";
+}
+
+export interface ZoomLevel {
+  id: string;
+  name: string;
+  /** Zoomed FOV in the same units as the game's FOV setting. */
+  fov: number;
+}
+
+/**
+ * How scoped sensitivity scales. Only models with a verifiable source are
+ * declared; games without one have no zoom data at all.
+ * - `source-linear`: sensitivity × (zoomFOV / hipFOV) × setting (Source SDK).
+ */
+export interface GameZoomConfig {
+  model: "source-linear";
+  settingName: string;
+  settingDefault: number;
+  decimals: number;
+  levels: ZoomLevel[];
+  source: YawSource;
+  verification: "verified" | "experimental";
   note: string;
 }
 
@@ -52,6 +83,10 @@ export interface GameDefinition {
   capabilities: ConversionCapability[];
   sensitivity: GameSensitivityConfig;
   fov?: GameFovConfig;
+  zoom?: GameZoomConfig;
+  /** Why FOV or zoom data is missing, shown instead of the controls. */
+  fovGap?: string;
+  zoomGap?: string;
   defaultSensitivity: number;
   verification: VerificationStatus;
   lastVerified?: string;

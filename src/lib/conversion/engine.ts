@@ -3,6 +3,14 @@ import {
   isConvertible,
   type GameDefinition,
 } from "@/lib/games/types";
+import {
+  actualFov,
+  defaultAspectRatioId,
+  getAspectRatio,
+  monitorDistanceRatio,
+  type ActualFov,
+  type MonitorAxis,
+} from "./fov";
 
 export const CM_PER_INCH = 2.54;
 export const DEGREES_PER_TURN = 360;
@@ -11,6 +19,7 @@ export type ConversionMethodId =
   | "cm360"
   | "fov-aware"
   | "monitor-distance"
+  | "viewspeed"
   | "game-specific";
 
 export interface ConversionMethod {
@@ -35,11 +44,11 @@ export const conversionMethods: ConversionMethod[] = [
   },
   {
     id: "fov-aware",
-    name: "FOV aware",
+    name: "Focal length (0%)",
     shortDescription:
-      "Ajusta la sensibilidad para conservar la densidad angular en el centro de la pantalla.",
+      "Conserva la velocidad aparente en el centro de la pantalla: distancia de monitor al 0%.",
     preserves:
-      "El movimiento necesario para alcanzar el centro de la mira (0% de distancia de monitor).",
+      "El movimiento necesario para pequeños ajustes alrededor de la mira (0% de distancia de monitor).",
     doesNotPreserve:
       "La distancia de un giro de 360°, que cambiará respecto al juego de origen.",
     requiresFov: true,
@@ -48,18 +57,27 @@ export const conversionMethods: ConversionMethod[] = [
     id: "monitor-distance",
     name: "Distancia de monitor",
     shortDescription:
-      "Coincide el movimiento físico hasta un porcentaje concreto del ancho de pantalla.",
+      "Coincide el movimiento hasta un porcentaje del ancho (horizontal) o del alto (vertical) de la pantalla.",
     preserves:
-      "La distancia de ratón para recorrer la fracción de pantalla que elijas.",
+      "La distancia de ratón para llevar la mira al punto de la pantalla que elijas, medido desde el centro.",
     doesNotPreserve:
       "La distancia de 360° ni el comportamiento fuera de esa franja de pantalla.",
+    requiresFov: true,
+  },
+  {
+    id: "viewspeed",
+    name: "Viewspeed",
+    shortDescription:
+      "Método comunitario que intenta igualar la velocidad percibida de la imagen.",
+    preserves: "La velocidad percibida según su autor.",
+    doesNotPreserve: "Ninguna distancia física concreta.",
     requiresFov: true,
   },
   {
     id: "game-specific",
     name: "Específica del juego",
     shortDescription:
-      "Fórmula documentada para un par concreto de juegos o para ADS/miras.",
+      "Fórmula documentada para un par concreto de juegos.",
     preserves: "Lo que defina la fórmula verificada del par.",
     doesNotPreserve: "Cualquier comportamiento no cubierto por esa fórmula.",
     requiresFov: false,
@@ -89,8 +107,12 @@ export interface ConversionInput {
   method: ConversionMethodId;
   sourceFov?: number;
   targetFov?: number;
-  /** Fraction of the screen half-width, 0–1. Used by monitor-distance. */
+  /** Fraction of the half-screen on the chosen axis, 0–1. Used by monitor-distance. */
   monitorDistance?: number;
+  /** Axis the monitor distance is measured on. Defaults to horizontal. */
+  monitorAxis?: MonitorAxis;
+  /** Width / height of the player's screen. Defaults to 16:9. */
+  aspectRatio?: number;
 }
 
 export interface MethodAvailability {
@@ -117,6 +139,10 @@ export interface ConversionSuccess {
   targetDegreesPerCount: number;
   sourceFov?: number;
   targetFov?: number;
+  sourceActualFov?: ActualFov;
+  targetActualFov?: ActualFov;
+  aspectRatio?: number;
+  monitorAxis?: MonitorAxis;
   monitorDistance?: number;
   fovRatio?: number;
   warnings: string[];
@@ -165,33 +191,11 @@ export function sensitivityToSensitivity(
   );
 }
 
-function degreesToRadians(degrees: number): number {
-  return (degrees * Math.PI) / 180;
-}
+/** @deprecated Usa monitorDistanceRatio de ./fov. */
+export const fovRatio = monitorDistanceRatio;
 
-/**
- * Ratio between the angles covered at a given monitor-distance fraction.
- * p = 0 is the crosshair (tangent) case, p = 1 is the screen edge (linear) case.
- */
-export function fovRatio(
-  sourceFov: number,
-  targetFov: number,
-  monitorDistance = 0,
-): number {
-  const sourceHalf = degreesToRadians(sourceFov / 2);
-  const targetHalf = degreesToRadians(targetFov / 2);
-  const halfSource = Math.tan(sourceHalf);
-  const halfTarget = Math.tan(targetHalf);
-
-  if (monitorDistance <= 0) {
-    return halfTarget / halfSource;
-  }
-
-  return (
-    Math.atan(monitorDistance * halfTarget) /
-    Math.atan(monitorDistance * halfSource)
-  );
-}
+const VIEWSPEED_GAP =
+  "No hemos encontrado una fórmula pública y verificable de Viewspeed; no la aproximamos.";
 
 export function getMethodAvailability(
   source: GameDefinition,
@@ -199,6 +203,10 @@ export function getMethodAvailability(
 ): MethodAvailability[] {
   const bothConvertible = isConvertible(source) && isConvertible(target);
   const bothHaveFov = Boolean(source.fov && target.fov);
+  const fovGap = [source, target]
+    .filter((game) => !game.fov)
+    .map((game) => game.fovGap ?? `${game.shortName} no tiene un FOV documentado.`)
+    .join(" ");
 
   return conversionMethods.map((method) => {
     if (!bothConvertible) {
@@ -209,12 +217,16 @@ export function getMethodAvailability(
       };
     }
 
+    if (method.id === "viewspeed") {
+      return { method, available: false, reason: VIEWSPEED_GAP };
+    }
+
     if (method.id === "game-specific") {
       return {
         method,
         available: false,
         reason:
-          "Todavía no hay ningún par de juegos con una fórmula específica verificada. Usa distancia 360° o FOV aware.",
+          "Todavía no hay ningún par de juegos con una fórmula específica verificada. Usa distancia 360°, focal length o distancia de monitor.",
       };
     }
 
@@ -222,7 +234,7 @@ export function getMethodAvailability(
       return {
         method,
         available: false,
-        reason: "Ambos juegos necesitan un FOV definido para este método.",
+        reason: fovGap || "Ambos juegos necesitan un FOV definido para este método.",
       };
     }
 
@@ -348,6 +360,10 @@ export function convertSensitivity(input: ConversionInput): ConversionOutcome {
   let targetFov = input.targetFov ?? targetGame.fov?.default;
   let ratio: number | undefined;
   let monitorDistance: number | undefined;
+  let sourceActualFov: ActualFov | undefined;
+  let targetActualFov: ActualFov | undefined;
+  let aspectRatio: number | undefined;
+  let monitorAxis: MonitorAxis | undefined;
 
   if (input.method === "fov-aware" || input.method === "monitor-distance") {
     if (sourceFov === undefined || targetFov === undefined) {
@@ -398,7 +414,47 @@ export function convertSensitivity(input: ConversionInput): ConversionOutcome {
       };
     }
 
-    ratio = fovRatio(sourceFov, targetFov, monitorDistance);
+    aspectRatio = input.aspectRatio ?? getAspectRatio(defaultAspectRatioId).value;
+    if (!isValidNumber(aspectRatio) || aspectRatio < 0.5 || aspectRatio > 5) {
+      return {
+        ok: false,
+        error: {
+          code: "invalid_input",
+          message: "La relación de aspecto no es válida.",
+          field: "fov",
+        },
+      };
+    }
+
+    // getMethodAvailability already guarantees both games declare a FOV.
+    const sourceScale = sourceGame.fov!.scale;
+    const targetScale = targetGame.fov!.scale;
+    sourceActualFov = actualFov(sourceFov, sourceScale, aspectRatio);
+    targetActualFov = actualFov(targetFov, targetScale, aspectRatio);
+    monitorAxis = input.monitorAxis ?? "horizontal";
+
+    for (const [game, value] of [
+      [sourceGame, sourceFov],
+      [targetGame, targetFov],
+    ] as const) {
+      if (game.fov && (value < game.fov.min || value > game.fov.max)) {
+        warnings.push(
+          `El FOV de ${game.shortName} (${value}) está fuera de su rango documentado (${game.fov.min}–${game.fov.max}).`,
+        );
+      }
+      if (game.fov?.verification === "experimental") {
+        warnings.push(
+          `La forma en que ${game.shortName} mide el FOV procede de fuentes comunitarias: ${game.fov.note}`,
+        );
+      }
+    }
+
+    const useVertical = input.method === "monitor-distance" && monitorAxis === "vertical";
+    ratio = monitorDistanceRatio(
+      useVertical ? sourceActualFov.vertical : sourceActualFov.horizontal,
+      useVertical ? targetActualFov.vertical : targetActualFov.horizontal,
+      monitorDistance,
+    );
     targetSensitivity *= ratio;
   } else {
     sourceFov = undefined;
@@ -465,6 +521,10 @@ export function convertSensitivity(input: ConversionInput): ConversionOutcome {
     targetDegreesPerCount: targetSensitivity * targetGame.yaw,
     sourceFov,
     targetFov,
+    sourceActualFov,
+    targetActualFov,
+    aspectRatio,
+    monitorAxis,
     monitorDistance,
     fovRatio: ratio,
     warnings,

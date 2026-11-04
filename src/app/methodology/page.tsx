@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { conversionMethods } from "@/lib/conversion/engine";
+import { fovScaleLabels } from "@/lib/conversion/fov";
 import { games } from "@/lib/games/registry";
 import { formatMeasure } from "@/lib/format";
 
@@ -30,7 +31,8 @@ const verificationSteps = [
 ];
 
 const limits = [
-  "No convierte la sensibilidad de miras o ADS salvo que el juego tenga una fórmula verificada; el resultado es de cadera.",
+  "Solo calcula miras en juegos con un modelo de zoom documentado (TF2 verificado; CS2 experimental, solo la AWP). En el resto, el resultado es de cadera.",
+  "No ofrece Viewspeed: no hemos encontrado una fórmula pública y verificable, y no la aproximamos.",
   "No modela recoil, aceleración del ratón, suavizado ni la respuesta del motor.",
   "No garantiza que el slider acepte el valor calculado: cada juego redondea y limita de forma distinta.",
   "No inventa constantes para juegos pendientes ni rellena resultados con datos de relleno.",
@@ -44,7 +46,7 @@ export default function MethodologyPage() {
 
   return (
     <div className="site-container pt-8 sm:pt-10">
-      <header className="grid gap-5 border-b-2 border-[var(--line)] pb-5 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] md:items-end">
+      <header className="grid gap-5 border-b border-[var(--line)] pb-5 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] md:items-end">
         <div>
           <p className="label">Metodología</p>
           <h1 className="display mt-2 text-[clamp(2.2rem,5vw,3.6rem)]">
@@ -139,7 +141,7 @@ export default function MethodologyPage() {
       </div>
 
       <section className="mt-10" aria-labelledby="methods-title">
-        <div className="flex flex-wrap items-end justify-between gap-3 border-b-2 border-[var(--line)] pb-2">
+        <div className="flex flex-wrap items-end justify-between gap-3 border-b border-[var(--line)] pb-2">
           <h2 id="methods-title" className="text-xl font-semibold tracking-[-0.02em]">
             Los métodos no son intercambiables
           </h2>
@@ -152,11 +154,11 @@ export default function MethodologyPage() {
           resultado, y ninguno corrige por sí solo el ADS, el recoil o la
           aceleración del ratón.
         </p>
-        <div className="mt-4 grid overflow-hidden border border-[var(--line-strong)] md:grid-cols-2 rounded-lg">
+        <div className="mt-4 grid gap-3 md:grid-cols-2">
           {conversionMethods.map((method) => (
             <article
               key={method.id}
-              className="border-b border-[var(--line)] p-4 last:border-b-0 md:odd:border-r md:[&:nth-last-child(2)]:border-b-0"
+              className="rounded-lg border border-[var(--line)] bg-[var(--surface)] p-4"
             >
               <div className="flex items-start justify-between gap-2">
                 <h3 className="text-[0.92rem] font-semibold tracking-[-0.01em]">
@@ -190,8 +192,92 @@ export default function MethodologyPage() {
         </div>
       </section>
 
+      <section className="mt-10" aria-labelledby="fov-title">
+        <div className="border-b border-[var(--line)] pb-2">
+          <h2 id="fov-title" className="text-xl font-semibold tracking-[-0.02em]">
+            Cómo mide cada juego el FOV
+          </h2>
+        </div>
+        <p className="mt-3 max-w-3xl text-[0.8125rem] leading-relaxed text-[var(--muted)]">
+          Cada juego expresa el FOV en sus propias unidades: horizontal como si
+          la pantalla fuera 4:3, horizontal como si fuera 16:9, o vertical. Antes
+          de comparar dos juegos convertimos ese valor al FOV real de tu monitor
+          (todos estos juegos son Hor+: el vertical se mantiene y un monitor más
+          ancho ve más a los lados). La distancia de monitor compara el ángulo
+          que cubre el mismo porcentaje de media pantalla, medido desde el centro
+          en horizontal o en vertical; al 0% es una razón de tangentes (focal
+          length).
+        </p>
+        <div className="mt-4 overflow-x-auto rounded-lg border border-[var(--line)]">
+          <table className="data-table">
+            <caption className="sr-only">Convención de FOV de cada juego</caption>
+            <thead>
+              <tr>
+                <th scope="col">Juego</th>
+                <th scope="col">Medida</th>
+                <th scope="col">Rango</th>
+                <th scope="col">Estado</th>
+                <th scope="col" className="hidden md:table-cell">
+                  Fuente
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {games
+                .filter((game) => game.fov || game.fovGap)
+                .map((game) => (
+                  <tr key={game.id}>
+                    <td className="font-semibold">{game.shortName}</td>
+                    <td className="text-[0.8125rem]">
+                      {game.fov ? fovScaleLabels[game.fov.scale] : "Sin documentar"}
+                    </td>
+                    <td className="mono whitespace-nowrap text-[0.8125rem]">
+                      {game.fov
+                        ? game.fov.fixed
+                          ? `${game.fov.fixed} fijo`
+                          : `${game.fov.min}–${game.fov.max}`
+                        : "—"}
+                    </td>
+                    <td>
+                      {game.fov ? (
+                        <span
+                          className={
+                            game.fov.verification === "verified"
+                              ? "badge badge-success"
+                              : "badge badge-warning"
+                          }
+                        >
+                          {game.fov.verification === "verified"
+                            ? "Verificado"
+                            : "Experimental"}
+                        </span>
+                      ) : (
+                        <span className="badge">No disponible</span>
+                      )}
+                    </td>
+                    <td className="hidden text-[var(--muted)] md:table-cell">
+                      {game.fov ? (
+                        <a
+                          href={game.fov.source.url}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          className="underline decoration-[var(--line-strong)] underline-offset-4 hover:decoration-[var(--accent)]"
+                        >
+                          {game.fov.source.label}
+                        </a>
+                      ) : (
+                        game.fovGap
+                      )}
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
       <section className="mt-10" aria-labelledby="verification-title">
-        <div className="border-b-2 border-[var(--line)] pb-2">
+        <div className="border-b border-[var(--line)] pb-2">
           <h2
             id="verification-title"
             className="text-xl font-semibold tracking-[-0.02em]"
