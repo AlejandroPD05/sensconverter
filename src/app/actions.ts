@@ -355,3 +355,36 @@ export async function updateAccountSettings(raw: unknown): Promise<ActionResult>
   revalidatePath("/global");
   return { ok: true, message: "Ajustes guardados." };
 }
+
+export async function deleteOwnAccount(confirmation: unknown): Promise<ActionResult> {
+  if (confirmation !== "ELIMINAR") {
+    return { ok: false, message: "Escribe ELIMINAR para confirmar el borrado." };
+  }
+
+  if (!isSupabaseConfigured) return { ok: false, message: NOT_CONFIGURED };
+
+  const supabase = await createSupabaseServerClient();
+  if (!supabase) return { ok: false, message: NOT_CONFIGURED };
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, message: NOT_AUTHENTICATED };
+
+  // La función solo borra auth.uid(); no recibe ningún id del cliente.
+  const { error } = await supabase.rpc("delete_own_account");
+  if (error) {
+    if (error.code === "PGRST202") {
+      return {
+        ok: false,
+        message:
+          "El borrado de cuenta no está instalado en la base de datos: aplica la migración 0003_delete_own_account.sql.",
+      };
+    }
+    return dbError();
+  }
+
+  await supabase.auth.signOut();
+  revalidatePath("/", "layout");
+  return { ok: true, message: "Cuenta eliminada." };
+}

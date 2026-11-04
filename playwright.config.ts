@@ -7,6 +7,9 @@ if (existsSync(".env.local")) {
   process.loadEnvFile(".env.local");
 }
 
+// Se ejecuta contra un segundo servidor sin credenciales de Supabase.
+const NO_BACKEND_SPEC = /sin-supabase\.spec\.ts$/;
+
 export default defineConfig({
   testDir: "./tests/e2e",
   fullyParallel: true,
@@ -21,20 +24,42 @@ export default defineConfig({
     trace: "on-first-retry",
     screenshot: "only-on-failure",
   },
-  webServer: {
-    command: "npm run dev -- --port 3100",
-    url: "http://127.0.0.1:3100",
-    reuseExistingServer: !process.env.CI,
-    timeout: 180_000,
-  },
+  webServer: [
+    {
+      command: "npm run dev -- --port 3100",
+      url: "http://127.0.0.1:3100",
+      reuseExistingServer: !process.env.CI,
+      timeout: 180_000,
+    },
+    {
+      // Mismo código sin credenciales de Supabase: valores no válidos para que
+      // Next no rellene las variables desde .env.local.
+      command: "npm run dev -- --port 3101",
+      url: "http://127.0.0.1:3101",
+      reuseExistingServer: !process.env.CI,
+      timeout: 180_000,
+      env: {
+        NEXT_DIST_DIR: ".next-e2e-sin-supabase",
+        NEXT_PUBLIC_SUPABASE_URL: "sin-configurar",
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: "sin-configurar",
+      },
+    },
+  ],
   projects: [
     {
       name: "chromium",
+      testIgnore: NO_BACKEND_SPEC,
       use: { ...devices["Desktop Chrome"] },
     },
     {
       name: "mobile",
+      testIgnore: NO_BACKEND_SPEC,
       use: { ...devices["Pixel 7"] },
+    },
+    {
+      name: "sin-supabase",
+      testMatch: NO_BACKEND_SPEC,
+      use: { ...devices["Desktop Chrome"], baseURL: "http://127.0.0.1:3101" },
     },
   ],
 });

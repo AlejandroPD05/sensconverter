@@ -5,7 +5,7 @@
 - Implementado: calculadora anónima, motor de conversión, biblioteca, herramienta global, auth opcional con Supabase, perfiles guardados, migraciones y pruebas.
 - `SensConverter.md` sigue siendo la fuente de verdad funcional. `README.md` documenta instalación, Supabase, despliegue, juegos soportados y límites conocidos.
 - El `AGENTS.md` de la raíz del workspace describe otro proyecto (`atlas`); al trabajar aquí, prevalece este archivo.
-- No hay repositorio Git inicializado. No hay nada commiteado.
+- Repositorio Git en `main`, desplegado en Vercel (`https://sensicore-zeta.vercel.app`). Comprueba `git log` antes de dar nada por publicado.
 - `.env.local` (ignorado por Git) tiene el proyecto Supabase real y un usuario de prueba. `npm run test:e2e` lo carga y ejecuta también las pruebas autenticadas y de RLS. Sin ese archivo o sin `TEST_USER_*`, esas pruebas se omiten y las omitidas no cuentan como aprobadas.
 - La secret key de Supabase no se guarda en el repo ni en `.env.local`; solo se usa la clave pública.
 
@@ -45,8 +45,8 @@ npm install
 npm run dev          # http://localhost:3000
 npm run lint
 npm run typecheck
-npm test             # Vitest: 23 pruebas
-npm run test:e2e     # Playwright: 22 pruebas, escritorio + móvil
+npm test             # Vitest: 24 pruebas
+npm run test:e2e     # Playwright: 33 pruebas (escritorio, móvil y sin Supabase)
 npm run build        # incluye TypeScript; no hace falta tsc aparte
 npm start            # sirve el build de producción
 ```
@@ -62,6 +62,8 @@ npx playwright test tests/e2e/calculator.spec.ts --project=chromium
 - `next.config.ts` incluye `allowedDevOrigins: ["127.0.0.1"]`. Sin eso, Playwright carga la página desde `127.0.0.1` pero Next bloquea los recursos de desarrollo y la app no hidrata; los inputs parecen ignorar los cambios.
 - `NEXT_PUBLIC_SUPABASE_*` se incrusta en build. Si faltan al compilar, las páginas de cuenta quedan estáticas con el aviso de configuración.
 - Las pruebas autenticadas necesitan Supabase migrado y `TEST_USER_EMAIL` / `TEST_USER_PASSWORD`; `playwright.config.ts` carga `.env.local` y usa un solo worker cuando hay usuario de prueba.
+- `test:e2e` arranca dos servidores: el normal en 3100 y otro en 3101 sin credenciales de Supabase (`NEXT_DIST_DIR=.next-e2e-sin-supabase`, variables con valor no válido para que Next no las lea de `.env.local`). Tras ejecutarlo, `next-env.d.ts` puede apuntar a esa carpeta; el siguiente `npm run dev` lo regenera. Las rutas de esa carpeta ya están en `tsconfig.json`.
+- La prueba de `delete_own_account` se omite mientras la migración 0003 no esté aplicada en el proyecto real.
 - Las clases de componente de `globals.css` viven en `@layer components` para que las utilidades de Tailwind (`md:hidden`, `min-w-0`, `pr-14`…) puedan sobrescribirlas. No las devuelvas al CSS sin capa.
 - Playwright inyecta `caret-color: transparent` al hacer capturas. Si la captura ocurre antes de hidratar, React avisa de un `style` distinto; es un artefacto del test, no de la app.
 

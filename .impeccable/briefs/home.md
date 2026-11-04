@@ -15,22 +15,12 @@
 
 ## Dirección elegida
 
-**Hoja de estadísticas de retransmisión**: la página se lee como el gráfico de datos de un partido, no como una landing. Papel hueso, tinta, un único campo amarillo de señal, hairlines de 1 px, números en mono tabular y una franja «en directo» que la propia calculadora alimenta. El momento memorable: el resultado amarillo con el cm/360 marcado sobre una escala de medición.
+**Herramienta SaaS clara** (Fase 10, sustituye a la «hoja de retransmisión»): fondo blanco, grises zinc, un único acento índigo, Geist + Geist Mono para números, tarjetas redondeadas con borde fino. El momento memorable: el resultado en Geist Mono sobre índigo suave con el cm/360 marcado en la escala. Reglas en `DESIGN.md`; capturas actuales en `.impeccable/review/`.
 
 ## Decisiones abiertas
 
 - Ninguna bloqueante. Si el nombre «SensiCore» cambia, los tokens y el logo están centralizados.
 
-## Direction contract
+## Direction contract (histórico)
 
-THESIS: la calculadora se presenta como la hoja de datos de un partido en directo, y rechaza el hero de tarjetas con degradado y cristal de las webs de conversores. La estructura es la de una tabla de estadísticas: cabecera, franja de directo, cuerpo de datos, pie de metodología.
-
-OWN-WORLD: papel hueso #e9e7de con lavado de tinta al 5 %, tinta #12140f, un único amarillo de señal #f2e23e que solo aparece en la franja en directo, el resultado y el método activo; verde/ámbar/rojo oscurecidos para estados. Radios 0–2 px, hairlines de 1 px, sin sombras, sin degradados de color, sin cristal. Archivo en pesos 600–700 para titulares con tracking negativo; Martian Mono en mayúsculas espaciadas para etiquetas, cifras y la franja en directo. Componentes: banda negra de cabecera, celdas de tabla con regla inferior, badges con punto cuadrado, botones de bloque sin radio.
-
-STORY: el visitante entiende en el primer vistazo que esto es una herramienta de medición entre juegos; ve su conversión en el mismo sitio donde está la evidencia (yaw, estado, fórmula) y se va sabiendo qué ha cambiado y qué no.
-
-FIRST VIEWPORT: a 1440 px, banda negra de 56 px con marca a la izquierda y navegación mono centrada; franja amarilla de 36 px que ya muestra la conversión viva. Debajo, a la izquierda, titular de dos líneas a 67 px y párrafo de 3 líneas con dos botones; a la derecha, lista de hechos con cifras mono alineadas a la derecha. Cierra el viewport la cabecera de la calculadora con su borde superior negro y el campo de origen. La acción primaria (convertir) está dentro del viewport; la secundaria, ver juegos, a su lado.
-
-FORM: hoja de estadísticas de retransmisión, séptima de siete en la lista ordenada (las seis restantes fueron los challengers del catálogo); el catálogo aportó a esta dirección la densidad de tabla y el valor de señal de un solo campo de color. seed:4d843d7aa5e21fc2
-
-FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+El contrato original describía la «hoja de retransmisión» y ya no aplica. La dirección vigente está en `DESIGN.md`.

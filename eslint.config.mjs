@@ -9,6 +9,8 @@ const eslintConfig = defineConfig([
   globalIgnores([
     // Default ignores of eslint-config-next:
     ".next/**",
+    // Servidor de las E2E sin Supabase (ver playwright.config.ts).
+    ".next-e2e-*/**",
     "out/**",
     "build/**",
     "next-env.d.ts",

@@ -54,9 +54,9 @@ La calculadora y la biblioteca funcionan sin crear `.env.local`. Las páginas de
 | `npm start` | Sirve el build de producción |
 | `npm run lint` | ESLint |
 | `npm run typecheck` | `tsc --noEmit` |
-| `npm test` | Vitest, 22 pruebas unitarias |
+| `npm test` | Vitest, 24 pruebas unitarias |
 | `npm run test:watch` | Vitest en modo watch |
-| `npm run test:e2e` | Playwright en escritorio y móvil |
+| `npm run test:e2e` | Playwright: escritorio, móvil y un servidor sin Supabase |
 
 Una sola prueba unitaria:
 
@@ -92,6 +92,7 @@ El servidor de Playwright arranca en el puerto `3100` para no chocar con el desa
 
    - `supabase/migrations/0001_init.sql`: tablas, índices, triggers, RLS y grants.
    - `supabase/migrations/0002_preferred_profile.sql`: perfil preferido por juego. Es idempotente; una instalación nueva ya incluye la columna en `0001`.
+   - `supabase/migrations/0003_delete_own_account.sql`: función `delete_own_account()` (security definer) para que cada usuario borre su propia cuenta sin exponer la service-role key. Sin ella, el botón «Eliminar mi cuenta» avisa de que falta la migración.
 
 4. En **Authentication → URL Configuration**:
 
@@ -234,8 +235,8 @@ Sirve el proceso detrás de HTTPS (por ejemplo, con un reverse proxy) y define l
 - El slider de cada juego puede redondear o limitar el valor calculado. Ajusta el valor exacto en el juego si no coincide.
 - Sin cuenta, la preferencia global se guarda en `localStorage` (`sensicore.global.v1`) y se dice explícitamente. No es almacenamiento en la nube ni se presenta como tal.
 - El estado de la calculadora no se persiste entre visitas.
-- El borrado de cuenta no está implementado. Tampoco hay cambio de email desde la app; la recuperación de contraseña sí está disponible.
-- Las pruebas autenticadas y el aislamiento RLS requieren un proyecto Supabase configurado y un usuario de prueba.
+- El borrado de cuenta requiere aplicar `0003_delete_own_account.sql`. No hay cambio de email desde la app; la recuperación de contraseña sí está disponible.
+- Las pruebas autenticadas y el aislamiento RLS requieren un proyecto Supabase configurado y un usuario de prueba. Con un solo usuario, el aislamiento se prueba desde su lado: solo lee filas propias y escribir a nombre de otro id devuelve la violación de política 42501.
 - La verificación de constantes es una revisión documental, no una medición física continua.
 
 ## Estado de verificación
@@ -244,8 +245,8 @@ Comprobado en este repositorio:
 
 - `npm run lint`: sin errores.
 - `npm run typecheck`: sin errores.
-- `npm test`: 22 pruebas superadas.
+- `npm test`: 24 pruebas superadas.
 - `npm run build`: build de producción correcto.
-- `npm run test:e2e`: 22 pruebas superadas (incluidas cuenta y RLS) en Chromium de escritorio y Pixel 7.
+- `npm run test:e2e`: 31 superadas y 2 omitidas (la comprobación de `delete_own_account` hasta aplicar la migración 0003). Incluye cuenta, RLS entre usuarios, Chromium de escritorio, Pixel 7 y la app sin credenciales de Supabase.
 
 Las pruebas autenticadas se omiten si no hay proyecto Supabase o usuario de prueba; las omitidas no cuentan como aprobadas.

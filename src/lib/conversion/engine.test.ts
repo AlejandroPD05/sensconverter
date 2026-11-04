@@ -266,6 +266,19 @@ describe("métodos de conversión", () => {
       true,
     );
   });
+
+  it("acepta el rango 1–100 del slider de Siege y su ejemplo publicado", () => {
+    // Ejemplo comunitario: 800 DPI, sensibilidad 10, yaw 0.00572957795 → ~19.9 cm/360.
+    expect(cm360For(800, 10, 0.00572958)).toBeCloseTo(19.95, 1);
+    const atDefault = convertSensitivity({
+      sourceGameId: "r6-siege",
+      targetGameId: "cs2",
+      sourceSensitivity: 50,
+      sourceDpi: 800,
+      method: "cm360",
+    });
+    expect(atDefault.ok).toBe(true);
+  });
 });
 
 describe("capacidades declaradas", () => {

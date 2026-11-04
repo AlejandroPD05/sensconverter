@@ -36,11 +36,18 @@ export default async function HomePage({
     (game) => game.verification === "experimental",
   ).length;
   const pending = games.length - verified - experimental;
+  const accountDeleted = first(params.cuenta) === "eliminada";
 
   return (
     <div className="relative">
     <div className="page-backdrop" aria-hidden="true" />
     <div className="site-container relative pt-10 sm:pt-16">
+      {accountDeleted ? (
+        <p className="callout callout-success mb-6 text-sm" role="status">
+          Tu cuenta y tus perfiles se han eliminado. La calculadora sigue
+          disponible sin registro.
+        </p>
+      ) : null}
       <section className="grid items-start gap-8 lg:grid-cols-[1.4fr_0.6fr]">
         <div className="animate-fade-up">
           <span className="eyebrow">

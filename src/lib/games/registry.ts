@@ -306,10 +306,10 @@ export const games: GameDefinition[] = [
     capabilities: ["cm360", "sensToSens", "fovAware", "monitorDistance"],
     sensitivity: {
       min: 1,
-      max: 20,
-      step: 0.01,
-      decimals: 2,
-      note: "Sensibilidad de cadera. El ADS por mira tiene multiplicadores propios.",
+      max: 100,
+      step: 1,
+      decimals: 0,
+      note: "Slider horizontal de cadera (1–100, enteros) con MouseSensitivityMultiplierUnit en 0.02, su valor por defecto. Si lo cambiaste en GameSettings.ini, el resultado no aplica.",
     },
     fov: {
       default: 90,

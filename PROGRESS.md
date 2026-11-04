@@ -12,8 +12,9 @@ Actualizado: 04/11/2026.
 - [x] **Fase 6 — Calidad.** Lint, typecheck, unitarias, build y E2E anónimas, autenticadas y de RLS verificadas contra un proyecto Supabase real.
 - [x] **Fase 7 — Entrega.** README con instalación, Supabase, despliegue, comandos, juegos y límites; `.env.example`; migraciones; este archivo.
 - [x] **Fase 8 — Producción.** Desplegado en Vercel (`https://sensicore-zeta.vercel.app`) con las variables públicas de Supabase y el Site URL/Redirect URLs del proyecto real apuntando al dominio.
-- [x] **Fase 9 — Rediseño visual.** Sustituida la estética "Liquid Glass" (anti-referencia) por el sistema "hoja de retransmisión": papel hueso, tinta, un único amarillo de señal, Archivo + Martian Mono, radios 0–2 px, hairlines, franja EN DIRECTO alimentada por la calculadora y escala cm/360. `DESIGN.md` y `.impeccable/design.json` documentan el sistema; `impeccable detect` no encuentra anti-patrones.
-- [x] **Fase 10 — Interfaz clara SaaS.** Sustituida la "hoja de retransmisión" por un estilo claro moderno: fondo blanco, grises zinc, acento índigo, Geist + Geist Mono, tarjetas redondeadas con borde fino y selectores segmentados. Se quitó la franja EN DIRECTO (y `lib/live-readout.ts`). `DESIGN.md` describe el sistema nuevo; las capturas de `.impeccable/` son del sistema anterior.
+- [x] **Fase 9 — Rediseño visual.** Sustituida la estética "Liquid Glass" (anti-referencia) por el sistema "hoja de retransmisión": papel hueso, tinta, un único amarillo de señal, Archivo + Martian Mono, radios 0–2 px, hairlines, franja EN DIRECTO alimentada por la calculadora y escala cm/360. `DESIGN.md` documentaba el sistema (sustituido en la Fase 10).
+- [x] **Fase 10 — Interfaz clara SaaS.** Sustituida la "hoja de retransmisión" por un estilo claro moderno: fondo blanco, grises zinc, acento índigo, Geist + Geist Mono, tarjetas redondeadas con borde fino y selectores segmentados. Se quitó la franja EN DIRECTO (y `lib/live-readout.ts`). `DESIGN.md` describe el sistema nuevo; las capturas de `.impeccable/review/` están regeneradas y `.impeccable/design.json` (sistema anterior) se eliminó.
+- [x] **Fase 11 — Pendientes de la spec.** Cuenta con configuraciones recientes, juegos favoritos (derivados de los perfiles favoritos) y borrado de cuenta seguro mediante `delete_own_account()` (migración 0003). Rango de R6 Siege corregido a 1–100 enteros. E2E nuevas: aislamiento RLS entre usuarios y la app sin credenciales de Supabase.
 
 ## Verificación real
 
@@ -21,9 +22,9 @@ Actualizado: 04/11/2026.
 | --- | --- |
 | `npm run lint` | Sin errores |
 | `npm run typecheck` | Sin errores |
-| `npm test` | 23/23 |
+| `npm test` | 24/24 |
 | `npm run build` | Correcto |
-| `npm run test:e2e` | 22/22 (incluye cuenta, RLS y aviso de enlace fallido; escritorio y móvil) |
+| `npm run test:e2e` | 31 superadas, 2 omitidas (incluye cuenta, RLS entre usuarios, aviso de enlace fallido y servidor sin Supabase; escritorio y móvil). Las omitidas son la comprobación de `delete_own_account` hasta aplicar la migración 0003 |
 | Revisión visual 390 / 768 / 1440 | Sin desbordamiento horizontal de página; navegación inferior solo en móvil |
 
 La revisión visual corrigió tres defectos reales: la navegación inferior se mostraba también en escritorio, la cabecera duplicaba el acceso a cuenta en móvil y las tarjetas de la biblioteca y el aviso de configuración desbordaban en pantallas estrechas. Las clases de componente se movieron a `@layer components` para que las utilidades de Tailwind puedan ocultarlas o limitarlas.
@@ -43,10 +44,14 @@ El aviso de hidratación sobre `caret-color: transparent` no procede de la app: 
 - [x] Desplegar en Vercel y configurar Site URL y Redirect URLs del proyecto Supabase real.
 - [ ] Añadir juegos pendientes solo cuando exista una constante documentada y contrastada.
 - [ ] Valorar ADS/scope y aspect ratio cuando haya fórmulas verificadas; hoy se declaran fuera de alcance.
-- [ ] Borrado de cuenta seguro (requiere operación de servidor con privilegios; no se expone service-role key).
+- [x] Borrado de cuenta seguro implementado sin service-role key (función `security definer` que solo borra `auth.uid()`).
+- [ ] **Aplicar `supabase/migrations/0003_delete_own_account.sql` en el proyecto real** (SQL Editor o `supabase db push`). Hasta entonces el botón avisa de que falta la migración. No se probó el borrado real de extremo a extremo para no eliminar el usuario de prueba.
+- [ ] Redesplegar en Vercel: la versión publicada no incluye las fases 10 y 11.
 
 ## Notas de la última pasada
 
+- R6 Siege limitaba la sensibilidad a 1–20 con dos decimales, pero el slider admite enteros de 1 a 100 (por defecto 50, con `MouseSensitivityMultiplierUnit` = 0.02). El valor por defecto del juego se rechazaba como fuera de rango. Fuente: guía comunitaria de clip.dor.gg con la fórmula 914.4 / (DPI × sens × 0.00572957795); sigue como experimental.
+- El aislamiento entre usuarios se prueba con un solo usuario de prueba: solo lee filas propias y escribir o traspasar a otro id devuelve 42501. No hay segundo usuario con datos reales en el proyecto.
 - La biblioteca mostraba badges "ADS" y "Zoom" en 8 juegos aunque el motor solo convierte cadera. Se quitaron `scoped`/`ads` de las capacidades del registro y una prueba unitaria impide volver a declararlas hasta que exista la conversión.
 
 - La prueba autenticada detectó un defecto real: los campos de DPI usaban `min=1` con `step=50`, así que 800 no era un valor HTML válido y el formulario de edición no se enviaba. Ahora usan `step=1`.
