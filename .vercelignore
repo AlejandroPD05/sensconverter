@@ -9,3 +9,4 @@ coverage
 probe-mail.mjs
 probe-mail-out.json
 probe-*.mjs
+.next-e2e-*
