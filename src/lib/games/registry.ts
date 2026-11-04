@@ -23,7 +23,7 @@ export const games: GameDefinition[] = [
     inputModel: "yaw",
     yaw: 0.022,
     yawSource: SOURCE_YAW,
-    capabilities: ["cm360", "sensToSens", "fovAware", "monitorDistance", "scoped"],
+    capabilities: ["cm360", "sensToSens", "fovAware", "monitorDistance"],
     sensitivity: {
       min: 0.01,
       max: 10,
@@ -55,7 +55,7 @@ export const games: GameDefinition[] = [
     inputModel: "yaw",
     yaw: 0.07,
     yawSource: FPSAIM,
-    capabilities: ["cm360", "sensToSens", "fovAware", "monitorDistance", "scoped"],
+    capabilities: ["cm360", "sensToSens", "fovAware", "monitorDistance"],
     sensitivity: {
       min: 0.001,
       max: 10,
@@ -87,7 +87,7 @@ export const games: GameDefinition[] = [
     inputModel: "yaw",
     yaw: 0.022,
     yawSource: FPSAIM,
-    capabilities: ["cm360", "sensToSens", "fovAware", "monitorDistance", "scoped", "ads"],
+    capabilities: ["cm360", "sensToSens", "fovAware", "monitorDistance"],
     sensitivity: {
       min: 0.1,
       max: 20,
@@ -119,7 +119,7 @@ export const games: GameDefinition[] = [
     inputModel: "yaw",
     yaw: 0.0066,
     yawSource: FPSAIM,
-    capabilities: ["cm360", "sensToSens", "fovAware", "monitorDistance", "scoped", "ads"],
+    capabilities: ["cm360", "sensToSens", "fovAware", "monitorDistance"],
     sensitivity: {
       min: 1,
       max: 100,
@@ -150,7 +150,7 @@ export const games: GameDefinition[] = [
     inputModel: "yaw",
     yaw: 0.005555,
     yawSource: FPSAIM,
-    capabilities: ["cm360", "sensToSens", "fovAware", "monitorDistance", "ads"],
+    capabilities: ["cm360", "sensToSens", "fovAware", "monitorDistance"],
     sensitivity: {
       min: 1,
       max: 100,
@@ -183,7 +183,7 @@ export const games: GameDefinition[] = [
     inputModel: "yaw",
     yaw: 0.0066,
     yawSource: FPSAIM,
-    capabilities: ["cm360", "sensToSens", "fovAware", "monitorDistance", "ads"],
+    capabilities: ["cm360", "sensToSens", "fovAware", "monitorDistance"],
     sensitivity: {
       min: 1,
       max: 20,
@@ -272,7 +272,7 @@ export const games: GameDefinition[] = [
     inputModel: "yaw",
     yaw: 0.0066,
     yawSource: FPSAIM,
-    capabilities: ["cm360", "sensToSens", "fovAware", "monitorDistance", "ads"],
+    capabilities: ["cm360", "sensToSens", "fovAware", "monitorDistance"],
     sensitivity: {
       min: 1,
       max: 20,
@@ -303,7 +303,7 @@ export const games: GameDefinition[] = [
     inputModel: "yaw",
     yaw: 0.00572958,
     yawSource: FPSAIM,
-    capabilities: ["cm360", "sensToSens", "fovAware", "monitorDistance", "ads"],
+    capabilities: ["cm360", "sensToSens", "fovAware", "monitorDistance"],
     sensitivity: {
       min: 1,
       max: 20,

@@ -20,7 +20,7 @@ Actualizado: 04/11/2026.
 | --- | --- |
 | `npm run lint` | Sin errores |
 | `npm run typecheck` | Sin errores |
-| `npm test` | 22/22 |
+| `npm test` | 23/23 |
 | `npm run build` | Correcto |
 | `npm run test:e2e` | 22/22 (incluye cuenta, RLS y aviso de enlace fallido; escritorio y móvil) |
 | Revisión visual 390 / 768 / 1440 | Sin desbordamiento horizontal de página; navegación inferior solo en móvil |
@@ -45,6 +45,8 @@ El aviso de hidratación sobre `caret-color: transparent` no procede de la app: 
 - [ ] Borrado de cuenta seguro (requiere operación de servidor con privilegios; no se expone service-role key).
 
 ## Notas de la última pasada
+
+- La biblioteca mostraba badges "ADS" y "Zoom" en 8 juegos aunque el motor solo convierte cadera. Se quitaron `scoped`/`ads` de las capacidades del registro y una prueba unitaria impide volver a declararlas hasta que exista la conversión.
 
 - La prueba autenticada detectó un defecto real: los campos de DPI usaban `min=1` con `step=50`, así que 800 no era un valor HTML válido y el formulario de edición no se enviaba. Ahora usan `step=1`.
 - El usuario de prueba de Playwright vive en `.env.local` y no se versiona. Playwright carga ese archivo y usa un solo worker cuando hay `TEST_USER_EMAIL`.

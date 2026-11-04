@@ -45,7 +45,7 @@ npm install
 npm run dev          # http://localhost:3000
 npm run lint
 npm run typecheck
-npm test             # Vitest: 22 pruebas
+npm test             # Vitest: 23 pruebas
 npm run test:e2e     # Playwright: 22 pruebas, escritorio + móvil
 npm run build        # incluye TypeScript; no hace falta tsc aparte
 npm start            # sirve el build de producción

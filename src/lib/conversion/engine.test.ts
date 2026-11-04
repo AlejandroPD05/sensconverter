@@ -7,7 +7,7 @@ import {
   sensitivityForCm360,
   sensitivityToSensitivity,
 } from "./engine";
-import { getGame } from "@/lib/games/registry";
+import { games, getGame } from "@/lib/games/registry";
 
 describe("cm/360", () => {
   it("calcula el ejemplo documentado de Valorant (0.4 a 800 DPI)", () => {
@@ -265,5 +265,20 @@ describe("métodos de conversión", () => {
     expect(result.warnings.some((warning) => warning.includes("experimental"))).toBe(
       true,
     );
+  });
+});
+
+describe("capacidades declaradas", () => {
+  it("ningún juego anuncia ADS o zoom mientras el motor no los convierta", () => {
+    // La biblioteca muestra cada capacidad como badge: declarar una que el motor
+    // no implementa sería una compatibilidad falsa.
+    const unimplemented = ["scoped", "ads"] as const;
+    for (const game of games) {
+      for (const capability of unimplemented) {
+        expect(game.capabilities, `${game.id} declara ${capability}`).not.toContain(
+          capability,
+        );
+      }
+    }
   });
 });
