@@ -15,7 +15,7 @@
 - Supabase Auth + Postgres con RLS (`@supabase/ssr`), Zod para validación.
 - Vitest (unitarias) y Playwright (E2E: Chromium de escritorio y Pixel 7).
 - npm como gestor de paquetes. Entorno Windows/PowerShell.
-- La estética es "hoja de retransmisión": papel hueso, tinta, un único amarillo de señal, radios 0–2 px y hairlines de 1 px. `DESIGN.md` es el documento normativo del sistema; `src/app/globals.css` es la implementación. El antiguo "Liquid Glass" oscuro es anti-referencia: nada de cristal, blur, glow, sombras difusas ni degradados de color.
+- La estética es una herramienta SaaS clara: fondo blanco, grises zinc, un único acento índigo, Geist + Geist Mono (solo números), radios de 6–16 px y tarjetas con borde fino. `DESIGN.md` es el documento normativo del sistema; `src/app/globals.css` es la implementación. Son anti-referencia tanto la "hoja de retransmisión" (papel hueso, amarillo de señal, mayúsculas mono, esquinas a 0 px) como el "Liquid Glass" oscuro original.
 
 ## Reglas que un agente suele romper
 

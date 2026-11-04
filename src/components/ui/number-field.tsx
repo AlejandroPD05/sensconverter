@@ -44,7 +44,7 @@ export function NumberField({
     <div>
       <div className="field-label">
         <label htmlFor={inputId}>{label}</label>
-        {unit ? <span className="mono text-[0.68rem] text-[var(--faint)]">{unit}</span> : null}
+        {unit ? <span className="mono text-xs text-[var(--faint)]">{unit}</span> : null}
       </div>
       <div className="relative">
         <input
@@ -66,7 +66,7 @@ export function NumberField({
         {unit ? (
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[0.7rem] font-medium tracking-wide text-[var(--faint)]"
+            className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-xs font-medium tracking-wide text-[var(--faint)]"
           >
             {unit}
           </span>

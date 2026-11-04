@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   AlertTriangle,
   ArrowLeftRight,
@@ -31,7 +31,6 @@ import {
 import type { GameDefinition } from "@/lib/games/types";
 import { cn } from "@/lib/cn";
 import { formatMeasure, formatSensitivity, parseDecimal } from "@/lib/format";
-import { publishLiveReadout } from "@/lib/live-readout";
 import { saveCalculatorProfile } from "@/app/actions";
 
 const convertibleGames = getConvertibleGames();
@@ -106,32 +105,6 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
   });
 
   const result = outcome.ok ? outcome : null;
-
-  // La franja del encabezado lee este resultado. Se publica tras cada render
-  // y se limpia al desmontar la calculadora.
-  useEffect(() => {
-    if (!result) {
-      publishLiveReadout(null);
-      return;
-    }
-    publishLiveReadout({
-      sourceShort: result.sourceGame.shortName,
-      sourceSensitivity: formatSensitivity(
-        result.sourceSensitivity,
-        result.sourceGame.sensitivity.decimals,
-      ),
-      sourceDpi: result.sourceDpi,
-      targetShort: result.targetGame.shortName,
-      targetSensitivity: formatSensitivity(
-        result.targetSensitivityRounded,
-        result.targetGame.sensitivity.decimals,
-      ),
-      cm360: result.sourceCm360,
-      edpi: result.sourceEdpi,
-    });
-  });
-
-  useEffect(() => () => publishLiveReadout(null), []);
 
   function fieldError(field: string): string | undefined {
     if (!outcome.ok && outcome.error.field === field) {
@@ -251,23 +224,23 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
 
   return (
     <section
-      className="border border-[var(--ink)] bg-[var(--paper-raise)]"
+      className="overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--surface)] shadow-[var(--shadow-md)]"
       aria-labelledby="calculator-title"
       data-testid="calculator"
     >
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--ink)] px-4 py-2.5 sm:px-5">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--line)] px-4 py-3 sm:px-5">
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
           <h2
             id="calculator-title"
-            className="text-[0.78rem] font-bold uppercase tracking-[0.08em]"
+            className="text-[0.95rem] font-semibold"
           >
             Conversión
           </h2>
-          <span className="mono text-[0.6rem] uppercase tracking-[0.06em] text-[var(--faint)]">
-            en vivo · cm/360
+          <span className="text-xs text-[var(--faint)]">
+            Se recalcula al escribir
           </span>
         </div>
-        <span className="badge badge-accent mono">
+        <span className="badge badge-accent">
           {activeMethod === "cm360"
             ? "360°"
             : activeMethod === "fov-aware"
@@ -361,10 +334,10 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
 
           <div className="result-surface p-4 sm:p-5">
             <div className="flex items-center justify-between gap-2">
-              <p className="mono text-[0.58rem] font-medium uppercase tracking-[0.07em]">
+              <p className="text-xs font-medium text-[var(--accent-fg)]">
                 Sensibilidad recomendada
               </p>
-              <span className="mono text-[0.58rem] uppercase tracking-[0.07em]">
+              <span className="text-xs text-[var(--accent-fg)]">
                 {targetGame.sensitivity.unit ?? "sens"}
               </span>
             </div>
@@ -372,7 +345,7 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
             <div className="mt-1 flex flex-wrap items-end justify-between gap-3">
               <output
                 key={resultValue}
-                className="mono result-in block text-[clamp(2.5rem,6.5vw,3.6rem)] font-bold leading-none tracking-[-0.06em]"
+                className="mono result-in block text-[clamp(2.5rem,6.5vw,3.5rem)] font-semibold leading-none tracking-[-0.04em] text-[var(--fg)]"
                 aria-live="polite"
                 aria-atomic="true"
                 data-testid="target-sensitivity"
@@ -397,7 +370,7 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
 
             <CmScale value={result?.sourceCm360 ?? null} />
 
-            <p className="mt-3 text-[0.7rem] leading-relaxed text-[var(--ink)]/75">
+            <p className="mt-3 text-xs leading-relaxed text-[var(--muted)]">
               Redondeado a {targetGame.sensitivity.decimals} decimales, la
               precisión que acepta {targetGame.shortName}. Ajusta el valor
               exacto en el juego si el slider no coincide.
@@ -407,20 +380,20 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
           <div>
             <div className="field-label">
               <span>DPI de destino</span>
-              <span className="mono text-[0.62rem] font-normal text-[var(--faint)]">
+              <span className="text-xs font-normal text-[var(--faint)]">
                 {sameDpi ? "mismo que origen" : "personalizado"}
               </span>
             </div>
-            <div className="inline-flex w-full border border-[var(--line-strong)]">
+            <div className="inline-flex w-full gap-1 rounded-lg bg-[var(--surface-muted)] p-1">
               <button
                 type="button"
                 onClick={() => setSameDpi(true)}
                 aria-pressed={sameDpi}
                 className={cn(
-                  "flex-1 px-2 py-2 text-[0.72rem] font-semibold transition-colors",
+                  "flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition-colors",
                   sameDpi
-                    ? "bg-[var(--ink)] text-[var(--paper)]"
-                    : "text-[var(--muted)] hover:text-[var(--ink)]",
+                    ? "bg-[var(--surface)] text-[var(--fg)] shadow-[var(--shadow-sm)]"
+                    : "text-[var(--muted)] hover:text-[var(--fg)]",
                 )}
               >
                 Usar {dpi || "—"} DPI
@@ -430,10 +403,10 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
                 onClick={() => setSameDpi(false)}
                 aria-pressed={!sameDpi}
                 className={cn(
-                  "flex-1 border-l border-[var(--line-strong)] px-2 py-2 text-[0.72rem] font-semibold transition-colors",
+                  "flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition-colors",
                   !sameDpi
-                    ? "bg-[var(--ink)] text-[var(--paper)]"
-                    : "text-[var(--muted)] hover:text-[var(--ink)]",
+                    ? "bg-[var(--surface)] text-[var(--fg)] shadow-[var(--shadow-sm)]"
+                    : "text-[var(--muted)] hover:text-[var(--fg)]",
                 )}
               >
                 Personalizado
@@ -457,32 +430,32 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
         </div>
       </div>
 
-      <div className="border-t border-[var(--ink)] p-4 sm:p-5">
+      <div className="border-t border-[var(--line)] p-4 sm:p-5">
         <fieldset>
           <legend className="flex w-full flex-wrap items-baseline justify-between gap-2">
-            <span className="text-[0.78rem] font-bold uppercase tracking-[0.08em]">
+            <span className="text-[0.9rem] font-semibold">
               Qué quieres conservar
             </span>
-            <span className="hidden text-[0.68rem] text-[var(--faint)] sm:block">
+            <span className="hidden text-xs text-[var(--faint)] sm:block">
               Los métodos no son intercambiables
             </span>
           </legend>
-          <div className="mt-3 grid gap-px bg-[var(--line)] sm:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
             {availability.map(({ method: item, available, reason }) => {
               const checked = activeMethod === item.id;
               return (
                 <label
                   key={item.id}
                   className={cn(
-                    "group relative flex cursor-pointer flex-col gap-1 p-3 transition-colors",
+                    "group relative flex cursor-pointer flex-col gap-1 rounded-lg border p-3 transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--accent)]",
                     checked
-                      ? "bg-[var(--field)]"
-                      : "bg-[var(--paper-raise)] hover:bg-[var(--paper)]",
+                      ? "border-[var(--accent)] bg-[var(--accent-soft)]"
+                      : "border-[var(--line)] bg-[var(--surface)] hover:border-[var(--line-strong)] hover:bg-[var(--bg-subtle)]",
                     !available && "cursor-not-allowed opacity-55",
                   )}
                 >
                   <span className="flex items-center justify-between gap-2">
-                    <span className="flex items-center gap-2 text-[0.82rem] font-semibold">
+                    <span className="flex items-center gap-2 text-[0.8125rem] font-semibold">
                       <input
                         type="radio"
                         name="conversion-method"
@@ -495,29 +468,29 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
                       <span
                         aria-hidden="true"
                         className={cn(
-                          "grid size-3.5 place-items-center border",
+                          "grid size-4 place-items-center rounded-full border",
                           checked
-                            ? "border-[var(--ink)] bg-[var(--ink)]"
+                            ? "border-[var(--accent)] bg-[var(--accent)]"
                             : "border-[var(--line-strong)]",
                         )}
                       >
                         {checked ? (
-                          <span className="size-1.5 bg-[var(--field)]" />
+                          <span className="size-1.5 rounded-full bg-white" />
                         ) : null}
                       </span>
                       {item.name}
                     </span>
                     {item.id === "cm360" ? (
-                      <span className="mono text-[0.55rem] uppercase tracking-[0.06em] text-[var(--ink-soft)]">
+                      <span className="badge text-[0.65rem] before:hidden">
                         base
                       </span>
                     ) : null}
                   </span>
-                  <span className="pl-[1.4rem] text-[0.68rem] leading-relaxed text-[var(--ink-soft)]">
+                  <span className="pl-6 text-xs leading-relaxed text-[var(--fg-soft)]">
                     {item.shortDescription}
                   </span>
                   {!available ? (
-                    <span className="pl-[1.4rem] text-[0.62rem] leading-relaxed text-[var(--faint)]">
+                    <span className="pl-6 text-xs leading-relaxed text-[var(--faint)]">
                       {reason}
                     </span>
                   ) : null}
@@ -528,13 +501,13 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
         </fieldset>
 
         {selectedMethod?.requiresFov ? (
-          <details className="mt-3 border border-[var(--line)]">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-2.5 text-[0.75rem] font-medium text-[var(--ink-soft)]">
+          <details className="mt-3 rounded-lg border border-[var(--line)]">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-2.5 text-xs font-medium text-[var(--fg-soft)]">
               <span className="flex items-center gap-2">
                 <ChevronDown className="size-3.5" aria-hidden="true" />
                 Ajustes de FOV
               </span>
-              <span className="mono text-[0.62rem] text-[var(--faint)]">
+              <span className="mono text-xs text-[var(--faint)]">
                 {sourceFov || "—"}° → {targetFov || "—"}°
               </span>
             </summary>
@@ -583,7 +556,7 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
       </div>
 
       <dl
-        className="grid grid-cols-2 gap-px border-t border-[var(--ink)] bg-[var(--line)] lg:grid-cols-4"
+        className="grid grid-cols-2 gap-px border-t border-[var(--line)] bg-[var(--line)] lg:grid-cols-4"
         aria-live="polite"
       >
         <Metric
@@ -607,7 +580,7 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
       <div className="border-t border-[var(--line)] px-4 py-3 sm:px-5">
         {result ? (
           <>
-            <div className="mono flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.66rem] text-[var(--muted)]">
+            <div className="mono flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[var(--muted)]">
               <span>
                 {formatSensitivity(result.sourceSensitivity, sourceGame.sensitivity.decimals)} sens ×{" "}
                 {result.sourceDpi} DPI
@@ -631,7 +604,7 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
                 </>
               ) : null}
             </div>
-            <p className="mt-2 text-[0.7rem] leading-relaxed text-[var(--faint)]">
+            <p className="mt-2 text-xs leading-relaxed text-[var(--faint)]">
               {selectedMethod?.preserves} No conserva:{" "}
               {selectedMethod?.doesNotPreserve.toLowerCase()}
             </p>
@@ -647,7 +620,7 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
             {result.warnings.map((warning) => (
               <li
                 key={warning}
-                className="flex items-start gap-2 border border-[rgba(138,90,0,0.4)] bg-[var(--field-soft)] px-2.5 py-2 text-[0.68rem] leading-relaxed text-[var(--ink-soft)]"
+                className="flex items-start gap-2 rounded-md border border-[#fde68a] bg-[var(--warning-soft)] px-2.5 py-2 text-xs leading-relaxed text-[var(--fg-soft)]"
               >
                 <AlertTriangle className="mt-0.5 size-3 shrink-0" aria-hidden="true" />
                 {warning}
@@ -657,13 +630,13 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
         ) : null}
 
         {methodDisabled && method !== activeMethod ? (
-          <p className="mt-2 text-[0.68rem] text-[var(--warning)]">
+          <p className="mt-2 text-xs text-[var(--warning)]">
             El método seleccionado no está disponible; se muestra distancia 360°.
           </p>
         ) : null}
       </div>
 
-      <div className="grid gap-2 border-t border-[var(--ink)] p-4 sm:grid-cols-[auto_auto_minmax(0,1fr)] sm:items-center sm:p-5">
+      <div className="grid gap-2 border-t border-[var(--line)] p-4 sm:grid-cols-[auto_auto_minmax(0,1fr)] sm:items-center sm:p-5">
         <Button
           variant="primary"
           disabled={!result || copied === "share"}
@@ -697,7 +670,7 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
           </Link>
         )}
 
-        <p className="text-[0.65rem] leading-relaxed text-[var(--faint)] sm:col-span-3">
+        <p className="text-xs leading-relaxed text-[var(--faint)] sm:col-span-3">
           La conversión es matemática; la sensación también depende del FOV, el
           zoom, la aceleración y la respuesta del juego.
         </p>
@@ -706,10 +679,10 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
           <p
             role="status"
             className={cn(
-              "border px-3 py-2 text-[0.7rem] leading-relaxed sm:col-span-3",
+              "rounded-md border px-3 py-2 text-xs leading-relaxed sm:col-span-3",
               saveState.status === "ok"
-                ? "border-[rgba(11,106,60,0.4)] text-[var(--success)]"
-                : "border-[rgba(165,31,24,0.4)] text-[var(--danger)]",
+                ? "border-[#bbf7d0] bg-[var(--success-soft)] text-[var(--success)]"
+                : "border-[#fecaca] bg-[var(--danger-soft)] text-[var(--danger)]",
             )}
           >
             {saveState.message}
@@ -717,7 +690,7 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
         ) : null}
 
         {copied === "error" ? (
-          <p className="text-[0.7rem] text-[var(--danger)] sm:col-span-3" role="status">
+          <p className="text-xs text-[var(--danger)] sm:col-span-3" role="status">
             No se pudo copiar al portapapeles. Revisa los permisos del navegador.
           </p>
         ) : null}
@@ -728,9 +701,9 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-[var(--paper-raise)] px-4 py-3">
+    <div className="bg-[var(--surface)] px-4 py-3">
       <dt className="label">{label}</dt>
-      <dd className="mono mt-1 text-[0.95rem] font-bold">{value}</dd>
+      <dd className="mono mt-1 text-[1.05rem] font-semibold">{value}</dd>
     </div>
   );
 }
@@ -769,10 +742,10 @@ function CmScale({ value }: { value: number | null }) {
           aria-hidden="true"
         />
       ) : null}
-      <span className="mono absolute bottom-0 left-0 text-[0.55rem] font-medium tracking-[0.06em] text-[var(--ink)]/65">
+      <span className="mono absolute bottom-0 left-0 text-xs text-[var(--accent-fg)]">
         {min} cm
       </span>
-      <span className="mono absolute bottom-0 right-0 text-[0.55rem] font-medium tracking-[0.06em] text-[var(--ink)]/65">
+      <span className="mono absolute bottom-0 right-0 text-xs text-[var(--accent-fg)]">
         {max} cm
       </span>
     </div>

@@ -41,7 +41,7 @@ export function SignOutButton() {
         {loading ? "Cerrando…" : "Cerrar sesión"}
       </Button>
       {error ? (
-        <p className="mt-2 text-[0.7rem] text-[var(--danger)]" role="alert">
+        <p className="mt-2 text-xs text-[var(--danger)]" role="alert">
           {error}
         </p>
       ) : null}

@@ -13,6 +13,7 @@ Actualizado: 04/11/2026.
 - [x] **Fase 7 — Entrega.** README con instalación, Supabase, despliegue, comandos, juegos y límites; `.env.example`; migraciones; este archivo.
 - [x] **Fase 8 — Producción.** Desplegado en Vercel (`https://sensicore-zeta.vercel.app`) con las variables públicas de Supabase y el Site URL/Redirect URLs del proyecto real apuntando al dominio.
 - [x] **Fase 9 — Rediseño visual.** Sustituida la estética "Liquid Glass" (anti-referencia) por el sistema "hoja de retransmisión": papel hueso, tinta, un único amarillo de señal, Archivo + Martian Mono, radios 0–2 px, hairlines, franja EN DIRECTO alimentada por la calculadora y escala cm/360. `DESIGN.md` y `.impeccable/design.json` documentan el sistema; `impeccable detect` no encuentra anti-patrones.
+- [x] **Fase 10 — Interfaz clara SaaS.** Sustituida la "hoja de retransmisión" por un estilo claro moderno: fondo blanco, grises zinc, acento índigo, Geist + Geist Mono, tarjetas redondeadas con borde fino y selectores segmentados. Se quitó la franja EN DIRECTO (y `lib/live-readout.ts`). `DESIGN.md` describe el sistema nuevo; las capturas de `.impeccable/` son del sistema anterior.
 
 ## Verificación real
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 import {
   Calculator,
   BookOpen,
@@ -13,12 +13,6 @@ import {
 } from "lucide-react";
 import { brand } from "@/lib/brand";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import { formatMeasure } from "@/lib/format";
-import {
-  getLiveReadoutServerSnapshot,
-  getLiveReadoutSnapshot,
-  subscribeLiveReadout,
-} from "@/lib/live-readout";
 import { cn } from "@/lib/cn";
 
 export const navItems = [
@@ -46,64 +40,23 @@ export function Brand({ compact = false }: { compact?: boolean }) {
             d="M12 3v3.4M12 17.6V21M3 12h3.4M17.6 12H21"
             stroke="currentColor"
             strokeWidth="1.9"
-            strokeLinecap="butt"
+            strokeLinecap="round"
           />
           <circle cx="12" cy="12" r="4.2" stroke="currentColor" strokeWidth="1.9" />
           <circle cx="12" cy="12" r="1.2" fill="currentColor" />
         </svg>
       </span>
       <span className="leading-none">
-        <span className="block text-[0.95rem] font-bold uppercase tracking-[-0.01em] text-[var(--band-ink)]">
+        <span className="block text-[0.95rem] font-semibold tracking-[-0.01em] text-[var(--fg)]">
           {brand.name}
         </span>
         {!compact ? (
-          <span className="mt-1 hidden font-mono text-[0.56rem] uppercase tracking-[0.14em] text-[var(--band-muted)] sm:block">
-            cm/360 · conversor
+          <span className="mt-0.5 hidden text-xs text-[var(--faint)] sm:block">
+            Conversor de sensibilidad
           </span>
         ) : null}
       </span>
     </Link>
-  );
-}
-
-function LiveStrip() {
-  const live = useSyncExternalStore(
-    subscribeLiveReadout,
-    getLiveReadoutSnapshot,
-    getLiveReadoutServerSnapshot,
-  );
-
-  return (
-    <div className="live-strip" aria-live="off">
-      <div className="site-container mono flex h-9 items-center gap-2.5 overflow-hidden text-[0.58rem] font-medium uppercase tracking-[0.05em] sm:gap-3 sm:text-[0.62rem]">
-        <span className="flex shrink-0 items-center gap-1.5">
-          <span className="live-dot" aria-hidden="true" />
-          En directo
-        </span>
-        <span aria-hidden="true" className="h-3 w-px shrink-0 bg-[var(--ink)]/30" />
-        {live ? (
-          <>
-            <span className="truncate">
-              {live.sourceShort} {live.sourceSensitivity} @ {live.sourceDpi} DPI
-            </span>
-            <span aria-hidden="true" className="shrink-0">
-              →
-            </span>
-            <span className="shrink-0 font-bold">
-              {live.targetShort} {live.targetSensitivity}
-            </span>
-            <span className="hidden shrink-0 sm:inline">
-              · {formatMeasure(live.cm360, 1)} cm/360 · eDPI{" "}
-              {formatMeasure(live.edpi, 0)}
-            </span>
-          </>
-        ) : (
-          <span className="truncate">
-            Conversor cm/360 · fórmulas documentadas · sin cuenta obligatoria
-          </span>
-        )}
-      </div>
-    </div>
   );
 }
 
@@ -141,7 +94,7 @@ export function SiteHeader() {
 
         <nav
           aria-label="Navegación principal"
-          className="hidden items-center gap-6 md:flex"
+          className="hidden items-center gap-1 md:flex"
         >
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -152,7 +105,7 @@ export function SiteHeader() {
                 className="nav-link"
                 aria-current={isActive(pathname, item.href) ? "page" : undefined}
               >
-                <Icon className="size-3.5 opacity-80" aria-hidden="true" />
+                <Icon className="size-4 opacity-70" aria-hidden="true" />
                 {item.label}
               </Link>
             );
@@ -169,15 +122,15 @@ export function SiteHeader() {
           </Link>
           <Link
             href={email ? "/account" : "/login"}
-            className={cn("btn btn-sm", email ? "btn-on-dark" : "btn-on-dark")}
+            className={cn("btn btn-sm", email ? "btn-secondary" : "btn-primary")}
           >
             {email ? (
               <>
                 <span
-                  className="mono grid size-5 place-items-center bg-[var(--ink)] text-[0.55rem] font-bold uppercase text-[var(--field)]"
+                  className="grid size-5 place-items-center rounded-full bg-[var(--accent)] text-[0.65rem] font-semibold text-[var(--on-accent)]"
                   aria-hidden="true"
                 >
-                  {email.slice(0, 1)}
+                  {email.slice(0, 1).toUpperCase()}
                 </span>
                 <span className="max-w-24 truncate">Cuenta</span>
               </>
@@ -190,14 +143,13 @@ export function SiteHeader() {
           </Link>
           <Link
             href="/my-sensitivities"
-            className="btn btn-ghost btn-sm btn-icon text-[var(--band-ink)] hover:bg-[rgba(233,231,222,0.12)] lg:hidden"
+            className="btn btn-ghost btn-sm btn-icon lg:hidden"
             aria-label="Mis sensibilidades"
           >
             <UserRound className="size-4" aria-hidden="true" />
           </Link>
         </div>
       </div>
-      <LiveStrip />
     </header>
   );
 }

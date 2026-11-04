@@ -57,13 +57,13 @@ export default async function MySensitivitiesPage() {
 
   return (
     <div className="site-container pt-8 sm:pt-10">
-      <header className="flex flex-wrap items-end justify-between gap-4 border-b-2 border-[var(--ink)] pb-5">
+      <header className="flex flex-wrap items-end justify-between gap-4 border-b-2 border-[var(--line)] pb-5">
         <div className="min-w-0">
           <p className="label">Tu biblioteca</p>
           <h1 className="display mt-2 text-[clamp(2rem,5vw,3.2rem)]">
             Mis sensibilidades
           </h1>
-          <p className="mt-2 max-w-2xl text-[0.84rem] leading-relaxed text-[var(--muted)]">
+          <p className="mt-2 max-w-2xl text-[0.8125rem] leading-relaxed text-[var(--muted)]">
             Perfiles guardados en tu cuenta. Puedes tener varias configuraciones
             por juego, marcarlas como favoritas y cargarlas en la calculadora.
           </p>

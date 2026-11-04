@@ -1,19 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, Martian_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteHeader, MobileNav } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { brand, siteUrl } from "@/lib/brand";
 
-const archivo = Archivo({
-  variable: "--font-archivo",
+const geistSans = Geist({
+  variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
-const martianMono = Martian_Mono({
-  variable: "--font-martian",
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
 });
 
 export const metadata: Metadata = {
@@ -49,7 +48,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#e9e7de",
+  themeColor: "#ffffff",
   colorScheme: "light",
 };
 
@@ -60,16 +59,15 @@ export default function RootLayout({
     <html
       lang="es"
       data-scroll-behavior="smooth"
-      className={`${archivo.variable} ${martianMono.variable} antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
       <body>
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-[var(--field)] focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-[var(--ink)]"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-[var(--surface)] focus:shadow-md focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-[var(--fg)]"
         >
           Saltar al contenido
         </a>
-        <div className="page-backdrop" aria-hidden="true" />
         <SiteHeader />
         <main id="main" className="relative z-10">
           {children}

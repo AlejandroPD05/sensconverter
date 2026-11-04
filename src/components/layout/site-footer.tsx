@@ -22,13 +22,13 @@ const groups = [
 
 export function SiteFooter() {
   return (
-    <footer className="relative z-10 mt-16 border-t-2 border-[var(--ink)] bg-[var(--paper)]">
+    <footer className="relative z-10 mt-16 border-t border-[var(--line)] bg-[var(--bg-subtle)]">
       <div className="site-container grid gap-8 py-10 md:grid-cols-[1.3fr_1fr_1fr]">
         <div className="max-w-sm">
-          <p className="text-sm font-bold uppercase tracking-[-0.01em]">
+          <p className="text-sm font-semibold tracking-[-0.01em]">
             {brand.name}
           </p>
-          <p className="mt-2 text-[0.8rem] leading-relaxed text-[var(--muted)]">
+          <p className="mt-2 text-[0.8125rem] leading-relaxed text-[var(--muted)]">
             Conversor de sensibilidad con fórmulas documentadas. Sin cuenta
             obligatoria, sin resultados inventados. La sensación de apuntado
             depende de más factores que cm/360.
@@ -43,7 +43,7 @@ export function SiteFooter() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-[0.8rem] text-[var(--ink-soft)] underline decoration-transparent underline-offset-4 transition-colors hover:decoration-[var(--ink)]"
+                    className="text-[0.8125rem] text-[var(--fg-soft)] underline decoration-transparent underline-offset-4 transition-colors hover:decoration-[var(--accent)]"
                   >
                     {link.label}
                   </Link>
@@ -54,8 +54,8 @@ export function SiteFooter() {
         ))}
       </div>
 
-      <div className="border-t border-[var(--line)] bg-[var(--ink)] text-[var(--band-muted)]">
-        <div className="site-container mono flex flex-col gap-1.5 py-3 text-[0.56rem] uppercase tracking-[0.06em] sm:flex-row sm:items-center sm:justify-between">
+      <div className="border-t border-[var(--line)] text-[var(--faint)]">
+        <div className="site-container flex flex-col gap-1.5 py-3 text-xs sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {new Date().getFullYear()} {brand.name} · herramienta independiente
           </p>

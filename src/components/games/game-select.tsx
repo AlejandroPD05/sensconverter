@@ -131,7 +131,7 @@ export function GameSelect({
       <div className="field-label">
         <span id={labelId}>{label}</span>
         {selected ? (
-          <span className="mono text-[0.66rem] font-normal tracking-normal text-[var(--faint)]">
+          <span className="mono text-xs font-normal tracking-normal text-[var(--faint)]">
             yaw {selected.yaw}
           </span>
         ) : null}
@@ -139,21 +139,21 @@ export function GameSelect({
       <button
         ref={triggerRef}
         type="button"
-        className="flex w-full items-center gap-3 border border-[var(--line-strong)] bg-[var(--paper-raise)] px-3 py-2.5 text-left transition-colors hover:border-[var(--ink)]"
+        className="flex w-full items-center gap-3 border border-[var(--line-strong)] bg-[var(--surface)] px-3 py-2.5 text-left transition-colors hover:border-[var(--faint)] rounded-lg"
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={open ? listId : undefined}
         aria-labelledby={labelId}
         onClick={() => (open ? closeSelect(false) : openSelect())}
       >
-        <span className="mono grid size-8 shrink-0 place-items-center border border-[var(--line)] bg-[var(--paper-sunk)] text-[0.6rem] font-bold tracking-wide text-[var(--ink-soft)]">
+        <span className="mono grid size-8 shrink-0 place-items-center border border-[var(--line)] bg-[var(--surface-muted)] text-xs font-semibold tracking-wide text-[var(--fg-soft)] rounded-lg">
           {selected ? initials(selected.shortName) : "—"}
         </span>
         <span className="min-w-0 flex-1">
           <span className="block truncate text-[0.92rem] font-semibold text-[var(--text)]">
             {selected?.name ?? "Selecciona un juego"}
           </span>
-          <span className="block truncate text-[0.68rem] text-[var(--faint)]">
+          <span className="block truncate text-xs text-[var(--faint)]">
             {selected
               ? selected.verification === "experimental"
                 ? `${selected.developer} · experimental`
@@ -168,7 +168,7 @@ export function GameSelect({
       </button>
 
       {open ? (
-        <div className="absolute left-0 right-0 top-[calc(100%+0.35rem)] z-50 overflow-hidden border border-[var(--ink)] bg-[var(--paper-raise)]">
+        <div className="absolute left-0 right-0 top-[calc(100%+0.35rem)] z-50 overflow-hidden border border-[var(--line)] bg-[var(--surface)] rounded-lg">
           <div className="flex items-center gap-2 border-b border-[var(--line)] px-2.5 py-2">
             <Search className="size-4 shrink-0 text-[var(--faint)]" aria-hidden="true" />
             <input
@@ -218,20 +218,20 @@ export function GameSelect({
                       className={cn(
                         "flex w-full items-center gap-3 px-2.5 py-2 text-left transition-colors",
                         index === activeIndex
-                          ? "bg-[var(--paper-sunk)]"
-                          : "hover:bg-[var(--paper)]",
+                          ? "bg-[var(--surface-muted)]"
+                          : "hover:bg-[var(--surface-muted)]",
                       )}
                       onPointerMove={() => setActiveIndex(index)}
                       onClick={() => selectGame(game)}
                     >
-                      <span className="mono grid size-7 shrink-0 place-items-center border border-[var(--line)] bg-[var(--paper-sunk)] text-[0.56rem] font-bold text-[var(--ink-soft)]">
+                      <span className="mono grid size-7 shrink-0 place-items-center border border-[var(--line)] bg-[var(--surface-muted)] text-xs font-semibold text-[var(--fg-soft)] rounded-lg">
                         {initials(game.shortName)}
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-sm font-medium">
                           {game.name}
                         </span>
-                        <span className="block truncate text-[0.66rem] text-[var(--faint)]">
+                        <span className="block truncate text-xs text-[var(--faint)]">
                           {game.developer}
                           {game.verification === "experimental"
                             ? " · experimental"
@@ -250,7 +250,7 @@ export function GameSelect({
               })
             )}
           </ul>
-          {hint ? <p className="px-2.5 py-2 text-[0.68rem] text-[var(--faint)]">{hint}</p> : null}
+          {hint ? <p className="px-2.5 py-2 text-xs text-[var(--faint)]">{hint}</p> : null}
         </div>
       ) : null}
     </div>

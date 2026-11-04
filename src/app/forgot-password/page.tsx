@@ -14,7 +14,7 @@ export default function ForgotPasswordPage() {
       subtitle="Te enviaremos un enlace para crear una contraseña nueva. Por seguridad, la respuesta es la misma exista o no la cuenta."
       footer={
         <p>
-          <Link href="/login" className="font-semibold text-[var(--ink)] underline decoration-[var(--line-strong)] underline-offset-4 hover:decoration-[var(--ink)]">
+          <Link href="/login" className="font-semibold text-[var(--fg)] underline decoration-[var(--line-strong)] underline-offset-4 hover:decoration-[var(--accent)]">
             Volver a iniciar sesión
           </Link>
         </p>

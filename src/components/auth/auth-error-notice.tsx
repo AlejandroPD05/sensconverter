@@ -14,7 +14,7 @@ export function AuthErrorNotice({ code }: { code?: string }) {
 
   return (
     <p
-      className="callout callout-warning mb-4 text-[0.76rem] leading-relaxed text-[var(--ink-soft)]"
+      className="callout callout-warning mb-4 text-xs leading-relaxed text-[var(--fg-soft)]"
       role="alert"
     >
       <AlertTriangle

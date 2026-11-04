@@ -14,7 +14,7 @@ export default function GamesPage() {
 
   return (
     <div className="site-container pt-8 sm:pt-10">
-      <header className="grid gap-5 border-b-2 border-[var(--ink)] pb-5 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] md:items-end">
+      <header className="grid gap-5 border-b-2 border-[var(--line)] pb-5 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] md:items-end">
         <div>
           <p className="label">Biblioteca</p>
           <h1 className="display mt-2 text-[clamp(2.2rem,5vw,3.6rem)]">
@@ -24,9 +24,9 @@ export default function GamesPage() {
           </h1>
         </div>
         <p className="max-w-md text-[0.88rem] leading-relaxed text-[var(--muted)] md:justify-self-end">
-          <span className="mono font-bold text-[var(--ink)]">{verified}</span>{" "}
+          <span className="mono font-semibold text-[var(--fg)]">{verified}</span>{" "}
           juegos con constante verificada.{" "}
-          <span className="mono font-bold text-[var(--ink)]">{pending}</span>{" "}
+          <span className="mono font-semibold text-[var(--fg)]">{pending}</span>{" "}
           aparecen como pendientes porque todavía no tenemos una fórmula que
           podamos defender. Preferimos decírtelo a inventar un número.
         </p>

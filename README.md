@@ -17,7 +17,7 @@ Conversor de sensibilidad de ratón entre juegos, con el **cm/360** como referen
 - Perfiles guardados en Postgres: crear, editar, renombrar, duplicar, borrar, favoritos y un perfil preferido por juego.
 - Preferencia global (cm/360 y DPI) guardada por usuario.
 - RLS activado: cada usuario solo puede leer y modificar sus propios registros.
-- Diseño propio "hoja de retransmisión" (papel hueso, tinta, una sola señal amarilla), documentado en `DESIGN.md`; responsive, con foco visible, `prefers-reduced-motion` y anuncios de resultados.
+- Diseño claro estilo SaaS (blanco, grises neutros, un acento índigo, Geist), documentado en `DESIGN.md`; responsive, con foco visible, `prefers-reduced-motion` y anuncios de resultados.
 
 ## Stack
 

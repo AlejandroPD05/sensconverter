@@ -167,7 +167,7 @@ export function AuthForm({ mode, next }: { mode: Mode; next: string }) {
             {mode === "login" ? (
               <Link
                 href="/forgot-password"
-                className="text-[0.68rem] font-normal tracking-normal text-[var(--ink-soft)] underline decoration-[var(--line-strong)] underline-offset-4 hover:decoration-[var(--ink)]"
+                className="text-xs font-normal tracking-normal text-[var(--fg-soft)] underline decoration-[var(--line-strong)] underline-offset-4 hover:decoration-[var(--accent)]"
               >
                 ¿La olvidaste?
               </Link>
@@ -189,7 +189,7 @@ export function AuthForm({ mode, next }: { mode: Mode; next: string }) {
             <button
               type="button"
               onClick={() => setShowPassword((value) => !value)}
-              className="absolute inset-y-0 right-2 grid w-9 place-items-center text-[var(--faint)] transition-colors hover:text-[var(--ink)]"
+              className="absolute inset-y-0 right-2 grid w-9 place-items-center text-[var(--faint)] transition-colors hover:text-[var(--fg)]"
               aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
             >
               {showPassword ? (
@@ -223,13 +223,13 @@ export function AuthForm({ mode, next }: { mode: Mode; next: string }) {
       ) : null}
 
       {error ? (
-        <p className="callout callout-danger text-[0.76rem] leading-relaxed" role="alert">
+        <p className="callout callout-danger text-xs leading-relaxed" role="alert">
           {error}
         </p>
       ) : null}
 
       {success ? (
-        <p className="callout callout-success text-[0.76rem] leading-relaxed" role="status">
+        <p className="callout callout-success text-xs leading-relaxed" role="status">
           {success}
         </p>
       ) : null}

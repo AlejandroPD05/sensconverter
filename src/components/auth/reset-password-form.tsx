@@ -51,11 +51,11 @@ export function ResetPasswordForm() {
   if (success) {
     return (
       <div className="callout callout-success" role="status">
-        <p className="flex items-center gap-2 text-sm font-bold text-[var(--success)]">
+        <p className="flex items-center gap-2 text-sm font-semibold text-[var(--success)]">
           <CheckCircle2 className="size-4" aria-hidden="true" />
           Contraseña actualizada
         </p>
-        <p className="mt-2 text-[0.78rem] leading-relaxed text-[var(--ink-soft)]">
+        <p className="mt-2 text-[0.8125rem] leading-relaxed text-[var(--fg-soft)]">
           Ya puedes usar tu nueva contraseña. Tu sesión actual sigue activa.
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
@@ -106,7 +106,7 @@ export function ResetPasswordForm() {
       </div>
 
       {error ? (
-        <p className="callout callout-danger text-[0.76rem] leading-relaxed" role="alert">
+        <p className="callout callout-danger text-xs leading-relaxed" role="alert">
           {error}
         </p>
       ) : null}

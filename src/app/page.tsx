@@ -38,10 +38,16 @@ export default async function HomePage({
   const pending = games.length - verified - experimental;
 
   return (
-    <div className="site-container pt-8 sm:pt-10">
+    <div className="relative">
+    <div className="page-backdrop" aria-hidden="true" />
+    <div className="site-container relative pt-10 sm:pt-16">
       <section className="grid items-start gap-8 lg:grid-cols-[1.4fr_0.6fr]">
         <div className="animate-fade-up">
-          <h1 className="display text-[clamp(2.5rem,5.6vw,4.2rem)]">
+          <span className="eyebrow">
+            <span className="size-1.5 rounded-full bg-[var(--success)]" aria-hidden="true" />
+            {verified} juegos con fórmula verificada
+          </span>
+          <h1 className="display mt-5 text-[clamp(2.5rem,5.6vw,4rem)]">
             La misma mano,
             <br />
             otro juego.
@@ -63,27 +69,27 @@ export default async function HomePage({
           </div>
         </div>
 
-        <dl className="fact-list animate-fade-up pt-1">
+        <dl className="fact-list animate-fade-up hidden lg:grid">
           <div>
             <dt className="label">Juegos verificados</dt>
-            <dd className="mono text-lg font-bold">
+            <dd className="mono text-lg font-semibold">
               {verified}
-              <span className="ml-1 text-[0.62rem] font-normal text-[var(--faint)]">
+              <span className="ml-1 text-xs font-normal text-[var(--faint)]">
                 de {games.length}
               </span>
             </dd>
           </div>
           <div>
             <dt className="label">Experimentales</dt>
-            <dd className="mono text-lg font-bold">{experimental}</dd>
+            <dd className="mono text-lg font-semibold">{experimental}</dd>
           </div>
           <div>
             <dt className="label">Pendientes de fórmula</dt>
-            <dd className="mono text-lg font-bold">{pending}</dd>
+            <dd className="mono text-lg font-semibold">{pending}</dd>
           </div>
           <div>
             <dt className="label">Cuenta</dt>
-            <dd className="text-lg font-bold">Opcional</dd>
+            <dd className="text-lg font-semibold">Opcional</dd>
           </div>
         </dl>
       </section>
@@ -101,15 +107,15 @@ export default async function HomePage({
       </div>
 
       <section className="mt-12 scroll-mt-28" aria-labelledby="global-home-title">
-        <div className="mb-4 flex flex-wrap items-end justify-between gap-3 border-b border-[var(--line-strong)] pb-2">
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
           <div>
             <h2
               id="global-home-title"
-              className="text-xl font-bold tracking-[-0.02em]"
+              className="text-xl font-semibold tracking-[-0.02em]"
             >
               Referencia global
             </h2>
-            <p className="mt-0.5 text-[0.8rem] text-[var(--muted)]">
+            <p className="mt-0.5 text-[0.8125rem] text-[var(--muted)]">
               Parte de centímetros, no del número de un slider.
             </p>
           </div>
@@ -128,18 +134,19 @@ export default async function HomePage({
 
       <div className="mt-12 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
         <section aria-labelledby="library-title">
-          <div className="flex items-end justify-between gap-3 border-b border-[var(--line-strong)] pb-2">
-            <h2 id="library-title" className="text-xl font-bold tracking-[-0.02em]">
+          <div className="flex items-end justify-between gap-3">
+            <h2 id="library-title" className="text-xl font-semibold tracking-[-0.02em]">
               Biblioteca
             </h2>
             <Link
               href="/games"
-              className="text-[0.72rem] font-semibold underline decoration-[var(--line-strong)] underline-offset-4 hover:decoration-[var(--ink)]"
+              className="text-xs font-semibold underline decoration-[var(--line-strong)] underline-offset-4 hover:decoration-[var(--accent)]"
             >
               Ver todos
             </Link>
           </div>
-          <table className="data-table mt-2">
+          <div className="mt-3 overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--surface)] shadow-[var(--shadow-sm)]">
+          <table className="data-table">
             <caption className="sr-only">
               Juegos con constante de yaw documentada
             </caption>
@@ -160,7 +167,7 @@ export default async function HomePage({
                 return (
                   <tr key={game.id}>
                     <td className="font-semibold">{game.shortName}</td>
-                    <td className="mono text-[0.78rem] text-[var(--muted)]">
+                    <td className="mono text-[0.8125rem] text-[var(--muted)]">
                       {game.yaw ? formatMeasure(game.yaw, 4) : "—"}
                     </td>
                     <td>
@@ -184,7 +191,7 @@ export default async function HomePage({
                       {convertible ? (
                         <Link
                           href={`/?game=${encodeURIComponent(game.id)}`}
-                          className="inline-flex items-center gap-1 text-[0.72rem] font-semibold underline decoration-[var(--line-strong)] underline-offset-4 hover:decoration-[var(--ink)]"
+                          className="inline-flex items-center gap-1 text-xs font-semibold underline decoration-[var(--line-strong)] underline-offset-4 hover:decoration-[var(--accent)]"
                         >
                           Convertir
                           <ArrowUpRight className="size-3" aria-hidden="true" />
@@ -192,7 +199,7 @@ export default async function HomePage({
                       ) : (
                         <Link
                           href="/methodology#limites"
-                          className="text-[0.72rem] text-[var(--warning)] underline underline-offset-4"
+                          className="text-xs text-[var(--warning)] underline underline-offset-4"
                         >
                           Por qué no
                         </Link>
@@ -203,33 +210,35 @@ export default async function HomePage({
               })}
             </tbody>
           </table>
+          </div>
         </section>
 
         <section
-          className="flex flex-col justify-between bg-[var(--ink)] p-6 text-[var(--band-ink)] sm:p-8"
+          className="flex flex-col justify-between rounded-2xl border border-[var(--accent-line)] bg-[var(--accent-soft)] p-6 text-[var(--fg)] sm:p-8"
           aria-labelledby="method-title"
         >
           <div>
-            <h2 id="method-title" className="text-xl font-bold tracking-[-0.02em]">
+            <h2 id="method-title" className="text-xl font-semibold tracking-[-0.02em]">
               ¿De dónde salen estos números?
             </h2>
-            <p className="mt-2 max-w-md text-[0.82rem] leading-relaxed text-[var(--band-muted)]">
+            <p className="mt-2 max-w-md text-[0.8125rem] leading-relaxed text-[var(--muted)]">
               La metodología explica la fórmula, la diferencia entre distancia
               360°, FOV aware y distancia de monitor, y por qué dos juegos con
               el mismo cm/360 no se sienten idénticos.
             </p>
           </div>
           <div className="mt-6 flex flex-wrap items-center gap-3">
-            <Link href="/methodology" className="btn btn-on-dark">
+            <Link href="/methodology" className="btn btn-primary">
               Leer la metodología
               <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
-            <span className="mono text-[0.58rem] uppercase tracking-[0.06em] text-[var(--band-muted)]">
-              sin promesas de precisión perfecta
+            <span className="text-xs text-[var(--muted)]">
+              Sin promesas de precisión perfecta
             </span>
           </div>
         </section>
       </div>
+    </div>
     </div>
   );
 }

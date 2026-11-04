@@ -160,7 +160,7 @@ export function GlobalConverter({
   return (
     <section
       className={cn(
-        "border border-[var(--ink)] bg-[var(--paper-raise)]",
+        "border border-[var(--line)] bg-[var(--surface)]",
         isCompact ? "p-4" : "p-4 sm:p-5",
       )}
       aria-labelledby={isCompact ? "global-compact-title" : "global-title"}
@@ -170,16 +170,16 @@ export function GlobalConverter({
           <span className="label">Referencia física</span>
           <h2
             id={isCompact ? "global-compact-title" : "global-title"}
-            className="mt-1 text-lg font-bold tracking-[-0.02em]"
+            className="mt-1 text-lg font-semibold tracking-[-0.02em]"
           >
             Sensibilidad global
           </h2>
-          <p className="mt-1 max-w-xl text-[0.78rem] leading-relaxed text-[var(--muted)]">
+          <p className="mt-1 max-w-xl text-[0.8125rem] leading-relaxed text-[var(--muted)]">
             Elige cuántos centímetros quieres mover el ratón para girar 360°.
             Después calcula la sensibilidad equivalente en cada juego.
           </p>
         </div>
-        <span className="badge badge-accent mono">cm/360 físico</span>
+        <span className="badge badge-accent">cm/360 físico</span>
       </div>
 
       <div
@@ -231,12 +231,12 @@ export function GlobalConverter({
 
       <div className="mt-4 grid gap-3 lg:grid-cols-[1.3fr_1fr]">
         <div className="result-surface p-4">
-          <p className="mono text-[0.58rem] font-medium uppercase tracking-[0.07em]">
+          <p className="text-xs font-medium text-[var(--accent-fg)]">
             Sensibilidad para {game.shortName}
           </p>
           <div className="mt-1 flex flex-wrap items-end justify-between gap-3">
             <output
-              className="mono text-[clamp(2.2rem,6vw,3.2rem)] font-bold leading-none tracking-[-0.06em]"
+              className="mono text-[clamp(2.2rem,6vw,3.2rem)] font-semibold leading-none tracking-[-0.04em]"
               aria-live="polite"
               data-testid="global-sensitivity"
             >
@@ -244,12 +244,12 @@ export function GlobalConverter({
                 ? formatSensitivity(calculation.rounded, game.sensitivity.decimals)
                 : "—"}
             </output>
-            <span className="mono pb-1 text-[0.62rem] uppercase tracking-[0.05em]">
+            <span className="mono pb-1 text-xs">
               {game.sensitivity.unit ?? "sens"} · {formatMeasure(dpiNumber, 0)} DPI
             </span>
           </div>
 
-          <div className="mt-4 grid grid-cols-3 border-t border-[var(--ink)]/30">
+          <div className="mt-4 grid grid-cols-3 border-t border-[var(--line)]">
             {[
               { angle: 90, label: "90°" },
               { angle: 180, label: "180°" },
@@ -257,12 +257,12 @@ export function GlobalConverter({
             ].map(({ angle, label }) => (
               <div
                 key={angle}
-                className="border-r border-[var(--ink)]/20 px-2 py-2 last:border-r-0"
+                className="border-r border-[var(--line)] px-2 py-2 last:border-r-0"
               >
-                <p className="mono text-[0.55rem] uppercase tracking-[0.06em] opacity-70">
+                <p className="mono text-xs opacity-70">
                   {label}
                 </p>
-                <p className="mono mt-0.5 text-sm font-bold">
+                <p className="mono mt-0.5 text-sm font-semibold">
                   {Number.isFinite(cm360Number)
                     ? `${formatMeasure(shortestAngle(cm360Number, angle), 1)} cm`
                     : "—"}
@@ -272,29 +272,29 @@ export function GlobalConverter({
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 border border-[var(--line)] p-4">
+        <div className="flex flex-col gap-3 border border-[var(--line)] p-4 rounded-lg">
           {!isCompact ? (
             <>
-              <p className="text-[0.72rem] font-bold uppercase tracking-[0.06em] text-[var(--ink-soft)]">
+              <p className="text-xs font-semibold text-[var(--fg-soft)]">
                 Comparación
               </p>
               {calculation?.currentCm360 !== null &&
               calculation?.currentCm360 !== undefined ? (
                 <>
                   <div>
-                    <p className="text-[0.65rem] text-[var(--faint)]">
+                    <p className="text-xs text-[var(--faint)]">
                       Tu sensibilidad actual equivale a
                     </p>
-                    <p className="mono mt-0.5 text-xl font-bold">
+                    <p className="mono mt-0.5 text-xl font-semibold">
                       {formatMeasure(calculation.currentCm360)} cm/360
                     </p>
                   </div>
                   <p
                     className={cn(
-                      "text-[0.72rem] leading-relaxed",
+                      "text-xs leading-relaxed",
                       Math.abs(calculation.deltaPercent ?? 0) < 1
                         ? "text-[var(--success)]"
-                        : "text-[var(--ink-soft)]",
+                        : "text-[var(--fg-soft)]",
                     )}
                   >
                     {Math.abs(calculation.deltaPercent ?? 0) < 1
@@ -305,14 +305,14 @@ export function GlobalConverter({
                   </p>
                 </>
               ) : (
-                <p className="text-[0.72rem] leading-relaxed text-[var(--muted)]">
+                <p className="text-xs leading-relaxed text-[var(--muted)]">
                   Introduce tu sensibilidad actual para ver cuánto se aleja de
                   tu referencia global.
                 </p>
               )}
             </>
           ) : (
-            <p className="text-[0.72rem] leading-relaxed text-[var(--muted)]">
+            <p className="text-xs leading-relaxed text-[var(--muted)]">
               Un mismo cm/360 produce números distintos en cada juego. Es una
               referencia física, no una sensibilidad universal.
             </p>
@@ -335,7 +335,7 @@ export function GlobalConverter({
                 Entra para sincronizarla
               </Link>
             )}
-            <p className="text-[0.62rem] leading-relaxed text-[var(--faint)]">
+            <p className="text-xs leading-relaxed text-[var(--faint)]">
               {storageState === "local"
                 ? "Guardado localmente en este navegador."
                 : "Sin cuenta, los cambios solo viven en esta pestaña."}
@@ -344,7 +344,7 @@ export function GlobalConverter({
               <p
                 role="status"
                 className={cn(
-                  "border px-2.5 py-1.5 text-[0.65rem] leading-relaxed",
+                  "border px-2.5 py-1.5 text-xs leading-relaxed",
                   saveState.status === "ok"
                     ? "border-[rgba(11,106,60,0.4)] text-[var(--success)]"
                     : "border-[rgba(165,31,24,0.4)] text-[var(--danger)]",
@@ -358,13 +358,13 @@ export function GlobalConverter({
       </div>
 
       {!isCompact ? (
-        <div className="mt-4 overflow-hidden border border-[var(--line-strong)]">
+        <div className="mt-4 overflow-hidden border border-[var(--line-strong)] rounded-lg">
           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--line-strong)] px-4 py-2.5">
-            <h3 className="text-[0.72rem] font-bold uppercase tracking-[0.06em] text-[var(--ink-soft)]">
+            <h3 className="text-xs font-semibold text-[var(--fg-soft)]">
               Equivalencias a {formatMeasure(cm360Number)} cm/360 ·{" "}
               {formatMeasure(dpiNumber, 0)} DPI
             </h3>
-            <span className="mono text-[0.58rem] uppercase tracking-[0.06em] text-[var(--faint)]">
+            <span className="mono text-xs text-[var(--faint)]">
               cadera
             </span>
           </div>
@@ -390,14 +390,14 @@ export function GlobalConverter({
                     <tr
                       key={entry.id}
                       className={cn(
-                        entry.id === gameId && "bg-[rgba(242,226,62,0.35)]",
+                        entry.id === gameId && "bg-[var(--accent-soft)]",
                       )}
                     >
                       <td className="font-semibold">{entry.shortName}</td>
-                      <td className="mono text-[0.8rem] font-bold">
+                      <td className="mono text-[0.8125rem] font-semibold">
                         {formatSensitivity(value, entry.sensitivity.decimals)}
                       </td>
-                      <td className="mono hidden text-[0.8rem] text-[var(--muted)] sm:table-cell">
+                      <td className="mono hidden text-[0.8125rem] text-[var(--muted)] sm:table-cell">
                         {formatMeasure(dpiNumber * value, 0)}
                       </td>
                       <td>

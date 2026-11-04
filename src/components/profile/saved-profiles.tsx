@@ -97,8 +97,8 @@ export function SavedProfiles({ profiles }: { profiles: SavedProfileView[] }) {
 
   return (
     <div>
-      <div className="flex flex-col gap-3 border border-[var(--ink)] bg-[var(--paper-raise)] p-3 sm:flex-row sm:items-center">
-        <div className="flex flex-1 items-center gap-2 border border-[var(--line-strong)] bg-[var(--paper)] px-3 py-2">
+      <div className="flex flex-col gap-3 border border-[var(--line)] bg-[var(--surface)] p-3 sm:flex-row sm:items-center rounded-lg">
+        <div className="flex flex-1 items-center gap-2 border border-[var(--line-strong)] bg-[var(--bg-subtle)] px-3 py-2 rounded-lg">
           <Search className="size-4 shrink-0 text-[var(--faint)]" aria-hidden="true" />
           <input
             type="search"
@@ -137,7 +137,7 @@ export function SavedProfiles({ profiles }: { profiles: SavedProfileView[] }) {
         <p
           role="status"
           className={cn(
-            "mt-3 border px-3 py-2 text-[0.75rem]",
+            "mt-3 border px-3 py-2 text-xs",
             message.ok
               ? "callout callout-success text-[var(--success)]"
               : "callout callout-danger text-[var(--danger)]",
@@ -148,7 +148,7 @@ export function SavedProfiles({ profiles }: { profiles: SavedProfileView[] }) {
       ) : null}
 
       <p
-        className="mono mt-3 text-[0.58rem] uppercase tracking-[0.05em] text-[var(--faint)]"
+        className="mono mt-3 text-xs text-[var(--faint)]"
         role="status"
       >
         {filtered.length} {filtered.length === 1 ? "perfil" : "perfiles"}
@@ -156,14 +156,14 @@ export function SavedProfiles({ profiles }: { profiles: SavedProfileView[] }) {
       </p>
 
       {profiles.length === 0 ? (
-        <div className="mt-3 flex flex-col items-center border border-[var(--line-strong)] bg-[var(--paper-raise)] px-6 py-14 text-center">
-          <span className="mono grid size-12 place-items-center border border-[var(--ink)] bg-[var(--field)]">
-            <Star className="size-5 text-[var(--ink)]" aria-hidden="true" />
+        <div className="mt-3 flex flex-col items-center border border-[var(--line-strong)] bg-[var(--surface)] px-6 py-14 text-center rounded-lg">
+          <span className="mono grid size-12 place-items-center border border-[var(--line)] bg-[var(--accent-soft)] rounded-lg">
+            <Star className="size-5 text-[var(--fg)]" aria-hidden="true" />
           </span>
-          <h2 className="mt-4 text-lg font-bold tracking-[-0.02em]">
+          <h2 className="mt-4 text-lg font-semibold tracking-[-0.02em]">
             Todavía no hay perfiles
           </h2>
-          <p className="mt-1.5 max-w-md text-[0.8rem] leading-relaxed text-[var(--muted)]">
+          <p className="mt-1.5 max-w-md text-[0.8125rem] leading-relaxed text-[var(--muted)]">
             Convierte una sensibilidad y pulsa «Guardar en mi cuenta». Puedes
             tener varios perfiles por juego: ranked, casual, cadera o miras.
           </p>
@@ -172,7 +172,7 @@ export function SavedProfiles({ profiles }: { profiles: SavedProfileView[] }) {
           </Link>
         </div>
       ) : filtered.length === 0 ? (
-        <div className="mt-3 border border-[var(--line-strong)] bg-[var(--paper-raise)] p-10 text-center">
+        <div className="mt-3 border border-[var(--line-strong)] bg-[var(--surface)] p-10 text-center rounded-lg">
           <p className="text-sm text-[var(--muted)]">
             No hay perfiles que coincidan con los filtros.
           </p>
@@ -195,12 +195,12 @@ export function SavedProfiles({ profiles }: { profiles: SavedProfileView[] }) {
             return (
               <li
                 key={profile.id}
-                className="flex flex-col border border-[var(--line-strong)] bg-[var(--paper-raise)]"
+                className="flex flex-col border border-[var(--line-strong)] bg-[var(--surface)] rounded-lg"
               >
                 <div className="flex items-start justify-between gap-3 border-b border-[var(--line)] p-4">
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <h2 className="truncate text-[0.95rem] font-bold tracking-[-0.01em]">
+                      <h2 className="truncate text-[0.95rem] font-semibold tracking-[-0.01em]">
                         {profile.name}
                       </h2>
                       {profile.isPreferred ? (
@@ -210,7 +210,7 @@ export function SavedProfiles({ profiles }: { profiles: SavedProfileView[] }) {
                         </span>
                       ) : null}
                     </div>
-                    <p className="mt-0.5 truncate text-[0.68rem] text-[var(--faint)]">
+                    <p className="mt-0.5 truncate text-xs text-[var(--faint)]">
                       {profile.gameName} ·{" "}
                       {methodLabels[profile.method] ?? profile.method}
                     </p>
@@ -227,7 +227,7 @@ export function SavedProfiles({ profiles }: { profiles: SavedProfileView[] }) {
                       "grid size-7 shrink-0 place-items-center border transition-colors",
                       profile.isFavorite
                         ? "border-[var(--warning)] text-[var(--warning)]"
-                        : "border-[var(--line-strong)] text-[var(--faint)] hover:border-[var(--ink)] hover:text-[var(--ink)]",
+                        : "border-[var(--line-strong)] text-[var(--faint)] hover:border-[var(--faint)] hover:text-[var(--fg)]",
                     )}
                     aria-label={
                       profile.isFavorite
@@ -263,12 +263,12 @@ export function SavedProfiles({ profiles }: { profiles: SavedProfileView[] }) {
                       value: profile.cm360 ? formatMeasure(profile.cm360) : "—",
                     },
                   ].map((cell) => (
-                    <div key={cell.label} className="bg-[var(--paper-raise)] px-3 py-2">
-                      <dt className="label text-[0.52rem]">{cell.label}</dt>
-                      <dd className="mono mt-0.5 text-[0.95rem] font-bold">
+                    <div key={cell.label} className="bg-[var(--surface)] px-3 py-2">
+                      <dt className="label text-xs">{cell.label}</dt>
+                      <dd className="mono mt-0.5 text-[0.95rem] font-semibold">
                         {cell.value}
                         {cell.suffix ? (
-                          <span className="ml-0.5 text-[0.58rem] font-normal text-[var(--faint)]">
+                          <span className="ml-0.5 text-xs font-normal text-[var(--faint)]">
                             {cell.suffix}
                           </span>
                         ) : null}
@@ -279,12 +279,12 @@ export function SavedProfiles({ profiles }: { profiles: SavedProfileView[] }) {
 
                 <div className="flex flex-1 flex-col p-4 pt-3">
                   {profile.notes ? (
-                    <p className="line-clamp-3 whitespace-pre-line text-[0.72rem] leading-relaxed text-[var(--muted)]">
+                    <p className="line-clamp-3 whitespace-pre-line text-xs leading-relaxed text-[var(--muted)]">
                       {profile.notes}
                     </p>
                   ) : null}
 
-                  <p className="mono mt-auto pt-3 text-[0.58rem] uppercase tracking-[0.05em] text-[var(--faint)]">
+                  <p className="mono mt-auto pt-3 text-xs text-[var(--faint)]">
                     Actualizado{" "}
                     {new Date(profile.updatedAt).toLocaleDateString("es-ES", {
                       day: "2-digit",
@@ -404,16 +404,16 @@ function EditProfileForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="mt-3 space-y-3 border border-[var(--ink)] bg-[var(--paper)] p-3"
+      className="mt-3 space-y-3 border border-[var(--line)] bg-[var(--bg-subtle)] p-3 rounded-lg"
     >
       <div className="flex items-center justify-between">
-        <p className="mono text-[0.58rem] font-medium uppercase tracking-[0.06em] text-[var(--ink-soft)]">
+        <p className="mono text-xs font-medium text-[var(--fg-soft)]">
           Editar perfil
         </p>
         <button
           type="button"
           onClick={onCancel}
-          className="grid size-6 place-items-center border border-transparent text-[var(--faint)] transition-colors hover:border-[var(--line-strong)] hover:text-[var(--ink)]"
+          className="grid size-6 place-items-center border border-transparent text-[var(--faint)] transition-colors hover:border-[var(--line-strong)] hover:text-[var(--fg)]"
           aria-label="Cancelar edición"
         >
           <X className="size-3.5" aria-hidden="true" />

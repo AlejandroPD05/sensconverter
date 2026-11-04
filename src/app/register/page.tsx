@@ -30,7 +30,7 @@ export default async function RegisterPage({
           ¿Ya tienes cuenta?{" "}
           <Link
             href={`/login?next=${encodeURIComponent(next)}`}
-            className="font-semibold text-[var(--ink)] underline decoration-[var(--line-strong)] underline-offset-4 hover:decoration-[var(--ink)]"
+            className="font-semibold text-[var(--fg)] underline decoration-[var(--line-strong)] underline-offset-4 hover:decoration-[var(--accent)]"
           >
             Iniciar sesión
           </Link>

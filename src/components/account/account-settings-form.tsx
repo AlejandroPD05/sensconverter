@@ -95,7 +95,7 @@ export function AccountSettingsForm({
           <p
             role="status"
             className={cn(
-              "text-[0.72rem]",
+              "text-xs",
               state.ok ? "text-[var(--success)]" : "text-[var(--danger)]",
             )}
           >
