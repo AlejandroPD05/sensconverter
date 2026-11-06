@@ -15,6 +15,7 @@
 - Supabase Auth + Postgres con RLS (`@supabase/ssr`), Zod para validación.
 - Vitest (unitarias) y Playwright (E2E: Chromium de escritorio y Pixel 7).
 - npm como gestor de paquetes. Entorno Windows/PowerShell.
+- Tema oscuro por defecto con selector en la cabecera (tokens en `[data-theme="dark"]` de `globals.css`); el servidor de desarrollo a veces no recarga cambios de CSS: si un estilo nuevo no aparece, comprueba con `npm run build` antes de depurar.
 - La estética es una herramienta SaaS en dos planos: hero oscuro (aurora índigo, visor de mira en la home) y aplicación clara (blanco, zinc, un único acento índigo, Geist + Geist Mono solo para números, radios de 6–16 px, tarjetas de borde fino). Animaciones: cifras que ruedan, segmentados deslizantes, ViewTransition entre páginas; todo con versión `prefers-reduced-motion`. `DESIGN.md` es el documento normativo del sistema; `src/app/globals.css` es la implementación. Son anti-referencia tanto la "hoja de retransmisión" (papel hueso, amarillo de señal, mayúsculas mono, esquinas a 0 px) como el "Liquid Glass" oscuro original.
 
 ## Reglas que un agente suele romper
@@ -47,7 +48,7 @@ npm run dev          # http://localhost:3000
 npm run lint
 npm run typecheck
 npm test             # Vitest: 46 pruebas
-npm run test:e2e     # Playwright: 45 pruebas (escritorio, móvil y sin Supabase)
+npm run test:e2e     # Playwright: 49 pruebas (escritorio, móvil y sin Supabase)
 npm run build        # incluye TypeScript; no hace falta tsc aparte
 npm start            # sirve el build de producción
 ```

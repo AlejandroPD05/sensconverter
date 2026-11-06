@@ -475,7 +475,7 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
               Los métodos no son intercambiables
             </span>
           </legend>
-          <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             {availability.map(({ method: item, available, reason }) => {
               const checked = activeMethod === item.id;
               return (
@@ -510,7 +510,7 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
                         )}
                       >
                         {checked ? (
-                          <span className="size-1.5 rounded-full bg-white" />
+                          <span className="size-1.5 rounded-full bg-[var(--on-accent)]" />
                         ) : null}
                       </span>
                       {item.name}
@@ -650,7 +650,7 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
             {result.warnings.map((warning) => (
               <li
                 key={warning}
-                className="flex items-start gap-2 rounded-md border border-[#fde68a] bg-[var(--warning-soft)] px-2.5 py-2 text-xs leading-relaxed text-[var(--fg-soft)]"
+                className="flex items-start gap-2 rounded-md border border-[var(--warning-line)] bg-[var(--warning-soft)] px-2.5 py-2 text-xs leading-relaxed text-[var(--fg-soft)]"
               >
                 <AlertTriangle className="mt-0.5 size-3 shrink-0" aria-hidden="true" />
                 {warning}
@@ -711,8 +711,8 @@ export function Calculator({ canSave, initial }: CalculatorProps) {
             className={cn(
               "rounded-md border px-3 py-2 text-xs leading-relaxed sm:col-span-3",
               saveState.status === "ok"
-                ? "border-[#bbf7d0] bg-[var(--success-soft)] text-[var(--success)]"
-                : "border-[#fecaca] bg-[var(--danger-soft)] text-[var(--danger)]",
+                ? "border-[var(--success-line)] bg-[var(--success-soft)] text-[var(--success)]"
+                : "border-[var(--danger-line)] bg-[var(--danger-soft)] text-[var(--danger)]",
             )}
           >
             {saveState.message}

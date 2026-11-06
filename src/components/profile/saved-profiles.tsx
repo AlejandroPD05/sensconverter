@@ -353,7 +353,7 @@ export function SavedProfiles({ profiles }: { profiles: SavedProfileView[] }) {
                         size="sm"
                         disabled={isBusy}
                         onClick={() => handleDelete(profile)}
-                        className="text-[var(--danger)] hover:bg-[rgba(165,31,24,0.08)] sm:ml-auto"
+                        className="text-[var(--danger)] hover:bg-[var(--danger-soft)] sm:ml-auto"
                       >
                         <Trash2 className="size-3.5" aria-hidden="true" />
                         Eliminar

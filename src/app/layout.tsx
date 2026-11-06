@@ -5,6 +5,7 @@ import "./globals.css";
 import { SiteHeader, MobileNav } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { brand, siteUrl } from "@/lib/brand";
+import { DEFAULT_THEME, themeBootScript } from "@/lib/theme";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,8 +50,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
-  colorScheme: "light",
+  themeColor: "#0a0a0f",
+  colorScheme: "dark light",
 };
 
 export default function RootLayout({
@@ -60,8 +61,13 @@ export default function RootLayout({
     <html
       lang="es"
       data-scroll-behavior="smooth"
+      data-theme={DEFAULT_THEME}
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
+      </head>
       <body>
         <a
           href="#main"

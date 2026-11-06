@@ -15,6 +15,7 @@ import {
 import { brand, donation } from "@/lib/brand";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/cn";
+import { ThemeToggle } from "./theme-toggle";
 
 export const navItems = [
   { href: "/", label: "Calculadora", icon: Calculator },
@@ -133,6 +134,7 @@ export function SiteHeader() {
           >
             Mis sensibilidades
           </Link>
+          <ThemeToggle />
           <Link
             href={email ? "/account" : "/login"}
             className={cn("btn btn-sm", email ? "btn-secondary" : "btn-primary")}

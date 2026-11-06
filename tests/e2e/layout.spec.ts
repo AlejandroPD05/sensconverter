@@ -25,6 +25,25 @@ test.describe("cabeceras de seguridad", () => {
   });
 });
 
+test.describe("tema", () => {
+  test("arranca en oscuro y recuerda el claro al recargar", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+
+    await page.getByRole("button", { name: "Cambiar a tema claro" }).click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+
+    await page.reload();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+    await expect(page.getByRole("button", { name: "Cambiar a tema oscuro" })).toBeVisible();
+  });
+
+  test("usa el favicon SVG de la marca", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator('link[rel="icon"][href*="icon.svg"]')).toHaveCount(1);
+  });
+});
+
 test.describe("donaciones", () => {
   test("el pie enlaza a Ko-fi en otra pestaña", async ({ page }) => {
     await page.goto("/");

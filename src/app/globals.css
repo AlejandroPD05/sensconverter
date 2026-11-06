@@ -41,6 +41,16 @@
   /* Bordes */
   --line: #e4e4e7;
   --line-strong: #d4d4d8;
+  --success-line: #bbf7d0;
+  --warning-line: #fde68a;
+  --danger-line: #fecaca;
+  --input-hover: #a1a1aa;
+  --focus-ring: rgba(79, 70, 229, 0.18);
+  --danger-ring: rgba(220, 38, 38, 0.14);
+  --header-bg: rgba(255, 255, 255, 0.92);
+  --nav-bg: rgba(255, 255, 255, 0.96);
+  --tick: rgba(55, 48, 163, 0.35);
+  --scrollbar: #d4d4d8;
 
   --shadow-sm: 0 1px 2px rgba(9, 9, 11, 0.05);
   --shadow-md: 0 1px 3px rgba(9, 9, 11, 0.06), 0 4px 12px rgba(9, 9, 11, 0.04);
@@ -268,18 +278,18 @@
   }
 
   .field-input:hover {
-    border-color: #a1a1aa;
+    border-color: var(--input-hover);
   }
 
   .field-input:focus {
     outline: none;
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.18);
+    box-shadow: 0 0 0 3px var(--focus-ring);
   }
 
   .field-input[aria-invalid="true"] {
     border-color: var(--danger);
-    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.14);
+    box-shadow: 0 0 0 3px var(--danger-ring);
   }
 
   .field-hint {
@@ -356,7 +366,7 @@
 
   .btn-danger {
     color: var(--danger);
-    border-color: #fecaca;
+    border-color: var(--danger-line);
     background: var(--surface);
   }
 
@@ -429,19 +439,19 @@
 
   .badge-success {
     color: var(--success);
-    border-color: #bbf7d0;
+    border-color: var(--success-line);
     background: var(--success-soft);
   }
 
   .badge-warning {
     color: var(--warning);
-    border-color: #fde68a;
+    border-color: var(--warning-line);
     background: var(--warning-soft);
   }
 
   .badge-danger {
     color: var(--danger);
-    border-color: #fecaca;
+    border-color: var(--danger-line);
     background: var(--danger-soft);
   }
 
@@ -453,17 +463,17 @@
   }
 
   .callout-warning {
-    border-color: #fde68a;
+    border-color: var(--warning-line);
     background: var(--warning-soft);
   }
 
   .callout-danger {
-    border-color: #fecaca;
+    border-color: var(--danger-line);
     background: var(--danger-soft);
   }
 
   .callout-success {
-    border-color: #bbf7d0;
+    border-color: var(--success-line);
     background: var(--success-soft);
   }
 
@@ -473,7 +483,7 @@
     position: sticky;
     top: 0;
     z-index: 40;
-    background: rgba(255, 255, 255, 0.92);
+    background: var(--header-bg);
     color: var(--fg);
     border-bottom: 1px solid var(--line);
     backdrop-filter: saturate(180%) blur(8px);
@@ -523,7 +533,7 @@
     padding: 0.35rem max(0.35rem, env(safe-area-inset-left))
       calc(0.35rem + env(safe-area-inset-bottom));
     border-top: 1px solid var(--line);
-    background: rgba(255, 255, 255, 0.96);
+    background: var(--nav-bg);
     backdrop-filter: saturate(180%) blur(8px);
   }
 
@@ -567,7 +577,7 @@
     width: 1px;
     height: 0.35rem;
     margin-top: 3px;
-    background: rgba(55, 48, 163, 0.35);
+    background: var(--tick);
   }
 
   .cm-scale__marker {
@@ -677,7 +687,7 @@
 
 .skeleton {
   border-radius: var(--radius-md);
-  background: linear-gradient(90deg, #f4f4f5, #e4e4e7, #f4f4f5);
+  background: linear-gradient(90deg, var(--surface-muted), var(--line), var(--surface-muted));
   background-size: 200% 100%;
   animation: shimmer 1.4s linear infinite;
 }
@@ -707,7 +717,7 @@
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #d4d4d8 transparent;
+  scrollbar-color: var(--scrollbar) transparent;
 }
 
 *::-webkit-scrollbar {
@@ -719,7 +729,7 @@
   border: 3px solid transparent;
   border-radius: 999px;
   background-clip: content-box;
-  background-color: #d4d4d8;
+  background-color: var(--scrollbar);
 }
 
 @media (max-width: 767px) {
@@ -1256,4 +1266,67 @@
   .rolling {
     vertical-align: baseline;
   }
+}
+
+/* ============================================================
+   Tema oscuro (por defecto). El claro es el :root original.
+   ============================================================ */
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #0a0a0f;
+  --bg-subtle: #0d0d13;
+  --surface: #121218;
+  --surface-muted: #1b1b23;
+
+  --fg: #f4f4f5;
+  --fg-soft: #d4d4d8;
+  --muted: #a1a1aa;
+  --faint: #8e8e98;
+
+  --accent: #818cf8;
+  --accent-hover: #a5b4fc;
+  --accent-soft: rgba(99, 102, 241, 0.14);
+  --accent-line: rgba(129, 140, 248, 0.38);
+  --accent-fg: #c7d2fe;
+  --on-accent: #0b0b1a;
+
+  --success: #4ade80;
+  --success-soft: rgba(34, 197, 94, 0.12);
+  --success-line: rgba(74, 222, 128, 0.32);
+  --warning: #fbbf24;
+  --warning-soft: rgba(245, 158, 11, 0.12);
+  --warning-line: rgba(251, 191, 36, 0.32);
+  --danger: #f87171;
+  --danger-soft: rgba(239, 68, 68, 0.12);
+  --danger-line: rgba(248, 113, 113, 0.35);
+
+  --line: #24242d;
+  --line-strong: #32323d;
+  --input-hover: #52525b;
+  --focus-ring: rgba(129, 140, 248, 0.3);
+  --danger-ring: rgba(248, 113, 113, 0.25);
+  --header-bg: rgba(10, 10, 15, 0.82);
+  --nav-bg: rgba(10, 10, 15, 0.92);
+  --tick: rgba(199, 210, 254, 0.35);
+  --scrollbar: #3f3f46;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* El cambio de tema funde la página entera cuando el navegador lo permite. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 260ms;
+}
+
+/* En oscuro el hero se funde con la página en lugar de cortar en seco. */
+[data-theme="dark"] .hero-dark {
+  background: linear-gradient(var(--hero-bg) 55%, var(--bg));
+}
+
+[data-theme="dark"] .hero-aurora {
+  mask-image: linear-gradient(#000 55%, transparent 85%);
 }

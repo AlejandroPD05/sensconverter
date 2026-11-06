@@ -248,6 +248,6 @@ Comprobado en este repositorio:
 - `npm run typecheck`: sin errores.
 - `npm test`: 46 pruebas superadas.
 - `npm run build`: build de producción correcto.
-- `npm run test:e2e`: 45 superadas. Incluye cuenta, RLS entre usuarios, Chromium de escritorio, Pixel 7 y la app sin credenciales de Supabase.
+- `npm run test:e2e`: 49 superadas. Incluye cuenta, RLS entre usuarios, Chromium de escritorio, Pixel 7 y la app sin credenciales de Supabase.
 
 Las pruebas autenticadas se omiten si no hay proyecto Supabase o usuario de prueba; las omitidas no cuentan como aprobadas.

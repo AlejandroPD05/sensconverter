@@ -53,6 +53,24 @@ Sustituye al sistema anterior "hoja de retransmisión" (papel hueso y amarillo
 de señal) y al "Liquid Glass" oscuro original; ninguno de los dos se debe
 reintroducir.
 
+## Temas
+
+- Oscuro por defecto (`<html data-theme="dark">`); el claro es el `:root`
+  original. El botón sol/luna de la cabecera alterna y guarda la elección en
+  `localStorage` (`sensconverter.theme.v1`); un script en `<head>` la aplica
+  antes del primer pintado para que no parpadee.
+- En oscuro el índigo de acción pasa a `#818cf8` con texto `--on-accent`
+  oscuro, porque el blanco sobre ese tono no llega a 4.5:1.
+- Todos los colores de estado, bordes, cabecera, barra inferior y
+  scrollbar son tokens: no uses literales en componentes.
+- El hero se funde con el fondo en oscuro; en claro corta en seco contra el
+  blanco a propósito.
+
+## Favicon
+
+- `src/app/icon.svg` (mira blanca sobre índigo) y `apple-icon.png` de 180 px
+  generado desde el SVG.
+
 ## Hero oscuro
 
 - `.hero-dark` es el único plano oscuro: home (con el visor) y `PageHero` en

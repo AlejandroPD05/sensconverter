@@ -160,17 +160,16 @@ export function GlobalConverter({
   return (
     <section
       className={cn(
-        "border border-[var(--line)] bg-[var(--surface)]",
-        isCompact ? "p-4" : "p-4 sm:p-5",
+        "rounded-2xl border border-[var(--line)] bg-[var(--surface)] shadow-[var(--shadow-md)]",
+        isCompact ? "p-4 sm:p-5" : "p-4 sm:p-6",
       )}
       aria-labelledby={isCompact ? "global-compact-title" : "global-title"}
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <span className="label">Referencia física</span>
           <h2
             id={isCompact ? "global-compact-title" : "global-title"}
-            className="mt-1 text-lg font-semibold tracking-[-0.02em]"
+            className="text-lg font-semibold tracking-[-0.02em]"
           >
             Sensibilidad global
           </h2>
@@ -346,8 +345,8 @@ export function GlobalConverter({
                 className={cn(
                   "border px-2.5 py-1.5 text-xs leading-relaxed",
                   saveState.status === "ok"
-                    ? "border-[rgba(11,106,60,0.4)] text-[var(--success)]"
-                    : "border-[rgba(165,31,24,0.4)] text-[var(--danger)]",
+                    ? "border-[var(--success-line)] text-[var(--success)]"
+                    : "border-[var(--danger-line)] text-[var(--danger)]",
                 )}
               >
                 {saveState.message}

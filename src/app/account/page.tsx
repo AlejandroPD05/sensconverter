@@ -315,7 +315,7 @@ export default async function AccountPage() {
           </section>
 
           <section
-            className="rounded-xl border border-[#fecaca] bg-[var(--surface)] p-4 shadow-[var(--shadow-sm)] sm:p-5"
+            className="rounded-xl border border-[var(--danger-line)] bg-[var(--surface)] p-4 shadow-[var(--shadow-sm)] sm:p-5"
             aria-labelledby="delete-title"
           >
             <h2 id="delete-title" className="text-[0.95rem] font-semibold text-[var(--danger)]">
